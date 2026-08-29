@@ -57,8 +57,8 @@ final readonly class Composition implements JsonSerializable
             if (isset($indexed[$variant->id])) {
                 throw new InvalidArgumentException("Variant '{$variant->id}' is declared twice.");
             }
-            foreach ($variant->stackDirections as $nodeId => $_) {
-                if ($scene->findNode(new NodeId($nodeId)) === null) {
+            foreach ([...array_keys($variant->stackDirections), ...array_keys($variant->stackAlignments)] as $nodeId) {
+                if ($scene->findNode(new NodeId((string) $nodeId)) === null) {
                     throw new InvalidArgumentException("Variant '{$variant->id}' overrides unknown node '{$nodeId}'.");
                 }
             }

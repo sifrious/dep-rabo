@@ -135,7 +135,7 @@ final readonly class Scene implements JsonSerializable
         return new self(
             $this->id.'.'.$variant->id,
             $variant->canvas,
-            self::applyDirections($this->root, $variant->stackDirections),
+            self::applyOverrides($this->root, $variant),
             $this->connectors,
             $this->readingOrder,
             $variant->padding ?? $this->padding,
@@ -255,18 +255,25 @@ final readonly class Scene implements JsonSerializable
         return $nodes;
     }
 
-    /** @param array<string,StackDirection> $directions */
-    private static function applyDirections(Node $node, array $directions): Node
+    private static function applyOverrides(Node $node, VariantSpec $variant): Node
     {
         if (! $node instanceof StackNode) {
             return $node;
         }
         $rebuilt = $node->withChildren(array_map(
-            static fn (Node $child): Node => self::applyDirections($child, $directions),
+            static fn (Node $child): Node => self::applyOverrides($child, $variant),
             $node->children(),
         ));
-        $override = $directions[$node->id()->value] ?? null;
 
-        return $override === null ? $rebuilt : $rebuilt->withDirection($override);
+        $direction = $variant->stackDirections[$node->id()->value] ?? null;
+        if ($direction !== null) {
+            $rebuilt = $rebuilt->withDirection($direction);
+        }
+        $alignment = $variant->stackAlignments[$node->id()->value] ?? null;
+        if ($alignment !== null) {
+            $rebuilt = $rebuilt->withAlign($alignment);
+        }
+
+        return $rebuilt;
     }
 }

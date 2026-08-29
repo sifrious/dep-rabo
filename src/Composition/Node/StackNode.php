@@ -90,6 +90,12 @@ final readonly class StackNode implements ContainerNode
         return new self($this->id, $direction, $this->gap, $this->children, $this->style, $this->align, $this->distribute);
     }
 
+    /** A copy aligned differently across its axis, keeping every identifier. */
+    public function withAlign(Alignment $align): self
+    {
+        return new self($this->id, $this->direction, $this->gap, $this->children, $this->style, $align, $this->distribute);
+    }
+
     /** @param list<Node> $children */
     public function withChildren(array $children): self
     {

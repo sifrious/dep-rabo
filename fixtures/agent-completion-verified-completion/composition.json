@@ -42,7 +42,7 @@
                     "type": "stack",
                     "id": "header",
                     "direction": "horizontal",
-                    "gap": "md",
+                    "gap": "lg",
                     "align": "center",
                     "distribute": "start",
                     "style": {
@@ -111,7 +111,7 @@
                     "content": "Agent completion ≠ verified completion",
                     "size": {
                         "width": 1000,
-                        "height": 120
+                        "height": 64
                     },
                     "style": {
                         "fill": null,
@@ -173,7 +173,7 @@
                                     "content": "\"Done\"",
                                     "size": {
                                         "width": 168,
-                                        "height": 26
+                                        "height": 28
                                     },
                                     "style": {
                                         "fill": null,
@@ -187,7 +187,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 2,
+                                    "max_lines": 1,
                                     "essential": true,
                                     "text_alternative": null
                                 },
@@ -211,7 +211,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 3,
+                                    "max_lines": 2,
                                     "essential": true,
                                     "text_alternative": null
                                 }
@@ -242,7 +242,7 @@
                                     "content": "A claim",
                                     "size": {
                                         "width": 168,
-                                        "height": 26
+                                        "height": 28
                                     },
                                     "style": {
                                         "fill": null,
@@ -256,14 +256,14 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 2,
+                                    "max_lines": 1,
                                     "essential": true,
                                     "text_alternative": null
                                 },
                                 {
                                     "type": "text",
                                     "id": "step-claim-detail",
-                                    "content": "An assertion about the world, not a result.",
+                                    "content": "An assertion, not yet a result.",
                                     "size": {
                                         "width": 168,
                                         "height": 48
@@ -280,7 +280,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 3,
+                                    "max_lines": 2,
                                     "essential": true,
                                     "text_alternative": null
                                 }
@@ -308,10 +308,10 @@
                                 {
                                     "type": "text",
                                     "id": "step-checks-label",
-                                    "content": "Independent checks",
+                                    "content": "Checks run",
                                     "size": {
                                         "width": 168,
-                                        "height": 26
+                                        "height": 28
                                     },
                                     "style": {
                                         "fill": null,
@@ -325,7 +325,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 2,
+                                    "max_lines": 1,
                                     "essential": true,
                                     "text_alternative": null
                                 },
@@ -349,7 +349,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 3,
+                                    "max_lines": 2,
                                     "essential": true,
                                     "text_alternative": null
                                 }
@@ -380,7 +380,7 @@
                                     "content": "Evidence",
                                     "size": {
                                         "width": 168,
-                                        "height": 26
+                                        "height": 28
                                     },
                                     "style": {
                                         "fill": null,
@@ -394,14 +394,14 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 2,
+                                    "max_lines": 1,
                                     "essential": true,
                                     "text_alternative": null
                                 },
                                 {
                                     "type": "text",
                                     "id": "step-evidence-detail",
-                                    "content": "Commit SHA, exit code, artifact digest.",
+                                    "content": "Commit SHA, exit code, digest.",
                                     "size": {
                                         "width": 168,
                                         "height": 48
@@ -418,7 +418,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 3,
+                                    "max_lines": 2,
                                     "essential": true,
                                     "text_alternative": null
                                 }
@@ -446,10 +446,10 @@
                                 {
                                     "type": "text",
                                     "id": "step-verified-label",
-                                    "content": "Verified completion",
+                                    "content": "Verified",
                                     "size": {
                                         "width": 168,
-                                        "height": 26
+                                        "height": 28
                                     },
                                     "style": {
                                         "fill": null,
@@ -463,7 +463,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 2,
+                                    "max_lines": 1,
                                     "essential": true,
                                     "text_alternative": null
                                 },
@@ -487,7 +487,7 @@
                                         "opacity": 1
                                     },
                                     "align": "start",
-                                    "max_lines": 3,
+                                    "max_lines": 2,
                                     "essential": true,
                                     "text_alternative": null
                                 }
@@ -558,7 +558,7 @@
                     "opacity": 1
                 },
                 "arrowhead": true,
-                "text_alternative": "A claim leads to Independent checks"
+                "text_alternative": "A claim leads to Checks run"
             },
             {
                 "type": "connector",
@@ -577,7 +577,7 @@
                     "opacity": 1
                 },
                 "arrowhead": true,
-                "text_alternative": "Independent checks leads to Evidence"
+                "text_alternative": "Checks run leads to Evidence"
             },
             {
                 "type": "connector",
@@ -596,7 +596,7 @@
                     "opacity": 1
                 },
                 "arrowhead": true,
-                "text_alternative": "Evidence leads to Verified completion"
+                "text_alternative": "Evidence leads to Verified"
             }
         ],
         "reading_order": [
@@ -624,6 +624,9 @@
             },
             "stack_directions": {
                 "flow": "vertical"
+            },
+            "stack_alignments": {
+                "root": "center"
             },
             "padding": "lg",
             "label": "Square, for feeds that crop wide images"
