@@ -1,0 +1,691 @@
+{
+    "contract": "sifrious.rabo.composition",
+    "contract_version": 1,
+    "id": "agent-completion-verified-completion",
+    "version": 1,
+    "title": "Agent completion is not verified completion",
+    "brand_id": "burg",
+    "brand_version": "1.0.0",
+    "scene": {
+        "contract": "sifrious.rabo.scene",
+        "contract_version": 1,
+        "id": "agent-completion-verified-completion",
+        "canvas": {
+            "width": 1200,
+            "height": 630
+        },
+        "padding": "lg",
+        "align_horizontal": "center",
+        "align_vertical": "center",
+        "background": "surface",
+        "description": "A five step chain reading: the agent reports \"Done\"; that report is a claim; independent checks run; evidence appears; only then is completion verified.",
+        "root": {
+            "type": "stack",
+            "id": "root",
+            "direction": "vertical",
+            "gap": "xl",
+            "align": "start",
+            "distribute": "start",
+            "style": {
+                "fill": null,
+                "text": null,
+                "type_role": null,
+                "stroke": null,
+                "stroke_width": null,
+                "radius": null,
+                "padding": null,
+                "semantic": null,
+                "opacity": 1
+            },
+            "children": [
+                {
+                    "type": "stack",
+                    "id": "header",
+                    "direction": "horizontal",
+                    "gap": "md",
+                    "align": "center",
+                    "distribute": "start",
+                    "style": {
+                        "fill": null,
+                        "text": null,
+                        "type_role": null,
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "children": [
+                        {
+                            "type": "image",
+                            "id": "mark",
+                            "asset": "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
+                            "size": {
+                                "width": 44,
+                                "height": 44
+                            },
+                            "style": {
+                                "fill": null,
+                                "text": null,
+                                "type_role": null,
+                                "stroke": null,
+                                "stroke_width": null,
+                                "radius": null,
+                                "padding": null,
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "text_alternative": "burg",
+                            "mark_id": "burg"
+                        },
+                        {
+                            "type": "text",
+                            "id": "eyebrow",
+                            "content": "RABO / EVIDENCE",
+                            "size": {
+                                "width": 200,
+                                "height": 22
+                            },
+                            "style": {
+                                "fill": null,
+                                "text": "text-muted",
+                                "type_role": "meta",
+                                "stroke": null,
+                                "stroke_width": null,
+                                "radius": null,
+                                "padding": null,
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "align": "start",
+                            "max_lines": 1,
+                            "essential": false,
+                            "text_alternative": null
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "headline",
+                    "content": "Agent completion ≠ verified completion",
+                    "size": {
+                        "width": 1000,
+                        "height": 120
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "headline",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 2,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "stack",
+                    "id": "flow",
+                    "direction": "horizontal",
+                    "gap": "xl",
+                    "align": "start",
+                    "distribute": "start",
+                    "style": {
+                        "fill": null,
+                        "text": null,
+                        "type_role": null,
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "children": [
+                        {
+                            "type": "stack",
+                            "id": "step-done",
+                            "direction": "vertical",
+                            "gap": "sm",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "accent-soft",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "md",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "step-done-label",
+                                    "content": "\"Done\"",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "accent-ink",
+                                        "type_role": "code",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": "claim",
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 2,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "text",
+                                    "id": "step-done-detail",
+                                    "content": "The agent reports that it finished.",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 48
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-muted",
+                                        "type_role": "step-detail",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 3,
+                                    "essential": true,
+                                    "text_alternative": null
+                                }
+                            ]
+                        },
+                        {
+                            "type": "stack",
+                            "id": "step-claim",
+                            "direction": "vertical",
+                            "gap": "sm",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "surface-raised",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "md",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "step-claim-label",
+                                    "content": "A claim",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-body",
+                                        "type_role": "step-label",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 2,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "text",
+                                    "id": "step-claim-detail",
+                                    "content": "An assertion about the world, not a result.",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 48
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-muted",
+                                        "type_role": "step-detail",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 3,
+                                    "essential": true,
+                                    "text_alternative": null
+                                }
+                            ]
+                        },
+                        {
+                            "type": "stack",
+                            "id": "step-checks",
+                            "direction": "vertical",
+                            "gap": "sm",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "surface-raised",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "md",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "step-checks-label",
+                                    "content": "Independent checks",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-body",
+                                        "type_role": "step-label",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 2,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "text",
+                                    "id": "step-checks-detail",
+                                    "content": "Run by something that is not the author.",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 48
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-muted",
+                                        "type_role": "step-detail",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 3,
+                                    "essential": true,
+                                    "text_alternative": null
+                                }
+                            ]
+                        },
+                        {
+                            "type": "stack",
+                            "id": "step-evidence",
+                            "direction": "vertical",
+                            "gap": "sm",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "surface-raised",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "md",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "step-evidence-label",
+                                    "content": "Evidence",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-body",
+                                        "type_role": "step-label",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 2,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "text",
+                                    "id": "step-evidence-detail",
+                                    "content": "Commit SHA, exit code, artifact digest.",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 48
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-muted",
+                                        "type_role": "step-detail",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 3,
+                                    "essential": true,
+                                    "text_alternative": null
+                                }
+                            ]
+                        },
+                        {
+                            "type": "stack",
+                            "id": "step-verified",
+                            "direction": "vertical",
+                            "gap": "sm",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "good-soft",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "md",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "step-verified-label",
+                                    "content": "Verified completion",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "good-ink",
+                                        "type_role": "step-label",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": "verified",
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 2,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "text",
+                                    "id": "step-verified-detail",
+                                    "content": "The claim now carries a warrant.",
+                                    "size": {
+                                        "width": 168,
+                                        "height": 48
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-muted",
+                                        "type_role": "step-detail",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 3,
+                                    "essential": true,
+                                    "text_alternative": null
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "evidence-note",
+                    "content": "Evidence: six RABO tickets sat in In Review with no attached verification, against a handoff standard requiring commit SHAs and per-criterion results.",
+                    "size": {
+                        "width": 1000,
+                        "height": 44
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-muted",
+                        "type_role": "meta",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 2,
+                    "essential": false,
+                    "text_alternative": null
+                }
+            ]
+        },
+        "connectors": [
+            {
+                "type": "connector",
+                "id": "link-1",
+                "from": "step-done",
+                "to": "step-claim",
+                "style": {
+                    "fill": null,
+                    "text": null,
+                    "type_role": null,
+                    "stroke": "accent",
+                    "stroke_width": "thick",
+                    "radius": null,
+                    "padding": null,
+                    "semantic": null,
+                    "opacity": 1
+                },
+                "arrowhead": true,
+                "text_alternative": "\"Done\" leads to A claim"
+            },
+            {
+                "type": "connector",
+                "id": "link-2",
+                "from": "step-claim",
+                "to": "step-checks",
+                "style": {
+                    "fill": null,
+                    "text": null,
+                    "type_role": null,
+                    "stroke": "accent",
+                    "stroke_width": "thick",
+                    "radius": null,
+                    "padding": null,
+                    "semantic": null,
+                    "opacity": 1
+                },
+                "arrowhead": true,
+                "text_alternative": "A claim leads to Independent checks"
+            },
+            {
+                "type": "connector",
+                "id": "link-3",
+                "from": "step-checks",
+                "to": "step-evidence",
+                "style": {
+                    "fill": null,
+                    "text": null,
+                    "type_role": null,
+                    "stroke": "accent",
+                    "stroke_width": "thick",
+                    "radius": null,
+                    "padding": null,
+                    "semantic": null,
+                    "opacity": 1
+                },
+                "arrowhead": true,
+                "text_alternative": "Independent checks leads to Evidence"
+            },
+            {
+                "type": "connector",
+                "id": "link-4",
+                "from": "step-evidence",
+                "to": "step-verified",
+                "style": {
+                    "fill": null,
+                    "text": null,
+                    "type_role": null,
+                    "stroke": "accent",
+                    "stroke_width": "thick",
+                    "radius": null,
+                    "padding": null,
+                    "semantic": null,
+                    "opacity": 1
+                },
+                "arrowhead": true,
+                "text_alternative": "Evidence leads to Verified completion"
+            }
+        ],
+        "reading_order": [
+            "eyebrow",
+            "headline",
+            "step-done-label",
+            "step-done-detail",
+            "step-claim-label",
+            "step-claim-detail",
+            "step-checks-label",
+            "step-checks-detail",
+            "step-evidence-label",
+            "step-evidence-detail",
+            "step-verified-label",
+            "step-verified-detail",
+            "evidence-note"
+        ]
+    },
+    "variants": [
+        {
+            "id": "square",
+            "canvas": {
+                "width": 1080,
+                "height": 1080
+            },
+            "stack_directions": {
+                "flow": "vertical"
+            },
+            "padding": "lg",
+            "label": "Square, for feeds that crop wide images"
+        }
+    ],
+    "references": {
+        "contract": "sifrious.rabo.composition-references",
+        "contract_version": 1,
+        "roles": {
+            "content_plan": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "content-plan",
+                    "id": "plan_verified_completion",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "evidence": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/digory",
+                    "type": "document",
+                    "id": "handoff_instructions_required_agent_completion_report",
+                    "object_version": "sha256:0f0a",
+                    "provenance": null
+                },
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "linear_rabo_tickets_in_review_without_attachments",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "storyboard": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "storyboard",
+                    "id": "storyboard_five_beat",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "treatment": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "treatment",
+                    "id": "treatment_agent_completion_v1",
+                    "object_version": "1",
+                    "provenance": null
+                }
+            ]
+        }
+    }
+}
