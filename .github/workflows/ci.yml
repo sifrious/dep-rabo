@@ -28,6 +28,23 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
 
+      # composer.json reaches sifrious/reference-contract over `git@github.com-sifrious:`,
+      # an SSH alias that exists only in one developer's ~/.ssh/config and resolves nowhere
+      # else. Both repositories are private, so any URL form needs a credential here.
+      - name: Authenticate for private sifrious packages
+        env:
+          TOKEN: ${{ secrets.SIFRIOUS_PACKAGES_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::This package depends on the private repository sifrious/dep-reference-contract."
+            echo "::error::Add a repository secret named SIFRIOUS_PACKAGES_TOKEN — a fine-grained PAT with read access to its contents."
+            echo "::error::composer.json addresses it as git@github.com-sifrious:, a local-only SSH alias, so the rewrite below is what makes it resolvable off one machine."
+            exit 1
+          fi
+          git config --global \
+            url."https://x-access-token:${TOKEN}@github.com/sifrious/".insteadOf \
+            "git@github.com-sifrious:sifrious/"
+
       # install, not update: this package ships a committed lock and the whole point is
       # that a checkout reproduces byte-identical artifacts.
       - run: composer install --no-interaction --prefer-dist --no-progress

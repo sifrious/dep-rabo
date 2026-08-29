@@ -171,3 +171,10 @@ crashing when its tools are missing.
 **Rejected.** Matching the neutral-package convention and shipping no CI. Defensible for a package
 of pure value objects; not for one whose correctness claim is "these committed bytes regenerate
 exactly".
+
+**What it caught immediately.** The first run failed on both legs, and not on anything the tests
+cover: `composer.json` addresses its one dependency through an SSH alias that exists only in one
+developer's `~/.ssh/config`. Local verification had passed, including a clean `git clone` into a
+scratch directory — because that clone happened on the machine where the alias resolves. The check
+that looked like proof of portability was measuring something else. See `docs/open-questions.md`
+Q-006 and MME-2193.

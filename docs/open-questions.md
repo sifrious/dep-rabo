@@ -35,3 +35,18 @@ for it, and it is not obvious that Rabo should be the thing that does.
 Cue captions currently produce a text equivalent for the whole piece. Timed captions for narrated
 motion — start, end, speaker — would need a caption track rather than a per-cue string. Deferred
 until a composition actually carries speech.
+
+## Q-006 — How does anything but one laptop install this package?
+
+`composer.json` reaches `sifrious/reference-contract` at `git@github.com-sifrious:…`, which is an
+SSH alias in one developer's `~/.ssh/config` and resolves nowhere else. Both repositories are
+private, so substituting an `https://` URL does not help either — it moves the failure from DNS to
+authentication.
+
+CI works around it with a `url.…insteadOf` rewrite gated on a `SIFRIOUS_PACKAGES_TOKEN` secret, and
+fails with an explicit message until that secret exists. That unblocks this package; it does not
+answer the question for the six repositories with the same line.
+
+Tracked as MME-2193, with four options recorded there. Worth noting that this was invisible to
+local verification — a clean `git clone` into a scratch directory passed, because it ran on the one
+machine where the alias resolves.
