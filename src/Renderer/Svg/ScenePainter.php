@@ -10,6 +10,7 @@ use Sifrious\Rabo\Brand\TextFlow;
 use Sifrious\Rabo\Composition\Box;
 use Sifrious\Rabo\Composition\Layout;
 use Sifrious\Rabo\Composition\Node\ConnectorNode;
+use Sifrious\Rabo\Composition\Node\ContainerNode;
 use Sifrious\Rabo\Composition\Node\ImageNode;
 use Sifrious\Rabo\Composition\Node\Node;
 use Sifrious\Rabo\Composition\Node\ShapeKind;
@@ -69,22 +70,42 @@ final readonly class ScenePainter
         ]);
     }
 
-    /** @param callable(Node):array<string,string|float|int|null> $groupAttributes */
+    /**
+     * Paints the node tree, keeping the composition's nesting in the output.
+     *
+     * Nesting is not cosmetic: a motion cue applied to a card has to carry the card's label
+     * and detail with it. A flat list of sibling groups would animate the box and leave its
+     * text behind.
+     *
+     * @param callable(Node):array<string,string|float|int|null> $groupAttributes
+     */
     public function paintNodes(SvgDocument $svg, Layout $layout, ?callable $groupAttributes = null): void
     {
-        foreach ($layout->placed as $placed) {
-            $node = $placed->node;
-            $attributes = $groupAttributes === null ? [] : $groupAttributes($node);
-            $body = $this->paintNode($node, $placed->box);
-            if ($body === [] && $attributes === []) {
-                continue;
-            }
-            $svg->open('g', ['id' => (string) $node->id()] + $attributes);
-            foreach ($body as $line) {
-                $svg->raw($line, 2);
-            }
-            $svg->close('g');
+        $this->paintTree($svg, $layout->placed[0]->node ?? null, $layout, $groupAttributes, 1);
+    }
+
+    /** @param callable(Node):array<string,string|float|int|null>|null $groupAttributes */
+    private function paintTree(SvgDocument $svg, ?Node $node, Layout $layout, ?callable $groupAttributes, int $depth): void
+    {
+        if ($node === null) {
+            return;
         }
+        $attributes = $groupAttributes === null ? [] : $groupAttributes($node);
+        $body = $this->paintNode($node, $layout->box($node->id()));
+        $children = $node instanceof ContainerNode ? $node->children() : [];
+
+        if ($body === [] && $attributes === [] && $children === []) {
+            return;
+        }
+
+        $svg->open('g', ['id' => (string) $node->id()] + $attributes, $depth);
+        foreach ($body as $line) {
+            $svg->raw($line, $depth + 1);
+        }
+        foreach ($children as $child) {
+            $this->paintTree($svg, $child, $layout, $groupAttributes, $depth + 1);
+        }
+        $svg->close('g', $depth);
     }
 
     /** @param callable(ConnectorNode):array<string,string|float|int|null> $groupAttributes */
