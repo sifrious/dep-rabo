@@ -1,0 +1,40 @@
+{
+    "contract": "sifrious.rabo.motion-composition",
+    "contract_version": 1,
+    "id": "motion-cue-overlap-motion",
+    "version": 1,
+    "composition_id": "motion-cue-overlap",
+    "scene": "source",
+    "description": "Two cues acting on one node at once.",
+    "reduced_motion": "final_state",
+    "timeline": {
+        "contract": "sifrious.rabo.timeline",
+        "contract_version": 1,
+        "duration_ms": 4000,
+        "tracks": [
+            {
+                "name": "main",
+                "cues": [
+                    {
+                        "id": "reveal-it",
+                        "node": "headline",
+                        "effect": "reveal",
+                        "start_ms": 0,
+                        "duration_ms": 1000,
+                        "easing": "quiet",
+                        "caption": null
+                    },
+                    {
+                        "id": "reveal-it-again",
+                        "node": "headline",
+                        "effect": "reveal",
+                        "start_ms": 500,
+                        "duration_ms": 1000,
+                        "easing": "linear",
+                        "caption": null
+                    }
+                ]
+            }
+        ]
+    }
+}

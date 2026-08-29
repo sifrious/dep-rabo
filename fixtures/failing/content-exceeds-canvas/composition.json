@@ -1,0 +1,376 @@
+{
+    "contract": "sifrious.rabo.composition",
+    "contract_version": 1,
+    "id": "content-exceeds-canvas",
+    "version": 1,
+    "title": null,
+    "brand_id": "minimal",
+    "brand_version": "1.0.0",
+    "scene": {
+        "contract": "sifrious.rabo.scene",
+        "contract_version": 1,
+        "id": "minimal",
+        "canvas": {
+            "width": 600,
+            "height": 300
+        },
+        "padding": "lg",
+        "align_horizontal": "center",
+        "align_vertical": "center",
+        "background": "surface",
+        "description": "A minimal scene used to exercise one validation rule.",
+        "root": {
+            "type": "stack",
+            "id": "root",
+            "direction": "vertical",
+            "gap": "md",
+            "align": "start",
+            "distribute": "start",
+            "style": {
+                "fill": null,
+                "text": null,
+                "type_role": null,
+                "stroke": null,
+                "stroke_width": null,
+                "radius": null,
+                "padding": null,
+                "semantic": null,
+                "opacity": 1
+            },
+            "children": [
+                {
+                    "type": "text",
+                    "id": "line-1",
+                    "content": "Line number 1.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-2",
+                    "content": "Line number 2.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-3",
+                    "content": "Line number 3.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-4",
+                    "content": "Line number 4.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-5",
+                    "content": "Line number 5.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-6",
+                    "content": "Line number 6.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-7",
+                    "content": "Line number 7.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-8",
+                    "content": "Line number 8.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-9",
+                    "content": "Line number 9.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-10",
+                    "content": "Line number 10.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-11",
+                    "content": "Line number 11.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "text",
+                    "id": "line-12",
+                    "content": "Line number 12.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                }
+            ]
+        },
+        "connectors": [],
+        "reading_order": [
+            "line-1",
+            "line-2",
+            "line-3",
+            "line-4",
+            "line-5",
+            "line-6",
+            "line-7",
+            "line-8",
+            "line-9",
+            "line-10",
+            "line-11",
+            "line-12"
+        ]
+    },
+    "variants": [],
+    "references": {
+        "contract": "sifrious.rabo.composition-references",
+        "contract_version": 1,
+        "roles": {
+            "evidence": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/digory",
+                    "type": "document",
+                    "id": "minimal",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "treatment": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "treatment",
+                    "id": "minimal",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ]
+        }
+    }
+}

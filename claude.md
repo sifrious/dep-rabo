@@ -1,0 +1,79 @@
+# Rabo — working notes
+
+Rabo owns what visual work looks like, how it is composed, how it moves, how it is validated,
+and how a renderer is asked to draw it. It does not decide what to say, who to say it to,
+whether it may be published, or where it goes.
+
+## Boundaries that are not negotiable
+
+**No framework, no ORM, no HTTP client, no provider SDK.** The only dependencies are `php` and
+`sifrious/reference-contract`. If a class here needs Laravel or a network, the design is wrong.
+
+**No Burdgeon tokens.** Burdgeon owns two token systems Rabo must never absorb: the semantic
+interface palette (`--color-surface-*`, `--tone-*`) and the product identity palette
+(`--product-*`, where `rabo` is itself a colour). A Brand Library is customer-facing brand
+vocabulary. Reusing those names would collapse a boundary that ADR-002 exists to hold.
+
+**No upstream or downstream state.** `ReferenceRole` records which package owns each role and
+rejects anything else. Rabo holds references and resolves none of them. It never caches a
+treatment's text, evidence bytes, or a review's verdict — those belong to packages that can
+change them without telling Rabo.
+
+**No renderer vocabulary in the domain.** `Brand`, `Composition`, and `Motion` contain no mention
+of SVG, `resvg`, or `ffmpeg`. Those words appear only under `src/Renderer/`.
+
+**Rendered artifacts never replace compositions.** An artifact is an output. Editing continues
+against the scene.
+
+## Things that will look like bugs and are not
+
+**Text measurement is an estimate.** `Brand\TextFlow` multiplies a brand-declared advance ratio by
+character count. There is no font engine and no font file. It is deliberately conservative — see
+`docs/assumptions.md`. Validation and the painter share the one implementation, and they must
+continue to: they were once separate, and a card passed validation then rendered with its last
+word silently dropped.
+
+**Maps are `stdClass` after `toArray()`.** Manifests emit maps as JSON objects so they stay
+readable and avoid the `[]` versus `{}` ambiguity. That makes `toArray() === toArray()` always
+false for equal documents. Use `canonical()` and `equals()`.
+
+**`maxLines` is an allowance, not a requirement.** Text that fits on one line inside a two-line box
+is correct. Height is measured against lines actually needed.
+
+**The MP4 has no golden fixture and reports `deterministic: false`.** MP4 bytes vary across encoder
+builds. The frame SVGs feeding it are reproducible and are what the tests assert on.
+
+**`FrozenClock` is the default in the CLI.** Artifacts contain no timestamps, so renders are
+byte-identical across runs. A timestamp anywhere in an artifact would destroy that.
+
+**Floats are formatted with `%.2F`.** The uppercase form. Lowercase `%f` is locale-dependent and
+would emit a comma decimal separator under some locales, silently producing different bytes on
+different machines.
+
+## Refusals, not warnings
+
+A composition that fails validation does not render. Both SVG renderers validate first and return
+`RenderOutcome::refused()` with a report and no artifact.
+
+`RenderOutcome` has four states and they are not interchangeable. A refusal will never succeed on
+retry. A transient failure probably will. An acknowledgement means the caller does not know
+whether work happened, so resubmitting may duplicate it. Do not collapse these.
+
+A missing `resvg` or `ffmpeg` is a refusal with `RABO_RENDERER_CAPABILITY_UNSUPPORTED`, not an
+exception. The request is fine; this renderer cannot serve it.
+
+Every `ValidationIssue` carries a machine code, the exact path at fault, and a remediation hint.
+Consumers match on codes. Never make prose the only contract.
+
+## Tests
+
+`composer test`. Fixtures are the same files a reviewer reads: `tests/` loads
+`fixtures/agent-completion-verified-completion` and `fixtures/failing/*` directly, and
+`tests/Cli/CommandTest.php` runs every command `docs/human-verification.md` documents, so the
+docs cannot drift from the package.
+
+Adding a validation code means adding a small bundle under `fixtures/failing/` that breaks that
+rule and nothing else. `ValidationCoverageTest` asserts each bundle isolates exactly one code.
+
+Changing a renderer changes the committed artifacts under `expected/`. Regenerate them with
+`bin/rabo render` and read the diff before committing it — that diff is the review.

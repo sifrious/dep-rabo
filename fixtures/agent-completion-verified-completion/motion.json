@@ -1,0 +1,108 @@
+{
+    "contract": "sifrious.rabo.motion-composition",
+    "contract_version": 1,
+    "id": "agent-completion-verified-completion-motion",
+    "version": 1,
+    "composition_id": "agent-completion-verified-completion",
+    "scene": "source",
+    "description": "Fifteen seconds in five beats: a completion claim is reframed as a claim, checked, evidenced, and only then called verified.",
+    "reduced_motion": "final_state",
+    "timeline": {
+        "contract": "sifrious.rabo.timeline",
+        "contract_version": 1,
+        "duration_ms": 15000,
+        "tracks": [
+            {
+                "name": "links",
+                "cues": [
+                    {
+                        "id": "reveal-link-1",
+                        "node": "link-1",
+                        "effect": "reveal",
+                        "start_ms": 2800,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": null
+                    },
+                    {
+                        "id": "reveal-link-2",
+                        "node": "link-2",
+                        "effect": "reveal",
+                        "start_ms": 5800,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": null
+                    },
+                    {
+                        "id": "reveal-link-3",
+                        "node": "link-3",
+                        "effect": "reveal",
+                        "start_ms": 9800,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": null
+                    },
+                    {
+                        "id": "reveal-link-4",
+                        "node": "link-4",
+                        "effect": "reveal",
+                        "start_ms": 12800,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": null
+                    }
+                ]
+            },
+            {
+                "name": "steps",
+                "cues": [
+                    {
+                        "id": "reveal-done",
+                        "node": "step-done",
+                        "effect": "reveal",
+                        "start_ms": 0,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": "The agent reports \"Done\"."
+                    },
+                    {
+                        "id": "reveal-claim",
+                        "node": "step-claim",
+                        "effect": "reveal",
+                        "start_ms": 3000,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": "That report is a claim, not a result."
+                    },
+                    {
+                        "id": "reveal-checks",
+                        "node": "step-checks",
+                        "effect": "reveal",
+                        "start_ms": 6000,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": "Independent checks run, by something that is not the author."
+                    },
+                    {
+                        "id": "reveal-evidence",
+                        "node": "step-evidence",
+                        "effect": "reveal",
+                        "start_ms": 10000,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": "Evidence appears: commit SHA, exit code, artifact digest."
+                    },
+                    {
+                        "id": "reveal-verified",
+                        "node": "step-verified",
+                        "effect": "reveal",
+                        "start_ms": 13000,
+                        "duration_ms": 340,
+                        "easing": "quiet",
+                        "caption": "Only now is completion verified."
+                    }
+                ]
+            }
+        ]
+    }
+}

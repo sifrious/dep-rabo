@@ -1,0 +1,26 @@
+{
+    "contract": "sifrious.rabo.asset-set",
+    "contract_version": 1,
+    "assets": [
+        {
+            "contract": "sifrious.rabo.asset",
+            "contract_version": 1,
+            "digest": "sha256:1d6ea82dea9552c378fa53f2bec0a5788bf6b0ae9a733b2eb8696f54538830a7",
+            "media_type": "image/svg+xml",
+            "byte_length": 114,
+            "rights": {
+                "holder": "sifrious",
+                "license": "MIT",
+                "attribution_required": false,
+                "terms": null
+            },
+            "dimensions": {
+                "width": 48,
+                "height": 48
+            },
+            "derivation": null,
+            "provenance": null,
+            "label": null
+        }
+    ]
+}
