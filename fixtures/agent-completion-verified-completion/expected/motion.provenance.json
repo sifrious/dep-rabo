@@ -1,0 +1,90 @@
+{
+    "contract": "sifrious.rabo.render-provenance",
+    "contract_version": 1,
+    "composition": {
+        "id": "agent-completion-verified-completion",
+        "version": 1,
+        "key": "ec248ee8a83665b628eddb02f86fe0648452586f92c0e130ecc4f6bbfd0a6e31",
+        "scene": "source"
+    },
+    "brand": {
+        "id": "burg",
+        "version": "1.0.0",
+        "key": "c6366911780c605dd9c2f1b81665faa406bed497190fbce7180d3012f37cc23d"
+    },
+    "assets": [
+        "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
+        "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9"
+    ],
+    "renderer": {
+        "id": "rabo-svg-motion",
+        "version": "1.0.0",
+        "deterministic": true,
+        "tool_versions": {
+            "motion_composition": "fea2f40875acf0449591c9e4d53cf31c96d7969257841cc73ad66a52eb4d6a7b",
+            "reduced_motion": "false"
+        }
+    },
+    "request_digest": "04251a3fb0139fb803011c314c23c65902bda62a520ec911f01bfe12e23efc51",
+    "output_digest": "sha256:5d3c4637873f230a5d236cbe948bb25097a5b8a986ae90bc3bd5241c1142572a",
+    "references": {
+        "contract": "sifrious.rabo.composition-references",
+        "contract_version": 1,
+        "roles": {
+            "content_plan": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "content-plan",
+                    "id": "plan_verified_completion",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "evidence": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/digory",
+                    "type": "document",
+                    "id": "handoff_instructions_required_agent_completion_report",
+                    "object_version": "sha256:0f0a",
+                    "provenance": null
+                },
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "linear_rabo_tickets_in_review_without_attachments",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "storyboard": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "storyboard",
+                    "id": "storyboard_five_beat",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "treatment": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "treatment",
+                    "id": "treatment_agent_completion_v1",
+                    "object_version": "1",
+                    "provenance": null
+                }
+            ]
+        }
+    },
+    "produced_at": "2026-08-29T00:00:00+00:00"
+}

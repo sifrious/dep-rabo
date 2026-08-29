@@ -96,6 +96,22 @@ final readonly class CompositionReferences implements JsonSerializable
         return new self($byRole);
     }
 
+    /**
+     * The canonical serialization.
+     *
+     * Roles are emitted as a JSON object, so compare on this rather than on toArray(): two
+     * equal envelopes hold distinct stdClass maps and are never identical by ===.
+     */
+    public function canonical(): string
+    {
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+    }
+
+    public function equals(self $other): bool
+    {
+        return $this->canonical() === $other->canonical();
+    }
+
     /** @return array<string,mixed> */
     public function toArray(): array
     {

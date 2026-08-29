@@ -1,0 +1,101 @@
+{
+    "contract": "sifrious.rabo.composition",
+    "contract_version": 1,
+    "id": "motion-cue-past-end",
+    "version": 1,
+    "title": null,
+    "brand_id": "minimal",
+    "brand_version": "1.0.0",
+    "scene": {
+        "contract": "sifrious.rabo.scene",
+        "contract_version": 1,
+        "id": "minimal",
+        "canvas": {
+            "width": 600,
+            "height": 300
+        },
+        "padding": "lg",
+        "align_horizontal": "center",
+        "align_vertical": "center",
+        "background": "surface",
+        "description": "A minimal scene used to exercise one validation rule.",
+        "root": {
+            "type": "stack",
+            "id": "root",
+            "direction": "vertical",
+            "gap": "md",
+            "align": "start",
+            "distribute": "start",
+            "style": {
+                "fill": null,
+                "text": null,
+                "type_role": null,
+                "stroke": null,
+                "stroke_width": null,
+                "radius": null,
+                "padding": null,
+                "semantic": null,
+                "opacity": 1
+            },
+            "children": [
+                {
+                    "type": "text",
+                    "id": "headline",
+                    "content": "A timeline shorter than its cue.",
+                    "size": {
+                        "width": 520,
+                        "height": 24
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "body",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 1,
+                    "essential": true,
+                    "text_alternative": null
+                }
+            ]
+        },
+        "connectors": [],
+        "reading_order": [
+            "headline"
+        ]
+    },
+    "variants": [],
+    "references": {
+        "contract": "sifrious.rabo.composition-references",
+        "contract_version": 1,
+        "roles": {
+            "evidence": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/digory",
+                    "type": "document",
+                    "id": "minimal",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "treatment": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "treatment",
+                    "id": "minimal",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ]
+        }
+    }
+}

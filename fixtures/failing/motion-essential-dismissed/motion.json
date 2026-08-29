@@ -1,0 +1,31 @@
+{
+    "contract": "sifrious.rabo.motion-composition",
+    "contract_version": 1,
+    "id": "motion-essential-dismissed-motion",
+    "version": 1,
+    "composition_id": "motion-essential-dismissed",
+    "scene": "source",
+    "description": "Essential text that only exists while the animation plays.",
+    "reduced_motion": "final_state",
+    "timeline": {
+        "contract": "sifrious.rabo.timeline",
+        "contract_version": 1,
+        "duration_ms": 6000,
+        "tracks": [
+            {
+                "name": "main",
+                "cues": [
+                    {
+                        "id": "take-it-away",
+                        "node": "headline",
+                        "effect": "dismiss",
+                        "start_ms": 1000,
+                        "duration_ms": 500,
+                        "easing": "quiet",
+                        "caption": null
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="rabo-title rabo-desc">
+  <title id="rabo-title">Agent completion is not verified completion</title>
+  <desc id="rabo-desc">A five step chain reading: the agent reports &quot;Done&quot;; that report is a claim; independent checks run; evidence appears; only then is completion verified. RABO / EVIDENCE Agent completion ≠ verified completion &quot;Done&quot; The agent reports that it finished. A claim An assertion, not yet a result. Checks run Run by something that is not the author. Evidence Commit SHA, exit code, digest. Verified The claim now carries a warrant. Evidence: six RABO tickets sat in In Review with no attached verification, against a handoff standard requiring commit SHAs and per-criterion results.</desc>
+  <defs>
+    <marker id="arrow-ef9f27" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#ef9f27"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1200" height="630" fill="#f1efe8"/>
+  <g id="root">
+    <g id="header">
+      <g id="mark">
+        <title>burg</title>
+        <image x="36" y="133" width="44" height="44" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzIiIGhlaWdodD0iNzIiIHZpZXdCb3g9IjAgMCA3MiA3MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImJ1cmcgbG9nbyBtYXJrOiBhbiBhbWJlciBzdW4gY3Jvc3NlZCBieSBhIHRlYWwgZ3VsbCwgd2luZ3MgY2FtYmVyZWQgaW4gdHdvIHRvbmVzIj4KICA8Y2lyY2xlIGN4PSIzNiIgY3k9IjI2IiByPSIxNSIgZmlsbD0iI0VGOUYyNyI+PC9jaXJjbGU+CiAgPHBhdGggZD0iTTM2IDQ3IEwxNyA0MCBMMzYgNTYgWiIgZmlsbD0iIzFEOUU3NSI+PC9wYXRoPgogIDxwYXRoIGQ9Ik0xNyA0MCBMMTMgNDUgTDM2IDU2IFoiIGZpbGw9IiMwRjZFNTYiPjwvcGF0aD4KICA8cGF0aCBkPSJNMzYgNDcgTDU1IDQwIEwzNiA1NiBaIiBmaWxsPSIjMUQ5RTc1Ij48L3BhdGg+CiAgPHBhdGggZD0iTTU1IDQwIEw1OSA0NSBMMzYgNTYgWiIgZmlsbD0iIzBGNkU1NiI+PC9wYXRoPgo8L3N2Zz4=" aria-label="burg"/>
+      </g>
+      <g id="eyebrow">
+        <text x="104" y="160.38" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="14" font-weight="500" letter-spacing="0.56" text-anchor="start" xml:space="preserve">RABO / EVIDENCE</text>
+      </g>
+    </g>
+    <g id="headline">
+      <text x="36" y="251.12" fill="#2a1700" font-family="&apos;Space Grotesk&apos;, &apos;Hanken Grotesk&apos;, system-ui, sans-serif" font-size="50" font-weight="700" letter-spacing="-1" text-anchor="start" xml:space="preserve">Agent completion ≠ verified completion</text>
+    </g>
+    <g id="flow">
+      <g id="step-done">
+        <rect x="36" y="305" width="200" height="116" rx="12" fill="#faeeda" stroke="#d8d2c2" stroke-width="1"/>
+        <g id="step-done-label">
+          <text x="52" y="342.06" fill="#8f6011" font-family="&apos;JetBrains Mono&apos;, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="600" text-anchor="start" xml:space="preserve">&quot;Done&quot;</text>
+        </g>
+        <g id="step-done-detail">
+          <text x="52" y="375.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">The agent reports</text>
+          <text x="52" y="399.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">that it finished.</text>
+        </g>
+      </g>
+      <g id="step-claim">
+        <rect x="268" y="305" width="200" height="116" rx="12" fill="#fbfaf6" stroke="#d8d2c2" stroke-width="1"/>
+        <g id="step-claim-label">
+          <text x="284" y="340.97" fill="#412402" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="20" font-weight="600" text-anchor="start" xml:space="preserve">A claim</text>
+        </g>
+        <g id="step-claim-detail">
+          <text x="284" y="375.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">An assertion, not yet</text>
+          <text x="284" y="399.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">a result.</text>
+        </g>
+      </g>
+      <g id="step-checks">
+        <rect x="500" y="305" width="200" height="116" rx="12" fill="#fbfaf6" stroke="#d8d2c2" stroke-width="1"/>
+        <g id="step-checks-label">
+          <text x="516" y="340.97" fill="#412402" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="20" font-weight="600" text-anchor="start" xml:space="preserve">Checks run</text>
+        </g>
+        <g id="step-checks-detail">
+          <text x="516" y="375.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">Run by something that</text>
+          <text x="516" y="399.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">is not the author.</text>
+        </g>
+      </g>
+      <g id="step-evidence">
+        <rect x="732" y="305" width="200" height="116" rx="12" fill="#fbfaf6" stroke="#d8d2c2" stroke-width="1"/>
+        <g id="step-evidence-label">
+          <text x="748" y="340.97" fill="#412402" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="20" font-weight="600" text-anchor="start" xml:space="preserve">Evidence</text>
+        </g>
+        <g id="step-evidence-detail">
+          <text x="748" y="375.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">Commit SHA, exit</text>
+          <text x="748" y="399.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">code, digest.</text>
+        </g>
+      </g>
+      <g id="step-verified">
+        <rect x="964" y="305" width="200" height="116" rx="12" fill="#e1f5ee" stroke="#d8d2c2" stroke-width="1"/>
+        <g id="step-verified-label">
+          <text x="980" y="340.97" fill="#085041" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="20" font-weight="600" text-anchor="start" xml:space="preserve">Verified</text>
+        </g>
+        <g id="step-verified-detail">
+          <text x="980" y="375.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">The claim now carries</text>
+          <text x="980" y="399.72" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="16" font-weight="400" text-anchor="start" xml:space="preserve">a warrant.</text>
+        </g>
+      </g>
+    </g>
+    <g id="evidence-note">
+      <text x="36" y="469.38" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="14" font-weight="500" letter-spacing="0.56" text-anchor="start" xml:space="preserve">Evidence: six RABO tickets sat in In Review with no attached verification, against a handoff standard requiring commit SHAs and</text>
+      <text x="36" y="490.38" fill="#6e6048" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="14" font-weight="500" letter-spacing="0.56" text-anchor="start" xml:space="preserve">per-criterion results.</text>
+    </g>
+  </g>
+  <g id="link-1">
+    <line x1="236" y1="363" x2="262" y2="363" stroke="#ef9f27" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-ef9f27)"/>
+    <title>&quot;Done&quot; leads to A claim</title>
+  </g>
+  <g id="link-2">
+    <line x1="468" y1="363" x2="494" y2="363" stroke="#ef9f27" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-ef9f27)"/>
+    <title>A claim leads to Checks run</title>
+  </g>
+  <g id="link-3">
+    <line x1="700" y1="363" x2="726" y2="363" stroke="#ef9f27" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-ef9f27)"/>
+    <title>Checks run leads to Evidence</title>
+  </g>
+  <g id="link-4">
+    <line x1="932" y1="363" x2="958" y2="363" stroke="#ef9f27" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-ef9f27)"/>
+    <title>Evidence leads to Verified</title>
+  </g>
+</svg>

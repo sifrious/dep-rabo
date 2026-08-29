@@ -1,0 +1,128 @@
+{
+    "contract": "sifrious.rabo.brand-library",
+    "contract_version": 1,
+    "id": "minimal",
+    "version": "1.0.0",
+    "name": "Minimal",
+    "colors": {
+        "tokens": [
+            {
+                "name": "faint",
+                "hex": "#d8d2c2",
+                "display": null,
+                "description": null
+            },
+            {
+                "name": "ink",
+                "hex": "#2a1700",
+                "display": null,
+                "description": null
+            },
+            {
+                "name": "paper",
+                "hex": "#f1efe8",
+                "display": null,
+                "description": null
+            }
+        ],
+        "roles": {
+            "faint": "faint",
+            "surface": "paper",
+            "text-strong": "ink"
+        }
+    },
+    "typography": {
+        "families": [
+            {
+                "name": "Hanken Grotesk",
+                "fallbacks": [
+                    "system-ui",
+                    "sans-serif"
+                ],
+                "weights": [
+                    400,
+                    600
+                ],
+                "advance_ratios": {
+                    "400": 0.5,
+                    "600": 0.525
+                }
+            }
+        ],
+        "roles": [
+            {
+                "name": "body",
+                "family": "Hanken Grotesk",
+                "weight": 400,
+                "size_px": 16,
+                "line_height": 1.5,
+                "tracking": 0
+            },
+            {
+                "name": "label",
+                "family": "Hanken Grotesk",
+                "weight": 600,
+                "size_px": 20,
+                "line_height": 1.28,
+                "tracking": 0
+            }
+        ]
+    },
+    "spacing": {
+        "name": "spacing",
+        "steps": {
+            "lg": 24,
+            "md": 16,
+            "none": 0,
+            "sm": 8
+        }
+    },
+    "radii": {
+        "name": "radii",
+        "steps": {
+            "md": 8,
+            "none": 0
+        }
+    },
+    "strokes": {
+        "name": "strokes",
+        "steps": {
+            "hair": 1
+        }
+    },
+    "motion": {
+        "durations_ms": {
+            "base": 200,
+            "fast": 120,
+            "slow": 340
+        },
+        "easings": {
+            "linear": "linear",
+            "quiet": "cubic-bezier(0.2, 0, 0, 1)"
+        },
+        "default_reduced_motion_strategy": "final_state"
+    },
+    "accessibility": {
+        "min_contrast_normal": 4.5,
+        "min_contrast_large": 3,
+        "require_text_alternatives": true,
+        "require_reduced_motion_variant": true,
+        "forbid_color_only_encoding": true
+    },
+    "marks": [
+        {
+            "id": "ghost",
+            "label": "A mark with no bytes",
+            "asset": "sha256:a12487876e0563da69cd4ffa19afc079899d9dba1d5e0ec3ca7da9d6a205a503",
+            "min_width_px": 16,
+            "clearspace_ratio": 0,
+            "variants": {}
+        }
+    ],
+    "templates": [],
+    "compatible_renderers": [
+        "rabo-svg-motion",
+        "rabo-svg-static"
+    ],
+    "provenance": null
+}
