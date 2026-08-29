@@ -1,0 +1,312 @@
+{
+    "contract": "sifrious.rabo.brand-library",
+    "contract_version": 1,
+    "id": "burg",
+    "version": "1.0.0",
+    "name": "Burg",
+    "colors": {
+        "tokens": [
+            {
+                "name": "bird.100",
+                "hex": "#e1f5ee",
+                "display": null,
+                "description": "Bird light fill"
+            },
+            {
+                "name": "bird.500",
+                "hex": "#1d9e75",
+                "display": null,
+                "description": "Brand Bird, the blessing hue"
+            },
+            {
+                "name": "bird.800",
+                "hex": "#085041",
+                "display": null,
+                "description": "Bird ink on light Bird fills"
+            },
+            {
+                "name": "lion.100",
+                "hex": "#faeeda",
+                "display": null,
+                "description": "Lion light fill"
+            },
+            {
+                "name": "lion.500",
+                "hex": "#ef9f27",
+                "display": null,
+                "description": "Brand Lion, the judgment hue"
+            },
+            {
+                "name": "lion.700",
+                "hex": "#8f6011",
+                "display": null,
+                "description": "Lion ink on light Lion fills"
+            },
+            {
+                "name": "mane.800",
+                "hex": "#412402",
+                "display": null,
+                "description": "Brand Mane"
+            },
+            {
+                "name": "mane.900",
+                "hex": "#2a1700",
+                "display": null,
+                "description": "Deepest ink"
+            },
+            {
+                "name": "parchment.200",
+                "hex": "#f1efe8",
+                "display": null,
+                "description": "Brand Parchment, the base surface"
+            },
+            {
+                "name": "parchment.300",
+                "hex": "#e8e4d8",
+                "display": null,
+                "description": null
+            },
+            {
+                "name": "parchment.400",
+                "hex": "#d8d2c2",
+                "display": null,
+                "description": "Hairline borders"
+            },
+            {
+                "name": "parchment.50",
+                "hex": "#fbfaf6",
+                "display": "oklch(0.985 0.004 95)",
+                "description": "Brightest leaf"
+            },
+            {
+                "name": "warm.600",
+                "hex": "#6e6048",
+                "display": null,
+                "description": "Muted body and captions"
+            }
+        ],
+        "roles": {
+            "accent": "lion.500",
+            "accent-ink": "lion.700",
+            "accent-soft": "lion.100",
+            "border": "parchment.400",
+            "good": "bird.500",
+            "good-ink": "bird.800",
+            "good-soft": "bird.100",
+            "surface": "parchment.200",
+            "surface-inset": "parchment.300",
+            "surface-raised": "parchment.50",
+            "text-body": "mane.800",
+            "text-muted": "warm.600",
+            "text-strong": "mane.900"
+        }
+    },
+    "typography": {
+        "families": [
+            {
+                "name": "Hanken Grotesk",
+                "fallbacks": [
+                    "system-ui",
+                    "-apple-system",
+                    "Segoe UI",
+                    "sans-serif"
+                ],
+                "weights": [
+                    400,
+                    500,
+                    600
+                ],
+                "advance_ratios": {
+                    "400": 0.5,
+                    "500": 0.51,
+                    "600": 0.525
+                }
+            },
+            {
+                "name": "JetBrains Mono",
+                "fallbacks": [
+                    "SFMono-Regular",
+                    "Menlo",
+                    "monospace"
+                ],
+                "weights": [
+                    400,
+                    600
+                ],
+                "advance_ratios": {
+                    "400": 0.6,
+                    "600": 0.6
+                }
+            },
+            {
+                "name": "Space Grotesk",
+                "fallbacks": [
+                    "Hanken Grotesk",
+                    "system-ui",
+                    "sans-serif"
+                ],
+                "weights": [
+                    500,
+                    700
+                ],
+                "advance_ratios": {
+                    "500": 0.52,
+                    "700": 0.545
+                }
+            }
+        ],
+        "roles": [
+            {
+                "name": "code",
+                "family": "JetBrains Mono",
+                "weight": 600,
+                "size_px": 18,
+                "line_height": 1.5,
+                "tracking": 0
+            },
+            {
+                "name": "headline",
+                "family": "Space Grotesk",
+                "weight": 700,
+                "size_px": 50,
+                "line_height": 1.08,
+                "tracking": -0.02
+            },
+            {
+                "name": "meta",
+                "family": "Hanken Grotesk",
+                "weight": 500,
+                "size_px": 14,
+                "line_height": 1.5,
+                "tracking": 0.04
+            },
+            {
+                "name": "step-detail",
+                "family": "Hanken Grotesk",
+                "weight": 400,
+                "size_px": 16,
+                "line_height": 1.5,
+                "tracking": 0
+            },
+            {
+                "name": "step-label",
+                "family": "Hanken Grotesk",
+                "weight": 600,
+                "size_px": 20,
+                "line_height": 1.28,
+                "tracking": 0
+            },
+            {
+                "name": "subhead",
+                "family": "Hanken Grotesk",
+                "weight": 500,
+                "size_px": 22,
+                "line_height": 1.28,
+                "tracking": -0.01
+            }
+        ]
+    },
+    "spacing": {
+        "name": "spacing",
+        "steps": {
+            "lg": 24,
+            "md": 16,
+            "none": 0,
+            "sm": 8,
+            "xl": 32,
+            "xs": 4,
+            "xxl": 48,
+            "xxxl": 64
+        }
+    },
+    "radii": {
+        "name": "radii",
+        "steps": {
+            "full": 999,
+            "lg": 12,
+            "md": 8,
+            "none": 0,
+            "sm": 6,
+            "xl": 16,
+            "xs": 4
+        }
+    },
+    "strokes": {
+        "name": "strokes",
+        "steps": {
+            "hair": 1,
+            "heavy": 3,
+            "rule": 1.5,
+            "thick": 2
+        }
+    },
+    "motion": {
+        "durations_ms": {
+            "base": 200,
+            "beat": 3000,
+            "fast": 120,
+            "slow": 340
+        },
+        "easings": {
+            "linear": "linear",
+            "out": "cubic-bezier(0.16, 1, 0.3, 1)",
+            "quiet": "cubic-bezier(0.2, 0, 0, 1)"
+        },
+        "default_reduced_motion_strategy": "final_state"
+    },
+    "accessibility": {
+        "min_contrast_normal": 4.5,
+        "min_contrast_large": 3,
+        "require_text_alternatives": true,
+        "require_reduced_motion_variant": true,
+        "forbid_color_only_encoding": true
+    },
+    "marks": [
+        {
+            "id": "burg",
+            "label": "burg mark",
+            "asset": "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
+            "min_width_px": 24,
+            "clearspace_ratio": 0.5,
+            "variants": {
+                "mono": "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9"
+            }
+        }
+    ],
+    "templates": [
+        {
+            "id": "evidence-diagram",
+            "kind": "static",
+            "label": "Evidence diagram",
+            "canvas": {
+                "width": 1200,
+                "height": 630
+            },
+            "required_roles": [
+                "headline",
+                "flow"
+            ],
+            "description": "A headline over a left-to-right chain of evidence steps."
+        },
+        {
+            "id": "evidence-motion",
+            "kind": "scene",
+            "label": "Evidence motion",
+            "canvas": {
+                "width": 1200,
+                "height": 630
+            },
+            "required_roles": [
+                "headline",
+                "flow"
+            ],
+            "description": "The evidence diagram revealed one step at a time."
+        }
+    ],
+    "compatible_renderers": [
+        "rabo-ffmpeg-motion",
+        "rabo-svg-motion",
+        "rabo-svg-static"
+    ],
+    "provenance": null
+}

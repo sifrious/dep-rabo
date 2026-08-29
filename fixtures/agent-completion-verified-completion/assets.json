@@ -1,0 +1,50 @@
+{
+    "contract": "sifrious.rabo.asset-set",
+    "contract_version": 1,
+    "assets": [
+        {
+            "contract": "sifrious.rabo.asset",
+            "contract_version": 1,
+            "digest": "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
+            "media_type": "image/svg+xml",
+            "byte_length": 485,
+            "rights": {
+                "holder": "sifrious",
+                "license": "MIT",
+                "attribution_required": false,
+                "terms": "Ships in sifrious/official-burd-design under an MIT licence."
+            },
+            "dimensions": {
+                "width": 72,
+                "height": 72
+            },
+            "derivation": null,
+            "provenance": null,
+            "label": "burg mark"
+        },
+        {
+            "contract": "sifrious.rabo.asset",
+            "contract_version": 1,
+            "digest": "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9",
+            "media_type": "image/svg+xml",
+            "byte_length": 537,
+            "rights": {
+                "holder": "sifrious",
+                "license": "MIT",
+                "attribution_required": false,
+                "terms": "Ships in sifrious/official-burd-design under an MIT licence."
+            },
+            "dimensions": {
+                "width": 72,
+                "height": 72
+            },
+            "derivation": {
+                "source": "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
+                "transform": "single-colour",
+                "tool": "official-burd-design"
+            },
+            "provenance": null,
+            "label": "burg mark, single colour"
+        }
+    ]
+}
