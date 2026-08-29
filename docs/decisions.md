@@ -1,0 +1,149 @@
+# Decision register
+
+Decisions taken while implementing MME-1864 and its children. Each entry records the decision,
+why, and what was rejected.
+
+## D-001 — Colours are canonically sRGB hex
+
+**Decision.** `ColorToken` requires a six-digit lowercase sRGB hex value. An optional `display`
+string carries the authoring-space form (oklch, lab) for round-tripping to design tools, and no
+Rabo code computes with it.
+
+**Rationale.** Contrast validation must be exact and identical on every machine and in every
+renderer. WCAG relative luminance is defined over sRGB; computing it from an oklch string means
+shipping a colour-space conversion whose rounding becomes part of a pass/fail decision.
+
+**Rejected.** oklch as the canonical form, matching the house CSS. It would have made the manifest
+prettier and every contrast result slightly arguable.
+
+## D-002 — SVG is a renderer, never the domain model
+
+**Decision.** The composition model knows nothing about SVG. Three adapters implement `Renderer`;
+none of their vocabulary appears in `Brand`, `Composition`, or `Motion`.
+
+**Rationale.** The whole point of the composition model is that a headline can be edited without
+touching a rendered file. If SVG structure leaked into the domain, "edit the scene" and "edit the
+output" would slowly become the same operation.
+
+**Rejected.** Generating SVG directly from a builder API. Faster to a first picture, and it would
+have made the second output format a rewrite.
+
+## D-003 — Motion is a timeline over the existing scene
+
+**Decision.** A `MotionComposition` references a composition and a scene by identifier and adds
+cues over nodes that scene already contains. It carries no geometry and no copy of its own.
+
+**Rationale.** The still version and the moving version have to say the same thing. Two separate
+documents drift the moment someone edits one headline.
+
+**Rejected.** A scene-per-beat storyboard, which is how a video tool would model it, and which
+would have made "change the headline" a five-place edit.
+
+## D-004 — The reduced-motion alternative is derived, not authored
+
+**Decision.** `ReducedMotionStrategy` is a required field; the alternative timeline is computed
+from the source timeline.
+
+**Rationale.** An accessible alternative that has to be remembered will eventually be forgotten,
+and one authored separately will eventually disagree with the original. Deriving it makes both
+failures unrepresentable.
+
+**Rejected.** An optional `reduced_motion` composition reference. Honest about the work involved,
+and it would have made the accessible path the one that rots.
+
+## D-005 — Text wrapping lives beside the brand, not inside a renderer
+
+**Decision.** `Brand\TextFlow` performs greedy word wrapping from the brand's declared advance
+ratios. Both `TextOverflowRule` and `ScenePainter` use it.
+
+**Rationale.** This was found the hard way. The rule originally divided box width by allowed
+lines while the renderer broke on word boundaries; a card passed validation and rendered with its
+last word silently dropped. Wrapping is one algorithm or it is two answers.
+
+**Rejected.** Keeping a wrapper in the SVG renderer. It read more naturally there and was wrong.
+
+## D-006 — Rabo has no font engine, and says so
+
+**Decision.** Font families declare average advance-width ratios per weight. Overflow is estimated
+from those, and `docs/assumptions.md` records that this is an estimate.
+
+**Rationale.** A real shaping engine means a font-file dependency, per-platform variation, and a
+much larger package, in exchange for precision that a validation gate does not need. A declared,
+brand-owned estimate is deterministic and inspectable.
+
+**Rejected.** Shipping a shaper, or measuring nothing at all. The first is disproportionate; the
+second leaves overflow to be discovered in review.
+
+## D-007 — Four render outcomes, not two
+
+**Decision.** `RenderOutcome` distinguishes succeeded, refused, failed transiently, and
+acknowledged, with a private constructor and named factories fixing which fields each may carry.
+
+**Rationale.** A caller must treat them differently: a refusal will never succeed on retry, a
+transient failure probably will, and an acknowledgement means the caller does not know whether
+work happened, so resubmitting may duplicate it. Collapsing these into a boolean pushes that
+judgement onto every consumer.
+
+**Rejected.** `?RenderArtifact` with an exception for failure, which cannot express the difference
+between "will never work" and "try again in thirty seconds".
+
+## D-008 — An unsatisfiable brand pin blocks; ordinary drift warns
+
+**Decision.** `RABO_BRAND_DRIFT` defaults to a warning, and `BrandCompatibilityRule` raises it at
+error severity when the pinned brand cannot be satisfied.
+
+**Rationale.** `RenderRequest` already refuses to construct against an unsatisfiable pin. Reporting
+the same condition as a non-blocking warning would have validation disagree with rendering.
+
+**Rejected.** Making every drift an error, which would leave no way to say "this is still fine, but
+it is not the current brand".
+
+## D-009 — MP4 is an adapter, and its non-determinism is declared
+
+**Decision.** The `ffmpeg` adapter samples the timeline into still SVGs through the same frame
+renderer the tests assert on, rasterizes each with `resvg`, and encodes the sequence. It reports
+`deterministic: false` and records both tool versions in provenance. The MP4 is not a committed
+artifact.
+
+**Rationale.** MP4 bytes vary across encoder builds. Claiming reproducibility that cannot be
+verified would undermine the one guarantee this package is trying to demonstrate. Keeping the
+frames reproducible preserves the guarantee where it can actually hold.
+
+**Rejected.** Committing an MP4 as a golden file, and claiming determinism the encoder does not
+provide.
+
+## D-010 — Missing binaries are a refusal, not a crash
+
+**Decision.** `BinaryProbe` is an interface. When `resvg` or `ffmpeg` is absent the adapter
+declares no capability and returns `RABO_RENDERER_CAPABILITY_UNSUPPORTED`.
+
+**Rationale.** The request is well-formed; this renderer simply cannot serve it, and the caller
+should ask a different one. Making it an interface also lets all four outcome states be tested
+without installing or removing anything.
+
+**Rejected.** Throwing on a missing binary, which turns a routing decision into an incident.
+
+## D-011 — A variant may re-orient and re-align, and nothing else
+
+**Decision.** `VariantSpec` carries a canvas, per-stack direction overrides, per-stack alignment
+overrides, and an optional padding step. It cannot change text, styles, or sizes.
+
+**Rationale.** A variant that could change copy would be a second composition wearing the first
+one's name. Restricting it to layout is what guarantees the square and landscape outputs say the
+same thing — which is asserted directly in `CompositionContractTest`.
+
+**Rejected.** Arbitrary per-variant node overrides. More flexible, and it would have made "the
+variants have drifted" a thing that can happen.
+
+## D-012 — Equality is canonical JSON, not array identity
+
+**Decision.** `BrandLibrary`, `Composition`, `Scene`, and `CompositionReferences` expose
+`canonical()` and `equals()`; comparisons use those.
+
+**Rationale.** Maps that may be empty are emitted as JSON objects via `(object)` casts, which keeps
+the manifests readable and avoids the empty-map ambiguity between `[]` and `{}`. Two equal
+documents therefore hold distinct `stdClass` instances and are never identical by `===`, so the
+house `toArray() === toArray()` idiom silently reports inequality.
+
+**Rejected.** Emitting maps as sorted key/value pair lists, which would restore `===` at the cost
+of a manifest no one wants to read or hand-edit.
