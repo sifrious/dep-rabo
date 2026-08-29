@@ -80,9 +80,14 @@ records.` Re-render to restore.
 ```sh
 for d in fixtures/failing/*/; do
   php bin/rabo validate "$d" >/dev/null 2>&1
-  echo "$(basename "$d") exit=$?"
+  exit_code=$?
+  echo "$(basename "$d") exit=$exit_code"
 done
 ```
+
+Capture `$?` into a variable before the `echo`. Writing `echo "$(basename "$d") exit=$?"` reports
+the exit code of `basename`, which is always `0`, and the loop then cheerfully claims every fixture
+passed. Avoid the name `status`, which is read-only in zsh.
 
 **Expect:** exit `1` for all twelve. Each bundle isolates exactly one code:
 
