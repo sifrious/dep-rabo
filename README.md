@@ -26,6 +26,10 @@ ordering and reduced-motion derivation, provenance, and the CLI. See
 [docs/human-verification.md](docs/human-verification.md) for the commands to run by hand and
 what each should print.
 
+The same suite runs in CI on every push and pull request, across PHP 8.3 and 8.4, on a runner with
+neither `resvg` nor `ffmpeg` installed — which also proves the MP4 adapter refuses deterministically
+rather than crashing when its tools are absent.
+
 ## The first proof
 
 One evidence-linked composition, `agent completion ≠ verified completion`, rendered four ways

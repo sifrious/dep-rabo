@@ -1,32 +1,109 @@
 {
     "schema_version": 1,
     "project": "Rabo",
-    "updated_at": "2026-08-29T00:00:00Z",
+    "updated_at": "2026-08-29T22:30:00Z",
     "facts": [
-        { "id": "F-001", "statement": "Rabo is a framework-neutral PHP package whose only dependencies are php ^8.3 and sifrious/reference-contract." },
-        { "id": "F-002", "statement": "A composition pins exactly one Brand Library id and version, and a library satisfies a pin only when the major matches and it is no older." },
-        { "id": "F-003", "statement": "Assets are identified by the sha256 digest of their bytes and stored at assets/sha256/<first two>/<rest>." },
-        { "id": "F-004", "statement": "Layout is a pure function of scene and brand; connectors resolve after layout, so an arrow re-orients when a variant flips a stack's axis." },
-        { "id": "F-005", "statement": "Both SVG renderers validate before painting and return a structured refusal rather than a partial artifact." },
-        { "id": "F-006", "statement": "The canonical proof renders four byte-reproducible artifacts from one source scene: 1200x630 still, 1080x1080 still, 15-second animated SVG, and a reduced-motion alternative." },
-        { "id": "F-007", "statement": "The MP4 adapter is the only non-deterministic renderer and declares deterministic: false, recording resvg and ffmpeg versions in provenance." },
-        { "id": "F-008", "statement": "Twelve failing fixtures under fixtures/failing each isolate exactly one validation code." }
+        {
+            "id": "F-001",
+            "statement": "Rabo is a framework-neutral PHP package whose only dependencies are php ^8.3 and sifrious/reference-contract."
+        },
+        {
+            "id": "F-002",
+            "statement": "A composition pins exactly one Brand Library id and version, and a library satisfies a pin only when the major matches and it is no older."
+        },
+        {
+            "id": "F-003",
+            "statement": "Assets are identified by the sha256 digest of their bytes and stored at assets/sha256/<first two>/<rest>."
+        },
+        {
+            "id": "F-004",
+            "statement": "Layout is a pure function of scene and brand; connectors resolve after layout, so an arrow re-orients when a variant flips a stack's axis."
+        },
+        {
+            "id": "F-005",
+            "statement": "Both SVG renderers validate before painting and return a structured refusal rather than a partial artifact."
+        },
+        {
+            "id": "F-006",
+            "statement": "The canonical proof renders four byte-reproducible artifacts from one source scene: 1200x630 still, 1080x1080 still, 15-second animated SVG, and a reduced-motion alternative."
+        },
+        {
+            "id": "F-007",
+            "statement": "The MP4 adapter is the only non-deterministic renderer and declares deterministic: false, recording resvg and ffmpeg versions in provenance."
+        },
+        {
+            "id": "F-008",
+            "statement": "Twelve failing fixtures under fixtures/failing each isolate exactly one validation code."
+        },
+        {
+            "id": "F-009",
+            "statement": "CI runs composer install/test/audit on PHP 8.3 and 8.4 with neither resvg nor ffmpeg present, which also exercises the MP4 adapter's deterministic refusal."
+        }
     ],
     "assumptions": [
-        { "id": "A-001", "statement": "Text measurement is a brand-declared advance-ratio estimate shared by validation and rendering, not font shaping." },
-        { "id": "A-002", "statement": "Clearspace is checked between boxes sharing a horizontal or vertical band; overlapping boxes are skipped." },
-        { "id": "A-003", "statement": "Reading order is authored rather than derived from position, because layout order and announcement order are not always the same." },
-        { "id": "A-004", "statement": "Animated SVG with CSS keyframes plays as authored in current browsers; no cross-browser check runs in this repository." }
+        {
+            "id": "A-001",
+            "statement": "Text measurement is a brand-declared advance-ratio estimate shared by validation and rendering, not font shaping."
+        },
+        {
+            "id": "A-002",
+            "statement": "Clearspace is checked between boxes sharing a horizontal or vertical band; overlapping boxes are skipped."
+        },
+        {
+            "id": "A-003",
+            "statement": "Reading order is authored rather than derived from position, because layout order and announcement order are not always the same."
+        },
+        {
+            "id": "A-004",
+            "statement": "Animated SVG with CSS keyframes plays as authored in current browsers; no cross-browser check runs in this repository."
+        }
     ],
     "decisions": [
-        { "id": "D-001", "decision": "Colours are canonically sRGB hex with an optional authoring-space display string.", "rationale": "Contrast arithmetic must be exact and identical everywhere; WCAG luminance is defined over sRGB." },
-        { "id": "D-002", "decision": "SVG is a renderer, never the domain model.", "rationale": "Editing a scene and editing an output must stay different operations." },
-        { "id": "D-003", "decision": "Motion is a timeline over the existing scene rather than a separate storyboard.", "rationale": "One set of words means the still and moving versions cannot drift." },
-        { "id": "D-004", "decision": "The reduced-motion alternative is derived from the source timeline and its strategy is required.", "rationale": "An optional accessible path is the one that rots." },
-        { "id": "D-005", "decision": "Word wrapping lives in Brand\\TextFlow and is shared by the overflow rule and the painter.", "rationale": "Separate implementations let a caption pass validation and then render with its last word dropped." },
-        { "id": "D-007", "decision": "Render outcomes are four states, not a nullable artifact.", "rationale": "A caller must distinguish a permanent refusal from a retryable failure from an ambiguous acknowledgement." },
-        { "id": "D-009", "decision": "MP4 non-determinism is declared rather than hidden, and no MP4 is committed as a golden artifact.", "rationale": "Claiming unverifiable reproducibility would undermine the guarantee the package exists to demonstrate." },
-        { "id": "D-012", "decision": "Equality is canonical JSON via canonical()/equals() rather than toArray() identity.", "rationale": "Readable manifests emit maps as JSON objects, whose stdClass instances are never identical by ===." }
+        {
+            "id": "D-001",
+            "decision": "Colours are canonically sRGB hex with an optional authoring-space display string.",
+            "rationale": "Contrast arithmetic must be exact and identical everywhere; WCAG luminance is defined over sRGB."
+        },
+        {
+            "id": "D-002",
+            "decision": "SVG is a renderer, never the domain model.",
+            "rationale": "Editing a scene and editing an output must stay different operations."
+        },
+        {
+            "id": "D-003",
+            "decision": "Motion is a timeline over the existing scene rather than a separate storyboard.",
+            "rationale": "One set of words means the still and moving versions cannot drift."
+        },
+        {
+            "id": "D-004",
+            "decision": "The reduced-motion alternative is derived from the source timeline and its strategy is required.",
+            "rationale": "An optional accessible path is the one that rots."
+        },
+        {
+            "id": "D-005",
+            "decision": "Word wrapping lives in Brand\\TextFlow and is shared by the overflow rule and the painter.",
+            "rationale": "Separate implementations let a caption pass validation and then render with its last word dropped."
+        },
+        {
+            "id": "D-007",
+            "decision": "Render outcomes are four states, not a nullable artifact.",
+            "rationale": "A caller must distinguish a permanent refusal from a retryable failure from an ambiguous acknowledgement."
+        },
+        {
+            "id": "D-009",
+            "decision": "MP4 non-determinism is declared rather than hidden, and no MP4 is committed as a golden artifact.",
+            "rationale": "Claiming unverifiable reproducibility would undermine the guarantee the package exists to demonstrate."
+        },
+        {
+            "id": "D-012",
+            "decision": "Equality is canonical JSON via canonical()/equals() rather than toArray() identity.",
+            "rationale": "Readable manifests emit maps as JSON objects, whose stdClass instances are never identical by ===."
+        },
+        {
+            "id": "D-013",
+            "decision": "This package ships CI although no neutral sibling does.",
+            "rationale": "It commits golden artifacts the tests compare byte for byte; a renderer change could otherwise invalidate them silently."
+        }
     ],
     "constraints": [
         "Rabo does not depend on Laravel, Eloquent, HTTP, a queue, a browser, or a provider SDK.",
@@ -36,39 +113,172 @@
         "Rendered artifacts never replace editable compositions."
     ],
     "open_questions": [
-        { "id": "Q-001", "question": "Where do a brand's font files live, given a rendered SVG relies on the viewer having the family?" },
-        { "id": "Q-002", "question": "Should departing from a template be a warning, an error, or silent?" },
-        { "id": "Q-003", "question": "How should a composition represent co-branded work, and whose accessibility floor governs?" },
-        { "id": "Q-004", "question": "What should happen when evidence a composition cites is later tombstoned or superseded?" },
-        { "id": "Q-005", "question": "Do timed captions need a first-class caption track rather than a per-cue string?" }
+        {
+            "id": "Q-001",
+            "question": "Where do a brand's font files live, given a rendered SVG relies on the viewer having the family?"
+        },
+        {
+            "id": "Q-002",
+            "question": "Should departing from a template be a warning, an error, or silent?"
+        },
+        {
+            "id": "Q-003",
+            "question": "How should a composition represent co-branded work, and whose accessibility floor governs?"
+        },
+        {
+            "id": "Q-004",
+            "question": "What should happen when evidence a composition cites is later tombstoned or superseded?"
+        },
+        {
+            "id": "Q-005",
+            "question": "Do timed captions need a first-class caption track rather than a per-cue string?"
+        }
     ],
     "glossary": [
-        { "term": "Brand Library", "definition": "The portable source of truth for a visual identity, its assets, templates, motion language, rules, and rights." },
-        { "term": "Composition", "definition": "The envelope holding a canonical scene, its variants, its brand pin, and its cross-package references." },
-        { "term": "Variant", "definition": "A derived output shape naming a new canvas and the smallest layout overrides needed to read well there. It never replaces its source." },
-        { "term": "Cue", "definition": "One timed change to one node in a scene." },
-        { "term": "Reduced-motion variant", "definition": "An accessible alternative derived from the source timeline, mandatory rather than optional." },
-        { "term": "Render outcome", "definition": "Succeeded, refused, failed transiently, or acknowledged." },
-        { "term": "Brand drift", "definition": "A working or published asset using obsolete, unapproved, inaccessible, or improperly licensed brand material." }
+        {
+            "term": "Brand Library",
+            "definition": "The portable source of truth for a visual identity, its assets, templates, motion language, rules, and rights."
+        },
+        {
+            "term": "Composition",
+            "definition": "The envelope holding a canonical scene, its variants, its brand pin, and its cross-package references."
+        },
+        {
+            "term": "Variant",
+            "definition": "A derived output shape naming a new canvas and the smallest layout overrides needed to read well there. It never replaces its source."
+        },
+        {
+            "term": "Cue",
+            "definition": "One timed change to one node in a scene."
+        },
+        {
+            "term": "Reduced-motion variant",
+            "definition": "An accessible alternative derived from the source timeline, mandatory rather than optional."
+        },
+        {
+            "term": "Render outcome",
+            "definition": "Succeeded, refused, failed transiently, or acknowledged."
+        },
+        {
+            "term": "Brand drift",
+            "definition": "A working or published asset using obsolete, unapproved, inaccessible, or improperly licensed brand material."
+        }
     ],
     "features": [
-        { "id": "MME-1869", "name": "Portable Brand Library manifest", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1870", "name": "Graphic and composition primitives", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1873", "name": "Content-addressed asset storage", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1871", "name": "Provider-neutral renderer contracts", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1868", "name": "Deterministic local brand validation", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1872", "name": "Motion as a first-class domain", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1866", "name": "Content, evidence, review, and delivery references", "stage": "MVP", "status": "implemented" },
-        { "id": "MME-1867", "name": "First portable static-and-motion composition", "stage": "MVP", "status": "implemented" }
+        {
+            "id": "MME-1869",
+            "name": "Portable Brand Library manifest",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1870",
+            "name": "Graphic and composition primitives",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1873",
+            "name": "Content-addressed asset storage",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1871",
+            "name": "Provider-neutral renderer contracts",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1868",
+            "name": "Deterministic local brand validation",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1872",
+            "name": "Motion as a first-class domain",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1866",
+            "name": "Content, evidence, review, and delivery references",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "MME-1867",
+            "name": "First portable static-and-motion composition",
+            "stage": "MVP",
+            "status": "implemented"
+        }
     ],
     "workflows": [
-        { "id": "W-001", "name": "Render a composition", "states": ["load bundle", "validate scene against brand", "refuse with structured issues or continue", "lay out scene", "paint through a renderer adapter", "record provenance", "return outcome"] },
-        { "id": "W-002", "name": "Derive a variant", "states": ["read variant spec", "rebuild stacks with overridden axis and alignment", "return a new scene", "leave the source scene untouched"] },
-        { "id": "W-003", "name": "Produce an accessible motion pair", "states": ["render the animated timeline", "derive the reduced-motion timeline from the same source", "render it as a separately addressable artifact", "record both digests"] }
+        {
+            "id": "W-001",
+            "name": "Render a composition",
+            "states": [
+                "load bundle",
+                "validate scene against brand",
+                "refuse with structured issues or continue",
+                "lay out scene",
+                "paint through a renderer adapter",
+                "record provenance",
+                "return outcome"
+            ]
+        },
+        {
+            "id": "W-002",
+            "name": "Derive a variant",
+            "states": [
+                "read variant spec",
+                "rebuild stacks with overridden axis and alignment",
+                "return a new scene",
+                "leave the source scene untouched"
+            ]
+        },
+        {
+            "id": "W-003",
+            "name": "Produce an accessible motion pair",
+            "states": [
+                "render the animated timeline",
+                "derive the reduced-motion timeline from the same source",
+                "render it as a separately addressable artifact",
+                "record both digests"
+            ]
+        }
     ],
     "content_opportunities": [
-        { "id": "C-001", "format": "diagram and short video", "user_problem": "An agent reporting completion is treated as evidence that work is complete.", "concept": "A completion claim becomes verified only after independent checks produce evidence.", "technology": "PHP value objects, deterministic SVG rendering", "project_context": "Rabo MME-1867, proven against six RABO tickets that sat In Review with no attachments", "audience": "engineers who delegate work to agents", "hook": "Agent completion is not verified completion." },
-        { "id": "C-002", "format": "post", "user_problem": "Accessible alternatives are authored last and drift from the original.", "concept": "Derive the reduced-motion variant from the same timeline so it cannot be forgotten or diverge.", "technology": "PHP, CSS keyframes in SVG", "project_context": "Rabo MME-1872", "audience": "intermediate application developers", "hook": "The accessible version should be impossible to forget, not merely required." },
-        { "id": "C-003", "format": "post", "user_problem": "Validation and rendering quietly disagree about whether text fits.", "concept": "Share one wrapping implementation so a caption cannot pass a check and then lose its last word.", "technology": "PHP", "project_context": "Rabo D-005, found by looking at a rendered PNG", "audience": "intermediate application developers", "hook": "Two implementations of the same rule are two answers." }
+        {
+            "id": "C-001",
+            "format": "diagram and short video",
+            "user_problem": "An agent reporting completion is treated as evidence that work is complete.",
+            "concept": "A completion claim becomes verified only after independent checks produce evidence.",
+            "technology": "PHP value objects, deterministic SVG rendering",
+            "project_context": "Rabo MME-1867, proven against six RABO tickets that sat In Review with no attachments",
+            "audience": "engineers who delegate work to agents",
+            "hook": "Agent completion is not verified completion."
+        },
+        {
+            "id": "C-002",
+            "format": "post",
+            "user_problem": "Accessible alternatives are authored last and drift from the original.",
+            "concept": "Derive the reduced-motion variant from the same timeline so it cannot be forgotten or diverge.",
+            "technology": "PHP, CSS keyframes in SVG",
+            "project_context": "Rabo MME-1872",
+            "audience": "intermediate application developers",
+            "hook": "The accessible version should be impossible to forget, not merely required."
+        },
+        {
+            "id": "C-003",
+            "format": "post",
+            "user_problem": "Validation and rendering quietly disagree about whether text fits.",
+            "concept": "Share one wrapping implementation so a caption cannot pass a check and then lose its last word.",
+            "technology": "PHP",
+            "project_context": "Rabo D-005, found by looking at a rendered PNG",
+            "audience": "intermediate application developers",
+            "hook": "Two implementations of the same rule are two answers."
+        }
     ]
 }
