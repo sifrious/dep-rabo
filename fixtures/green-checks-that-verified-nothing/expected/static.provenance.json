@@ -1,0 +1,91 @@
+{
+    "contract": "sifrious.rabo.render-provenance",
+    "contract_version": 1,
+    "composition": {
+        "id": "green-checks-that-verified-nothing",
+        "version": 1,
+        "key": "aaf7e1e57e2af57975c5d5c71aedbebe518477e59038bebf10e3498ce74bee28",
+        "scene": "source"
+    },
+    "brand": {
+        "id": "burg",
+        "version": "1.0.0",
+        "key": "ebe8a59d0cb954b9d31304042859c466db7382afce31b03b78cd993cc34caa52"
+    },
+    "assets": [
+        "sha256:0640890476fc1198ab4de571fb658de443c4d85b66466ec09534a8737ab1ce9d",
+        "sha256:18be452724bfdc236c074ca94a249a7f41a86752c7d04ab258ce9ed5651f6a7e",
+        "sha256:2fa7a175769e16bf56416b47cb69bf19fd0a4e2718ae3af33de2c7ab9ef3a901",
+        "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
+        "sha256:94f4af82871f6de575a33981e6609ebba43d9201c0a8b6275f4d6647ea527a3b",
+        "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9",
+        "sha256:bdefb6627fd07193c089cc21488c2955145b693051fbaa9ed12928edf8c29a19",
+        "sha256:e9201eddf1d41d0b62253295d869ce3cf65768f7102b797f02c7f8c876b4a9d5"
+    ],
+    "renderer": {
+        "id": "rabo-svg-static",
+        "version": "1.0.0",
+        "deterministic": true,
+        "tool_versions": {}
+    },
+    "request_digest": "0ea943f491a842defdf54032864d5c3bde1b55659937f4118e8d9becc2e73f6c",
+    "output_digest": "sha256:5a2a866364589186a9f4ae40b9e304a29a795f6c5878600f2f79601bebd5c863",
+    "references": {
+        "contract": "sifrious.rabo.composition-references",
+        "contract_version": 1,
+        "roles": {
+            "content_plan": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "content-plan",
+                    "id": "plan_verified_completion",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "evidence": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "rabo_failing_fixture_loop_read_basename_exit_code",
+                    "object_version": "sha256:1c1fe1a",
+                    "provenance": null
+                },
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "rabo_ci_first_run_failed_on_local_only_ssh_alias",
+                    "object_version": null,
+                    "provenance": null
+                },
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "rabo_text_flow_dropped_last_word_after_validation_passed",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "treatment": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "treatment",
+                    "id": "treatment_green_checks_v1",
+                    "object_version": "1",
+                    "provenance": null
+                }
+            ]
+        }
+    },
+    "produced_at": "2026-08-29T00:00:00+00:00"
+}

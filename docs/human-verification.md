@@ -103,6 +103,28 @@ RABO_FONT_GLYPH_UNAVAILABLE  headline
 All three faces are latin subsets without U+2260, so that one character comes from a system font. The
 report says so rather than letting it be discovered at publication.
 
+## 6b. A second composition on the same brand
+
+```sh
+php bin/rabo validate fixtures/green-checks-that-verified-nothing
+php bin/rabo render  fixtures/green-checks-that-verified-nothing --format=svg --out=build/second
+php bin/rabo render  fixtures/green-checks-that-verified-nothing --format=svg --scene=portrait --out=build/second
+diff -r build/second fixtures/green-checks-that-verified-nothing/expected
+```
+
+**Expect:** exit `0` throughout, zero issues, and an empty diff.
+
+This bundle exists to test whether the primitives generalise. It differs from the first in every
+structural way available: stacks nested four deep rather than two, ellipses, no connectors at all,
+the mark's mono variant, a 4:5 portrait derivation, and **no motion** — a bundle with no
+`motion.json` is a complete bundle, not a broken one.
+
+It also carries only two typefaces rather than three, because it sets nothing in mono:
+
+```sh
+grep -c '@font-face' build/second/static.svg     # 2
+```
+
 ## 7. Every validation dimension fails the way it should
 
 ```sh

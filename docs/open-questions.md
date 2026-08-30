@@ -69,3 +69,42 @@ Validation reports this as `RABO_FONT_GLYPH_UNAVAILABLE` rather than hiding it, 
 text is fixed by the brief, so the options are to ship a wider subset for the display face or to
 accept a system fallback for one character. Widening the subset means re-vendoring from Fontsource
 and re-deriving the TrueType, which is a small but real decision about what the brand carries.
+
+## Q-008 — Node sizes are fixed, so a variant cannot reflow to a new measure
+
+Found by building a second composition. A `VariantSpec` can flip a stack's axis, but every node
+carries a fixed `Size`, so nothing widens when the axis changes.
+
+In the first fixture this was invisible: five narrow cards read the same side by side or stacked. In
+the second, two 560-wide columns that sit edge to edge in landscape become a single 560-wide column
+in a 1000-wide portrait, leaving 440 pixels of dead space beside it. The content is correct and the
+layout is legal; it simply does not use the space it was given.
+
+The obvious answer is a stretch mode on a stack's cross axis, which is what flexbox does. It is not
+a small change: `TextOverflowRule` measures against `declaredSize()` while `ScenePainter` wraps
+against the resolved layout box, so a size the layout computes rather than the node declares would
+put those two back into disagreement — the exact failure D-005 exists to prevent. Any stretch
+implementation has to give the overflow rule the resolved box too.
+
+## Q-009 — `currentColor` cannot cross an embedded image boundary
+
+The mono mark is authored with `fill="currentColor"` so it takes the ink colour of whatever it sits
+in. Placed through an `ImageNode`, it becomes a separate document in a data URI and `currentColor`
+resolves to that document's own default — black — rather than the brand's `text-strong`, which is a
+warm near-black.
+
+So a mono mark is always pure black, subtly off-brand, and no validation notices. Inlining the
+mark's markup into the host document rather than referencing it as an image would fix it and would
+let brand colour reach the mark, at the cost of the renderer having to parse and namespace foreign
+SVG. Not obviously worth it yet; recorded so the next person does not rediscover it.
+
+## Q-010 — Two compositions on one brand duplicate the brand
+
+A bundle is self-contained by design: everything needed to validate and render lives under one path.
+That is what makes it portable, and it is why the second composition ships its own copy of
+`brand.json` and its own asset store — about 330 KB of it typefaces.
+
+Self-contained and non-duplicating pull in opposite directions. Two compositions is fine; twenty is
+6 MB of identical font bytes. Some indirection will be needed — a bundle naming a brand directory,
+or a store that several bundles share — and it should be chosen deliberately rather than when the
+repository gets uncomfortable.

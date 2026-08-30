@@ -1,0 +1,752 @@
+{
+    "contract": "sifrious.rabo.composition",
+    "contract_version": 1,
+    "id": "green-checks-that-verified-nothing",
+    "version": 1,
+    "title": "Green checks that verified nothing",
+    "brand_id": "burg",
+    "brand_version": "1.0.0",
+    "scene": {
+        "contract": "sifrious.rabo.scene",
+        "contract_version": 1,
+        "id": "green-checks-that-verified-nothing",
+        "canvas": {
+            "width": 1200,
+            "height": 630
+        },
+        "padding": "lg",
+        "align_horizontal": "center",
+        "align_vertical": "center",
+        "background": "surface",
+        "description": "Two columns. On the left, three checks that reported success. On the right, what was actually true in each case: an exit code read from the wrong command, a clone that only worked on one machine, and a caption that lost its last word when drawn.",
+        "root": {
+            "type": "stack",
+            "id": "root",
+            "direction": "vertical",
+            "gap": "xl",
+            "align": "start",
+            "distribute": "start",
+            "style": {
+                "fill": null,
+                "text": null,
+                "type_role": null,
+                "stroke": null,
+                "stroke_width": null,
+                "radius": null,
+                "padding": null,
+                "semantic": null,
+                "opacity": 1
+            },
+            "children": [
+                {
+                    "type": "stack",
+                    "id": "header",
+                    "direction": "horizontal",
+                    "gap": "lg",
+                    "align": "center",
+                    "distribute": "start",
+                    "style": {
+                        "fill": null,
+                        "text": null,
+                        "type_role": null,
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "children": [
+                        {
+                            "type": "image",
+                            "id": "mark",
+                            "asset": "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9",
+                            "size": {
+                                "width": 44,
+                                "height": 44
+                            },
+                            "style": {
+                                "fill": null,
+                                "text": null,
+                                "type_role": null,
+                                "stroke": null,
+                                "stroke_width": null,
+                                "radius": null,
+                                "padding": null,
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "text_alternative": "burg",
+                            "mark_id": "burg"
+                        },
+                        {
+                            "type": "text",
+                            "id": "eyebrow",
+                            "content": "RABO / VERIFICATION",
+                            "size": {
+                                "width": 240,
+                                "height": 22
+                            },
+                            "style": {
+                                "fill": null,
+                                "text": "text-muted",
+                                "type_role": "meta",
+                                "stroke": null,
+                                "stroke_width": null,
+                                "radius": null,
+                                "padding": null,
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "align": "start",
+                            "max_lines": 1,
+                            "essential": false,
+                            "text_alternative": null
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "headline",
+                    "content": "Green checks that verified nothing",
+                    "size": {
+                        "width": 1000,
+                        "height": 64
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-strong",
+                        "type_role": "headline",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 2,
+                    "essential": true,
+                    "text_alternative": null
+                },
+                {
+                    "type": "stack",
+                    "id": "columns",
+                    "direction": "horizontal",
+                    "gap": "xl",
+                    "align": "start",
+                    "distribute": "start",
+                    "style": {
+                        "fill": null,
+                        "text": null,
+                        "type_role": null,
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "children": [
+                        {
+                            "type": "stack",
+                            "id": "col-reported",
+                            "direction": "vertical",
+                            "gap": "md",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "surface-raised",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "lg",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "col-reported-title",
+                                    "content": "What the check reported",
+                                    "size": {
+                                        "width": 512,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-strong",
+                                        "type_role": "step-label",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 1,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "stack",
+                                    "id": "reported-1",
+                                    "direction": "horizontal",
+                                    "gap": "sm",
+                                    "align": "center",
+                                    "distribute": "start",
+                                    "style": {
+                                        "fill": null,
+                                        "text": null,
+                                        "type_role": null,
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "shape",
+                                            "id": "reported-1-dot",
+                                            "shape": "ellipse",
+                                            "size": {
+                                                "width": 12,
+                                                "height": 12
+                                            },
+                                            "style": {
+                                                "fill": "good",
+                                                "text": null,
+                                                "type_role": null,
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": "reported-passing",
+                                                "opacity": 1
+                                            },
+                                            "text_alternative": "Reported as passing"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "id": "reported-1-text",
+                                            "content": "Twelve failing fixtures: exit=0",
+                                            "size": {
+                                                "width": 492,
+                                                "height": 24
+                                            },
+                                            "style": {
+                                                "fill": null,
+                                                "text": "text-body",
+                                                "type_role": "step-detail",
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": null,
+                                                "opacity": 1
+                                            },
+                                            "align": "start",
+                                            "max_lines": 1,
+                                            "essential": true,
+                                            "text_alternative": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "stack",
+                                    "id": "reported-2",
+                                    "direction": "horizontal",
+                                    "gap": "sm",
+                                    "align": "center",
+                                    "distribute": "start",
+                                    "style": {
+                                        "fill": null,
+                                        "text": null,
+                                        "type_role": null,
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "shape",
+                                            "id": "reported-2-dot",
+                                            "shape": "ellipse",
+                                            "size": {
+                                                "width": 12,
+                                                "height": 12
+                                            },
+                                            "style": {
+                                                "fill": "good",
+                                                "text": null,
+                                                "type_role": null,
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": "reported-passing",
+                                                "opacity": 1
+                                            },
+                                            "text_alternative": "Reported as passing"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "id": "reported-2-text",
+                                            "content": "A clean clone installed and passed",
+                                            "size": {
+                                                "width": 492,
+                                                "height": 24
+                                            },
+                                            "style": {
+                                                "fill": null,
+                                                "text": "text-body",
+                                                "type_role": "step-detail",
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": null,
+                                                "opacity": 1
+                                            },
+                                            "align": "start",
+                                            "max_lines": 1,
+                                            "essential": true,
+                                            "text_alternative": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "stack",
+                                    "id": "reported-3",
+                                    "direction": "horizontal",
+                                    "gap": "sm",
+                                    "align": "center",
+                                    "distribute": "start",
+                                    "style": {
+                                        "fill": null,
+                                        "text": null,
+                                        "type_role": null,
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "shape",
+                                            "id": "reported-3-dot",
+                                            "shape": "ellipse",
+                                            "size": {
+                                                "width": 12,
+                                                "height": 12
+                                            },
+                                            "style": {
+                                                "fill": "good",
+                                                "text": null,
+                                                "type_role": null,
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": "reported-passing",
+                                                "opacity": 1
+                                            },
+                                            "text_alternative": "Reported as passing"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "id": "reported-3-text",
+                                            "content": "Validation passed; the card rendered",
+                                            "size": {
+                                                "width": 492,
+                                                "height": 24
+                                            },
+                                            "style": {
+                                                "fill": null,
+                                                "text": "text-body",
+                                                "type_role": "step-detail",
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": null,
+                                                "opacity": 1
+                                            },
+                                            "align": "start",
+                                            "max_lines": 1,
+                                            "essential": true,
+                                            "text_alternative": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "stack",
+                            "id": "col-actual",
+                            "direction": "vertical",
+                            "gap": "md",
+                            "align": "start",
+                            "distribute": "start",
+                            "style": {
+                                "fill": "accent-soft",
+                                "text": null,
+                                "type_role": null,
+                                "stroke": "border",
+                                "stroke_width": "hair",
+                                "radius": "lg",
+                                "padding": "lg",
+                                "semantic": null,
+                                "opacity": 1
+                            },
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "id": "col-actual-title",
+                                    "content": "What was true",
+                                    "size": {
+                                        "width": 512,
+                                        "height": 26
+                                    },
+                                    "style": {
+                                        "fill": null,
+                                        "text": "text-strong",
+                                        "type_role": "step-label",
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "align": "start",
+                                    "max_lines": 1,
+                                    "essential": true,
+                                    "text_alternative": null
+                                },
+                                {
+                                    "type": "stack",
+                                    "id": "actual-1",
+                                    "direction": "horizontal",
+                                    "gap": "sm",
+                                    "align": "center",
+                                    "distribute": "start",
+                                    "style": {
+                                        "fill": null,
+                                        "text": null,
+                                        "type_role": null,
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "shape",
+                                            "id": "actual-1-dot",
+                                            "shape": "ellipse",
+                                            "size": {
+                                                "width": 12,
+                                                "height": 12
+                                            },
+                                            "style": {
+                                                "fill": "accent",
+                                                "text": null,
+                                                "type_role": null,
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": "actually-false",
+                                                "opacity": 1
+                                            },
+                                            "text_alternative": "Actually false"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "id": "actual-1-text",
+                                            "content": "The loop read basename exit codes",
+                                            "size": {
+                                                "width": 492,
+                                                "height": 24
+                                            },
+                                            "style": {
+                                                "fill": null,
+                                                "text": "text-body",
+                                                "type_role": "step-detail",
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": null,
+                                                "opacity": 1
+                                            },
+                                            "align": "start",
+                                            "max_lines": 1,
+                                            "essential": true,
+                                            "text_alternative": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "stack",
+                                    "id": "actual-2",
+                                    "direction": "horizontal",
+                                    "gap": "sm",
+                                    "align": "center",
+                                    "distribute": "start",
+                                    "style": {
+                                        "fill": null,
+                                        "text": null,
+                                        "type_role": null,
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "shape",
+                                            "id": "actual-2-dot",
+                                            "shape": "ellipse",
+                                            "size": {
+                                                "width": 12,
+                                                "height": 12
+                                            },
+                                            "style": {
+                                                "fill": "accent",
+                                                "text": null,
+                                                "type_role": null,
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": "actually-false",
+                                                "opacity": 1
+                                            },
+                                            "text_alternative": "Actually false"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "id": "actual-2-text",
+                                            "content": "It ran where the SSH alias resolves",
+                                            "size": {
+                                                "width": 492,
+                                                "height": 24
+                                            },
+                                            "style": {
+                                                "fill": null,
+                                                "text": "text-body",
+                                                "type_role": "step-detail",
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": null,
+                                                "opacity": 1
+                                            },
+                                            "align": "start",
+                                            "max_lines": 1,
+                                            "essential": true,
+                                            "text_alternative": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "stack",
+                                    "id": "actual-3",
+                                    "direction": "horizontal",
+                                    "gap": "sm",
+                                    "align": "center",
+                                    "distribute": "start",
+                                    "style": {
+                                        "fill": null,
+                                        "text": null,
+                                        "type_role": null,
+                                        "stroke": null,
+                                        "stroke_width": null,
+                                        "radius": null,
+                                        "padding": null,
+                                        "semantic": null,
+                                        "opacity": 1
+                                    },
+                                    "children": [
+                                        {
+                                            "type": "shape",
+                                            "id": "actual-3-dot",
+                                            "shape": "ellipse",
+                                            "size": {
+                                                "width": 12,
+                                                "height": 12
+                                            },
+                                            "style": {
+                                                "fill": "accent",
+                                                "text": null,
+                                                "type_role": null,
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": "actually-false",
+                                                "opacity": 1
+                                            },
+                                            "text_alternative": "Actually false"
+                                        },
+                                        {
+                                            "type": "text",
+                                            "id": "actual-3-text",
+                                            "content": "The last word was dropped when drawn",
+                                            "size": {
+                                                "width": 492,
+                                                "height": 24
+                                            },
+                                            "style": {
+                                                "fill": null,
+                                                "text": "text-body",
+                                                "type_role": "step-detail",
+                                                "stroke": null,
+                                                "stroke_width": null,
+                                                "radius": null,
+                                                "padding": null,
+                                                "semantic": null,
+                                                "opacity": 1
+                                            },
+                                            "align": "start",
+                                            "max_lines": 1,
+                                            "essential": true,
+                                            "text_alternative": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "note",
+                    "content": "All three ran green while something was wrong. Each was found by looking at output, by an independent reviewer, or by continuous integration.",
+                    "size": {
+                        "width": 1000,
+                        "height": 44
+                    },
+                    "style": {
+                        "fill": null,
+                        "text": "text-muted",
+                        "type_role": "meta",
+                        "stroke": null,
+                        "stroke_width": null,
+                        "radius": null,
+                        "padding": null,
+                        "semantic": null,
+                        "opacity": 1
+                    },
+                    "align": "start",
+                    "max_lines": 2,
+                    "essential": false,
+                    "text_alternative": null
+                }
+            ]
+        },
+        "connectors": [],
+        "reading_order": [
+            "eyebrow",
+            "headline",
+            "col-reported-title",
+            "reported-1-text",
+            "reported-2-text",
+            "reported-3-text",
+            "col-actual-title",
+            "actual-1-text",
+            "actual-2-text",
+            "actual-3-text",
+            "note"
+        ]
+    },
+    "variants": [
+        {
+            "id": "portrait",
+            "canvas": {
+                "width": 1080,
+                "height": 1350
+            },
+            "stack_directions": {
+                "columns": "vertical"
+            },
+            "stack_alignments": {},
+            "padding": "lg",
+            "label": "Portrait, for feeds that favour tall images"
+        }
+    ],
+    "references": {
+        "contract": "sifrious.rabo.composition-references",
+        "contract_version": 1,
+        "roles": {
+            "content_plan": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "content-plan",
+                    "id": "plan_verified_completion",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "evidence": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "rabo_failing_fixture_loop_read_basename_exit_code",
+                    "object_version": "sha256:1c1fe1a",
+                    "provenance": null
+                },
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "rabo_ci_first_run_failed_on_local_only_ssh_alias",
+                    "object_version": null,
+                    "provenance": null
+                },
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/funes",
+                    "type": "observation",
+                    "id": "rabo_text_flow_dropped_last_word_after_validation_passed",
+                    "object_version": null,
+                    "provenance": null
+                }
+            ],
+            "treatment": [
+                {
+                    "contract": "sifrious.cross-package-reference",
+                    "contract_version": 1,
+                    "owner": "sifrious/pulp",
+                    "type": "treatment",
+                    "id": "treatment_green_checks_v1",
+                    "object_version": "1",
+                    "provenance": null
+                }
+            ]
+        }
+    }
+}
