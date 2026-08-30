@@ -42,7 +42,18 @@ final readonly class AssetRule implements Rule
                 $required[(string) $node->asset] = ['digest' => $node->asset, 'path' => (string) $node->id()];
             }
         }
+        // Font files are referenced assets too, but FontAssetRule owns them: it can name the
+        // family and the format, which is a far more useful thing to be told. One fact, one rule.
+        $fonts = [];
+        foreach ($context->brand->typography->families as $family) {
+            foreach ($family->assets() as $digest) {
+                $fonts[(string) $digest] = true;
+            }
+        }
         foreach ($context->brand->referencedAssets() as $digest) {
+            if (isset($fonts[(string) $digest])) {
+                continue;
+            }
             $required[(string) $digest] ??= ['digest' => $digest, 'path' => 'brand.marks'];
         }
         ksort($required);

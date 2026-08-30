@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Sifrious\Rabo\Renderer\Ffmpeg;
 
 use Sifrious\Rabo\Asset\AssetStore;
+use Sifrious\Rabo\Brand\BrandLibrary;
+use Sifrious\Rabo\Composition\Scene;
 use Sifrious\Rabo\Motion\Duration;
 use Sifrious\Rabo\Motion\MotionComposition;
 use Sifrious\Rabo\Render\Clock;
@@ -16,6 +18,7 @@ use Sifrious\Rabo\Render\RenderOutcome;
 use Sifrious\Rabo\Render\RenderProvenance;
 use Sifrious\Rabo\Render\RenderRequest;
 use Sifrious\Rabo\Render\SystemClock;
+use Sifrious\Rabo\Renderer\Svg\ScenePainter;
 use Sifrious\Rabo\Renderer\Svg\SvgFrameRenderer;
 use Sifrious\Rabo\Validation\CompositionValidator;
 use Sifrious\Rabo\Validation\IssueCode;
@@ -107,6 +110,12 @@ final readonly class FfmpegMotionRenderer implements Renderer
         }
 
         try {
+            // The rasterizer cannot read @font-face and rejects WOFF2, so the brand's TrueType
+            // files are written to disk and handed to it by path. Without this the video renders
+            // in a system fallback while the SVG renders in the brand — the same composition
+            // saying two different things.
+            $fontArguments = $this->writeFontFiles($request->brand, $scene, $directory);
+
             $frames = new SvgFrameRenderer($request->brand, $this->assets);
             $times = SvgFrameRenderer::frameTimes($timeline, $fps);
             foreach ($times as $index => $at) {
@@ -116,6 +125,7 @@ final readonly class FfmpegMotionRenderer implements Renderer
                     (string) $this->probe->path(self::RASTERIZER),
                     '--width', (string) $scene->canvas->width,
                     '--height', (string) $scene->canvas->height,
+                    ...$fontArguments,
                     $name.'.svg', $name.'.png',
                 ]);
                 if ($rasterised['status'] !== 0) {
@@ -166,6 +176,7 @@ final readonly class FfmpegMotionRenderer implements Renderer
                     'motion_composition' => $this->motion->key(),
                     'frames' => (string) count($times),
                     'frames_per_second' => (string) $fps,
+                    'embedded_fonts' => (string) (count($fontArguments) / 2),
                     self::RASTERIZER => (string) $this->probe->version(self::RASTERIZER),
                     self::ENCODER => (string) $this->probe->version(self::ENCODER),
                 ],
@@ -173,6 +184,34 @@ final readonly class FfmpegMotionRenderer implements Renderer
         } finally {
             $this->cleanup($directory);
         }
+    }
+
+    /**
+     * Writes the brand's rasterizable font files beside the frames and returns the arguments
+     * that load them.
+     *
+     * @return list<string>
+     */
+    private function writeFontFiles(BrandLibrary $brand, Scene $scene, string $directory): array
+    {
+        if ($this->assets === null) {
+            return [];
+        }
+
+        $arguments = [];
+        $painter = new ScenePainter($brand, $this->assets);
+        foreach ($painter->familiesUsedBy($scene) as $family) {
+            $file = $family->rasterFile();
+            if ($file === null || ! $this->assets->has($file->digest)) {
+                continue;
+            }
+            $path = $directory.'/font-'.substr($file->digest->hex, 0, 16).'.ttf';
+            file_put_contents($path, $this->assets->bytes($file->digest));
+            $arguments[] = '--use-font-file';
+            $arguments[] = $path;
+        }
+
+        return $arguments;
     }
 
     /** @return list<string> */

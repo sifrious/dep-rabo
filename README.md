@@ -104,6 +104,27 @@ flowchart TB
 | **Render request** | Composition plus brand plus scene plus target, self-contained enough to cross a process boundary, with a digest that identifies it. |
 | **Render outcome** | Succeeded, refused, failed transiently, or acknowledged — four states a caller must treat differently. |
 
+### Typefaces
+
+A family declares its font files, and a rendered artifact carries the ones it actually sets. That is
+what makes an artifact display as the brand on a machine that has never installed it — which
+included, until this landed, the machine that builds them.
+
+Two formats, because no single one satisfies both consumers: browsers honour an inlined
+`@font-face` data URI, while the rasterizer used for MP4 output ignores `@font-face` entirely and
+rejects WOFF2 outright. One artifact serves both — the font stack names the family the TrueType file
+declares for itself directly after the family's own name, so a rasterizer matches the second entry
+from a file on disk while a browser matches the first from the inlined face.
+
+The TrueType is recorded as a derivation of the WOFF2. Licences are assets too: each OFL text is
+stored under its own digest and named from the font's rights, so it cannot drift from the bytes it
+covers. `--no-embed-fonts` renders the small artifact for anyone who controls the display
+environment.
+
+Validation reads each face's `cmap` and warns when a scene sets a character the family cannot draw.
+The canonical composition triggers it: its headline turns on `≠`, and all three brand faces are
+latin subsets with no U+2260.
+
 ### Brand Library format
 
 `fixtures/agent-completion-verified-completion/brand.json` is the canonical sample. Colours are

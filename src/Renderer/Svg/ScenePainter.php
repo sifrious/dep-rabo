@@ -6,6 +6,7 @@ namespace Sifrious\Rabo\Renderer\Svg;
 
 use Sifrious\Rabo\Asset\AssetStore;
 use Sifrious\Rabo\Brand\BrandLibrary;
+use Sifrious\Rabo\Brand\FontFamily;
 use Sifrious\Rabo\Brand\TextFlow;
 use Sifrious\Rabo\Composition\Box;
 use Sifrious\Rabo\Composition\Layout;
@@ -55,6 +56,58 @@ final readonly class ScenePainter
         ksort($colours);
 
         return array_values($colours);
+    }
+
+    /**
+     * Inlines the typefaces a scene actually uses.
+     *
+     * Without this an artifact renders in whatever the viewer happens to have, which for these
+     * faces is usually a serif fallback that looks nothing like the brand. Only the families
+     * behind type roles the scene sets are inlined, so an artifact carries no font it will not draw.
+     *
+     * Rasterizers that cannot read `@font-face` skip this block and match the next entry in each
+     * font stack instead — see FontFamily::stack().
+     */
+    public function paintFontFaces(SvgDocument $svg, Scene $scene): void
+    {
+        $faces = [];
+        foreach ($this->familiesUsedBy($scene) as $family) {
+            $file = $family->embeddableFile();
+            if ($file === null || $this->assets === null || ! $this->assets->has($file->digest)) {
+                continue;
+            }
+            $faces[] = sprintf(
+                "@font-face { font-family: '%s'; src: url(data:%s;base64,%s) format('%s'); }",
+                $family->name,
+                $file->format->mediaType(),
+                base64_encode($this->assets->bytes($file->digest)),
+                $file->format->cssFormat(),
+            );
+        }
+        if ($faces === []) {
+            return;
+        }
+
+        $svg->open('style');
+        foreach ($faces as $face) {
+            $svg->raw($face, 2);
+        }
+        $svg->close('style');
+    }
+
+    /** @return list<FontFamily> */
+    public function familiesUsedBy(Scene $scene): array
+    {
+        $roles = [];
+        foreach ($scene->nodes() as $node) {
+            $role = $node->style()->typeRole;
+            if ($role !== null) {
+                $roles[$role] = $role;
+            }
+        }
+        ksort($roles);
+
+        return $this->brand->typography->familiesForRoles(array_values($roles));
     }
 
     public function paintBackground(SvgDocument $svg, Scene $scene): void

@@ -102,6 +102,9 @@ final readonly class SvgMotionRenderer implements Renderer
         $svg->element('title', $request->composition->title ?? $request->composition->id, ['id' => 'rabo-title']);
         $svg->element('desc', $this->describe($request), ['id' => 'rabo-desc']);
         $this->paintStyles($svg, $request->brand, $timeline, $reduced);
+        if ($request->target->embedFonts) {
+            $painter->paintFontFaces($svg, $scene);
+        }
         $painter->paintArrowheadDefs($svg, $scene);
         $painter->paintBackground($svg, $scene);
 

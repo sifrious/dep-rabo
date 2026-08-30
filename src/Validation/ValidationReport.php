@@ -75,6 +75,13 @@ final readonly class ValidationReport implements JsonSerializable
         return array_values(array_unique(array_map(static fn (ValidationIssue $i): string => $i->code->value, $this->issues)));
     }
 
+    /** The codes that actually block. Warnings are worth reading, not worth failing on. */
+    /** @return list<string> */
+    public function errorCodes(): array
+    {
+        return array_values(array_unique(array_map(static fn (ValidationIssue $i): string => $i->code->value, $this->errors())));
+    }
+
     /** @return array<string,mixed> */
     public function toArray(): array
     {

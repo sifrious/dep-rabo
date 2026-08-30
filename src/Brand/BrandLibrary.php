@@ -124,6 +124,11 @@ final readonly class BrandLibrary implements JsonSerializable
                 $digests[(string) $digest] = $digest;
             }
         }
+        foreach ($this->typography->families as $family) {
+            foreach ($family->assets() as $digest) {
+                $digests[(string) $digest] = $digest;
+            }
+        }
         ksort($digests);
 
         return array_values($digests);

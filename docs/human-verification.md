@@ -9,7 +9,7 @@ and the package cannot drift apart. Run them from the repository root after `com
 composer test
 ```
 
-**Expect:** exit `0`, `OK (87 tests, 354 assertions)`.
+**Expect:** exit `0`, `OK (97 tests, 413 assertions)`.
 
 ## 2. The canonical bundle validates
 
@@ -75,7 +75,35 @@ php bin/rabo inspect build/static.svg
 **Expect:** exit `1` and `FAIL ... the bytes on disk do not match the digest its provenance
 records.` Re-render to restore.
 
-## 6. Every validation dimension fails the way it should
+## 6. The artifact displays in the brand's own typefaces
+
+```sh
+php bin/rabo render fixtures/agent-completion-verified-completion --format=svg
+grep -c '@font-face' build/static.svg          # 3
+```
+
+**Expect:** three inlined faces, and a file around 140 KB rather than 9 KB. Open it in a browser: the
+headline is Space Grotesk, the body Hanken Grotesk, `"Done"` JetBrains Mono. **None of those three
+faces needs to be installed** — that is the point. Before this existed, every artifact rendered in a
+serif fallback on a machine with none of them, and nothing said so.
+
+```sh
+php bin/rabo render fixtures/agent-completion-verified-completion --format=svg --no-embed-fonts --out=build/bare
+```
+
+**Expect:** exit `0`, no `@font-face`, under 20 KB — for anyone who controls the display environment.
+
+The validation report carries one honest warning:
+
+```
+RABO_FONT_GLYPH_UNAVAILABLE  headline
+  Font family 'Space Grotesk' has no glyph for '≠' …
+```
+
+All three faces are latin subsets without U+2260, so that one character comes from a system font. The
+report says so rather than letting it be discovered at publication.
+
+## 7. Every validation dimension fails the way it should
 
 ```sh
 for d in fixtures/failing/*/; do
@@ -89,7 +117,7 @@ Capture `$?` into a variable before the `echo`. Writing `echo "$(basename "$d") 
 the exit code of `basename`, which is always `0`, and the loop then cheerfully claims every fixture
 passed. Avoid the name `status`, which is read-only in zsh.
 
-**Expect:** exit `1` for all twelve. Each bundle isolates exactly one code:
+**Expect:** exit `1` for all thirteen. Each bundle isolates exactly one code:
 
 | Bundle | Code |
 | --- | --- |
@@ -105,6 +133,7 @@ passed. Avoid the name `status`, which is read-only in zsh.
 | `motion-cue-past-end` | `RABO_MOTION_DURATION_INVALID` |
 | `motion-cue-overlap` | `RABO_MOTION_CUE_OVERLAP_UNRESOLVED` |
 | `motion-essential-dismissed` | `RABO_MOTION_INFORMATION_ONLY_TRANSIENT` |
+| `missing-font-asset` | `RABO_FONT_ASSET_MISSING` |
 
 Check one in detail:
 
@@ -116,7 +145,7 @@ php bin/rabo validate fixtures/failing/unknown-brand-token
 `{"code": "RABO_BRAND_TOKEN_UNKNOWN", "severity": "error", "path": "headline", ...}` — it names
 the exact node — with a remediation hint. Standard error repeats the code and path.
 
-## 7. A failed validation prevents an artifact
+## 8. A failed validation prevents an artifact
 
 ```sh
 rm -rf /tmp/rabo-refused
@@ -127,7 +156,7 @@ ls /tmp/rabo-refused
 **Expect:** exit `1`, `RABO_CONTRAST_INSUFFICIENT` on standard error, and **no file written**.
 The refusal is deterministic: the same request will never succeed until the composition changes.
 
-## 8. Optional — the MP4 adapter
+## 9. Optional — the MP4 adapter
 
 Without `resvg` and `ffmpeg` on `PATH`:
 
@@ -148,7 +177,9 @@ ffprobe -v error -show_entries format=duration:stream=width,height,r_frame_rate 
   -of default=noprint_wrappers=1 build/motion.mp4
 ```
 
-**Expect:** exit `0`; roughly 100 KB at `1200×630`, `24/1`, `duration=15.000000`. The MP4 is
+**Expect:** exit `0`; roughly 100 KB at `1200×630`, `24/1`, `duration=15.000000`. The brand's
+TrueType files are written from the store and handed to the rasterizer, so the video is set in the
+brand's own faces too — `provenance.renderer.tool_versions.embedded_fonts` records how many. The MP4 is
 deliberately **not** a committed artifact — MP4 bytes vary across encoder builds, so its
 provenance records `deterministic: false` along with the `resvg` and `ffmpeg` versions used. The
 frame SVGs feeding it are reproducible and are what the tests assert on.

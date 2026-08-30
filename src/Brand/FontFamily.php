@@ -6,6 +6,7 @@ namespace Sifrious\Rabo\Brand;
 
 use InvalidArgumentException;
 use JsonSerializable;
+use Sifrious\Rabo\Asset\ContentDigest;
 
 /**
  * A declared family, its fallback stack, and its declared advance-width ratios.
@@ -26,16 +27,21 @@ final readonly class FontFamily implements JsonSerializable
     /** @var array<int,float> */
     public array $advanceRatios;
 
+    /** @var list<FontFile> */
+    public array $files;
+
     /**
      * @param  list<string>  $fallbacks
      * @param  list<int>  $weights
      * @param  array<int,float>  $advanceRatios
+     * @param  list<FontFile>  $files
      */
     public function __construct(
         public string $name,
         array $fallbacks,
         array $weights,
         array $advanceRatios,
+        array $files = [],
     ) {
         if (trim($name) !== $name || $name === '') {
             throw new InvalidArgumentException('Font family names must be non-empty and trimmed.');
@@ -64,9 +70,57 @@ final readonly class FontFamily implements JsonSerializable
         }
         ksort($advanceRatios);
 
+        $seenFormats = [];
+        foreach ($files as $file) {
+            if (! $file instanceof FontFile) {
+                throw new InvalidArgumentException("Font family '{$name}' accepts FontFile values only.");
+            }
+            if (isset($seenFormats[$file->format->value])) {
+                throw new InvalidArgumentException("Font family '{$name}' declares two {$file->format->value} files.");
+            }
+            $seenFormats[$file->format->value] = true;
+        }
+
         $this->fallbacks = array_values($fallbacks);
         $this->weights = array_values($weights);
         $this->advanceRatios = $advanceRatios;
+        $this->files = array_values($files);
+    }
+
+    public function file(FontFormat $format): ?FontFile
+    {
+        foreach ($this->files as $file) {
+            if ($file->format === $format) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
+    /** The file a document can inline as a data URI, if the family ships one. */
+    public function embeddableFile(): ?FontFile
+    {
+        foreach ($this->files as $file) {
+            if ($file->format->isEmbeddable()) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
+    /** The file a rasterizer can load from disk, if the family ships one. */
+    public function rasterFile(): ?FontFile
+    {
+        return $this->file(FontFormat::TrueType);
+    }
+
+    /** Every digest this family depends on, in declaration order. */
+    /** @return list<ContentDigest> */
+    public function assets(): array
+    {
+        return array_map(static fn (FontFile $file): ContentDigest => $file->digest, $this->files);
     }
 
     public function supportsWeight(int $weight): bool
@@ -80,12 +134,26 @@ final readonly class FontFamily implements JsonSerializable
             ?? throw new UnknownBrandToken("Font family '{$this->name}' declares no weight {$weight}.");
     }
 
-    /** The full CSS font stack, family first. */
+    /**
+     * The full CSS font stack, family first.
+     *
+     * Any family name a font file declares for itself is inserted straight after the family's own
+     * name. That is what lets one artifact serve both consumers: a browser matches the first entry
+     * against the inlined `@font-face`, while a rasterizer that cannot read `@font-face` at all
+     * matches the next entry against a font file handed to it on the command line.
+     */
     public function stack(): string
     {
+        $declared = [];
+        foreach ($this->files as $file) {
+            if ($file->declaredFamily !== null && $file->declaredFamily !== $this->name) {
+                $declared[$file->declaredFamily] = $file->declaredFamily;
+            }
+        }
+
         return implode(', ', array_map(
             static fn (string $family): string => str_contains($family, ' ') ? "'{$family}'" : $family,
-            [$this->name, ...$this->fallbacks],
+            [$this->name, ...array_values($declared), ...$this->fallbacks],
         ));
     }
 
@@ -102,6 +170,7 @@ final readonly class FontFamily implements JsonSerializable
             'fallbacks' => $this->fallbacks,
             'weights' => $this->weights,
             'advance_ratios' => (object) $ratios,
+            'files' => array_map(static fn (FontFile $f): array => $f->toArray(), $this->files),
         ];
     }
 
@@ -112,15 +181,28 @@ final readonly class FontFamily implements JsonSerializable
         $fallbacks = $serialized['fallbacks'] ?? [];
         $weights = $serialized['weights'] ?? null;
         $ratios = $serialized['advance_ratios'] ?? null;
-        if (! is_string($name) || ! is_array($fallbacks) || ! is_array($weights) || ! is_array($ratios)) {
-            throw new InvalidArgumentException('Serialized font families require name, fallbacks, weights, and advance ratios.');
+        $files = $serialized['files'] ?? [];
+        if (! is_string($name) || ! is_array($fallbacks) || ! is_array($weights) || ! is_array($ratios) || ! is_array($files)) {
+            throw new InvalidArgumentException('Serialized font families require name, fallbacks, weights, advance ratios, and files.');
         }
         $decodedRatios = [];
         foreach ($ratios as $weight => $ratio) {
             $decodedRatios[(int) $weight] = (float) $ratio;
         }
 
-        return new self($name, array_values($fallbacks), array_map(intval(...), array_values($weights)), $decodedRatios);
+        return new self(
+            $name,
+            array_values($fallbacks),
+            array_map(intval(...), array_values($weights)),
+            $decodedRatios,
+            array_map(static function (mixed $file): FontFile {
+                if (! is_array($file)) {
+                    throw new InvalidArgumentException('Serialized font files must be objects.');
+                }
+
+                return FontFile::fromArray($file);
+            }, array_values($files)),
+        );
     }
 
     /** @return array<string,mixed> */

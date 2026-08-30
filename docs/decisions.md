@@ -178,3 +178,49 @@ developer's `~/.ssh/config`. Local verification had passed, including a clean `g
 scratch directory — because that clone happened on the machine where the alias resolves. The check
 that looked like proof of portability was measuring something else. See `docs/open-questions.md`
 Q-006 and MME-2193.
+## D-014 — Typefaces are content-addressed assets, in two formats
+
+**Decision.** A `FontFamily` declares `FontFile` records. The WOFF2 is inlined into rendered SVG as
+an `@font-face` data URI; the TrueType is written to disk and passed to the rasterizer by path. The
+TrueType is stored as an `AssetDerivation` of the WOFF2, transform `woff2-decompress`. Each OFL
+licence text is stored as its own asset and named from the font's `AssetRights.terms`.
+
+**Rationale.** Before this, artifacts named `'Space Grotesk', …, sans-serif` and rendered in whatever
+the viewer had. None of the three faces were installed on the machine that built them, so every
+artifact this package had ever produced was a serif fallback and nothing said so. "Portable, validated
+brand composition" was true only where the brand was already installed.
+
+Two formats because no single one satisfies both consumers, which was established by experiment
+rather than assumed: browsers honour `@font-face`; resvg reports `The @font-face rule is not
+supported. Skipped.` and rejects WOFF2 with `malformed font`. A single artifact serves both because
+`FontFamily::stack()` inserts the name the TrueType file declares for itself — "Space Grotesk Light",
+after that variable font's default axis instance — directly after the family's own name.
+
+Fonts are assets rather than a new concept because they *are* assets: bytes with an identity, rights,
+and a derivation. The model already expressed all of it.
+
+**Rejected.** Depending on `sifrious/official-burd-design`, which already ships these files and is the
+one properly tagged package in the organisation — it requires `illuminate/view`, and taking it would
+put Laravel in this package's dependency tree and break the boundary in
+`docs/package-boundary-validation.md` row 1.
+
+Also rejected: rasterizing with headless Chrome, which honours `@font-face` and would need no font
+conversion at all, but would replace a twelve-second frame pipeline with several hundred browser
+invocations.
+
+## D-015 — Glyph coverage is checked, and a gap is a warning
+
+**Decision.** `FontCoverage` parses a TrueType `cmap` directly. `FontAssetRule` reports
+`RABO_FONT_GLYPH_UNAVAILABLE`, at warning severity, for every character a scene sets that its family
+cannot draw.
+
+**Rationale.** The canonical composition's headline is "Agent completion ≠ verified completion", and
+none of the brand's three latin subsets has a glyph for U+2260. Without this check the artifact
+passes validation, renders correctly on a machine with a system font covering `≠`, and renders a tofu
+box everywhere else — the same shape of failure as D-005, where validation and drawing disagreed.
+
+A warning rather than an error because the artifact does still render, and because a brand may
+knowingly rely on a system stack. The point is that the report says so.
+
+An unparseable font is reported as covering nothing, so an unreadable file produces a false warning
+rather than a false pass.

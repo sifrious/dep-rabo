@@ -1,7 +1,7 @@
 {
     "schema_version": 1,
     "project": "Rabo",
-    "updated_at": "2026-08-29T22:30:00Z",
+    "updated_at": "2026-08-30T00:20:00Z",
     "facts": [
         {
             "id": "F-001",
@@ -38,6 +38,14 @@
         {
             "id": "F-009",
             "statement": "CI runs composer install/test/audit on PHP 8.3 and 8.4 with neither resvg nor ffmpeg present, which also exercises the MP4 adapter's deterministic refusal."
+        },
+        {
+            "id": "F-010",
+            "statement": "Typefaces ship as content-addressed assets in two formats: WOFF2 inlined into SVG as @font-face, and TrueType handed to the rasterizer by path because resvg ignores @font-face and rejects WOFF2."
+        },
+        {
+            "id": "F-011",
+            "statement": "The brand's three faces are latin subsets with no U+2260, so the canonical headline's \u2260 comes from a system font; validation warns rather than hiding it."
         }
     ],
     "assumptions": [
@@ -103,6 +111,16 @@
             "id": "D-013",
             "decision": "This package ships CI although no neutral sibling does.",
             "rationale": "It commits golden artifacts the tests compare byte for byte; a renderer change could otherwise invalidate them silently."
+        },
+        {
+            "id": "D-014",
+            "decision": "Typefaces are content-addressed assets in two formats, with the TrueType derived from the WOFF2.",
+            "rationale": "No single format satisfies both browsers and the rasterizer, and before this every artifact rendered in a fallback on a machine with none of the faces installed."
+        },
+        {
+            "id": "D-015",
+            "decision": "Glyph coverage is parsed from the font cmap and a gap is a warning.",
+            "rationale": "The headline turns on a character none of the brand faces contains; without the check it renders as a tofu box wherever no system font covers it."
         }
     ],
     "constraints": [
@@ -132,6 +150,14 @@
         {
             "id": "Q-005",
             "question": "Do timed captions need a first-class caption track rather than a per-cue string?"
+        },
+        {
+            "id": "Q-006",
+            "question": "How does anything but one laptop install this package, given composer.json uses a local-only SSH alias for a private dependency?"
+        },
+        {
+            "id": "Q-007",
+            "question": "Should the brand ship a wider font subset that covers its own headline's \u2260, or accept a system fallback for that character?"
         }
     ],
     "glossary": [

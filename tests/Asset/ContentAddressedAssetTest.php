@@ -32,9 +32,8 @@ final class ContentAddressedAssetTest extends TestCase
 
     public function test_a_source_and_its_derived_variant_keep_distinct_identities(): void
     {
-        $set = Fixture::json('assets.json');
-        $assets = array_map(Asset::fromArray(...), $set['assets']);
-        [$source, $derived] = $assets;
+        $derived = $this->assetLabelled('burg mark, single colour');
+        $source = $this->assetLabelled('burg mark');
 
         self::assertFalse($source->isDerived());
         self::assertTrue($derived->isDerived());
@@ -89,14 +88,38 @@ final class ContentAddressedAssetTest extends TestCase
 
     public function test_rights_and_provenance_survive_export_and_reimport(): void
     {
-        $set = Fixture::json('assets.json');
-        $original = Asset::fromArray($set['assets'][1]);
+        $original = $this->assetLabelled('burg mark, single colour');
         $restored = Asset::fromArray(json_decode(json_encode($original, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR));
 
         self::assertSame('MIT', $restored->rights->license);
         self::assertSame('sifrious', $restored->rights->holder);
         self::assertSame($original->rights->terms, $restored->rights->terms);
         self::assertSame($original->toArray(), $restored->toArray());
+    }
+
+    public function test_font_licences_travel_with_the_font_bytes(): void
+    {
+        $font = $this->assetLabelled('Space Grotesk (woff2)');
+        $licence = $this->assetLabelled('Space Grotesk licence');
+
+        self::assertSame('OFL-1.1', $font->rights->license);
+        self::assertTrue($font->rights->attributionRequired);
+        self::assertStringContainsString(
+            (string) $licence->digest,
+            (string) $font->rights->terms,
+            'The font must name the licence asset that covers it, so the two cannot drift apart.',
+        );
+    }
+
+    public function test_the_truetype_font_is_recorded_as_derived_from_the_woff2(): void
+    {
+        $woff2 = $this->assetLabelled('Space Grotesk (woff2)');
+        $truetype = $this->assetLabelled('Space Grotesk (truetype)');
+
+        self::assertTrue($truetype->isDerived());
+        self::assertSame('woff2-decompress', $truetype->derivation->transform);
+        self::assertTrue($truetype->derivation->source->equals($woff2->digest));
+        self::assertFalse($truetype->digest->equals($woff2->digest));
     }
 
     public function test_a_path_is_a_locator_and_never_an_identity(): void
@@ -108,5 +131,16 @@ final class ContentAddressedAssetTest extends TestCase
 
         self::assertStringEndsWith($expected, $store->locator($digest), 'The locator is the digest, fanned out.');
         self::assertStringNotContainsString('.svg', $store->locator($digest), 'Locators are derived from content, not from a filename.');
+    }
+
+    private function assetLabelled(string $label): Asset
+    {
+        foreach (Fixture::json('assets.json')['assets'] as $serialized) {
+            if (($serialized['label'] ?? null) === $label) {
+                return Asset::fromArray($serialized);
+            }
+        }
+
+        self::fail("The fixture holds no asset labelled '{$label}'.");
     }
 }

@@ -14,6 +14,9 @@ enum IssueCode: string
 {
     case BrandTokenUnknown = 'RABO_BRAND_TOKEN_UNKNOWN';
     case BrandFontUnknown = 'RABO_BRAND_FONT_UNKNOWN';
+    case FontAssetMissing = 'RABO_FONT_ASSET_MISSING';
+    case FontNotEmbeddable = 'RABO_FONT_NOT_EMBEDDABLE';
+    case FontGlyphUnavailable = 'RABO_FONT_GLYPH_UNAVAILABLE';
     case BrandDrift = 'RABO_BRAND_DRIFT';
     case ContrastInsufficient = 'RABO_CONTRAST_INSUFFICIENT';
     case AssetMissing = 'RABO_ASSET_MISSING';
@@ -36,7 +39,9 @@ enum IssueCode: string
     public function defaultSeverity(): Severity
     {
         return match ($this) {
-            self::BrandDrift => Severity::Warning,
+            // A brand may legitimately rely on a system stack; the artifact still renders,
+            // just not necessarily as the brand.
+            self::BrandDrift, self::FontNotEmbeddable, self::FontGlyphUnavailable => Severity::Warning,
             default => Severity::Error,
         };
     }
@@ -47,6 +52,9 @@ enum IssueCode: string
         return match ($this) {
             self::BrandTokenUnknown => 'Reference a token the Brand Library declares, or add it to the brand.',
             self::BrandFontUnknown => 'Use a declared font family and a weight that family supports.',
+            self::FontAssetMissing => 'Add the font bytes to the store, or drop the file declaration from the family.',
+            self::FontNotEmbeddable => 'Ship a WOFF2 for this family, or accept that viewers without it see a fallback.',
+            self::FontGlyphUnavailable => 'Use a font subset that covers the character, or rewrite the text to avoid it.',
             self::BrandDrift => 'Re-point the composition at a current Brand Library version.',
             self::ContrastInsufficient => 'Choose an ink role with more contrast against its fill, or change the fill.',
             self::AssetMissing => 'Add the asset bytes to the store, or reference an asset that exists.',

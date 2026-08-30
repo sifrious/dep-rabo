@@ -10,11 +10,17 @@
     "brand": {
         "id": "burg",
         "version": "1.0.0",
-        "key": "c6366911780c605dd9c2f1b81665faa406bed497190fbce7180d3012f37cc23d"
+        "key": "ebe8a59d0cb954b9d31304042859c466db7382afce31b03b78cd993cc34caa52"
     },
     "assets": [
+        "sha256:0640890476fc1198ab4de571fb658de443c4d85b66466ec09534a8737ab1ce9d",
+        "sha256:18be452724bfdc236c074ca94a249a7f41a86752c7d04ab258ce9ed5651f6a7e",
+        "sha256:2fa7a175769e16bf56416b47cb69bf19fd0a4e2718ae3af33de2c7ab9ef3a901",
         "sha256:65f9f05df7a1c8959a2bbf6592a8edd8cebe79c67e67dba19e2bfc91b6b5e960",
-        "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9"
+        "sha256:94f4af82871f6de575a33981e6609ebba43d9201c0a8b6275f4d6647ea527a3b",
+        "sha256:b6728c8f52420f39d2905101518bf7907933f3abce2ae6d4a44d7443e37190a9",
+        "sha256:bdefb6627fd07193c089cc21488c2955145b693051fbaa9ed12928edf8c29a19",
+        "sha256:e9201eddf1d41d0b62253295d869ce3cf65768f7102b797f02c7f8c876b4a9d5"
     ],
     "renderer": {
         "id": "rabo-svg-static",
@@ -22,8 +28,8 @@
         "deterministic": true,
         "tool_versions": {}
     },
-    "request_digest": "8f35edcd42e4c550642c1caf8dda079aec6e6823012c4c43117345693cd58d5f",
-    "output_digest": "sha256:4f54e2660d8405cf2908c236c8ecc89d8e9ad7955e78695cdfa4c7ada59fd88f",
+    "request_digest": "a29d61066e8d3bd2e2df5f4b1f51fb259fb49262cabcfe23d62c4a178ec4048d",
+    "output_digest": "sha256:aa25274e3e75d72619080af9a14a9a4779e29078c139a01a72f624ea48c7d531",
     "references": {
         "contract": "sifrious.rabo.composition-references",
         "contract_version": 1,
