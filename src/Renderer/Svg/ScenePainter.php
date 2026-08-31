@@ -76,12 +76,15 @@ final readonly class ScenePainter
             if ($file === null || $this->assets === null || ! $this->assets->has($file->digest)) {
                 continue;
             }
+            // Belt and braces. FontFamily rejects names carrying quotes, braces or angle brackets,
+            // but a manifest reaching this painter by some other route must still not be able to
+            // close the style element and inject markup into a document a viewer opens.
             $faces[] = sprintf(
                 "@font-face { font-family: '%s'; src: url(data:%s;base64,%s) format('%s'); }",
-                $family->name,
+                self::cssIdentifier($family->name),
                 $file->format->mediaType(),
                 base64_encode($this->assets->bytes($file->digest)),
-                $file->format->cssFormat(),
+                self::cssIdentifier($file->format->cssFormat()),
             );
         }
         if ($faces === []) {
@@ -93,6 +96,12 @@ final readonly class ScenePainter
             $svg->raw($face, 2);
         }
         $svg->close('style');
+    }
+
+    /** Strips anything that could escape a CSS string or the style element containing it. */
+    private static function cssIdentifier(string $value): string
+    {
+        return (string) preg_replace('/[^\p{L}\p{N} ._+-]/u', '', $value);
     }
 
     /** @return list<FontFamily> */

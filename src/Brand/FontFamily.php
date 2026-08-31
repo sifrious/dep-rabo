@@ -43,12 +43,12 @@ final readonly class FontFamily implements JsonSerializable
         array $advanceRatios,
         array $files = [],
     ) {
-        if (trim($name) !== $name || $name === '') {
-            throw new InvalidArgumentException('Font family names must be non-empty and trimmed.');
+        if (! self::isSafeFamilyName($name)) {
+            throw new InvalidArgumentException('Font family names must be plain, non-empty typeface names.');
         }
         foreach ($fallbacks as $fallback) {
-            if (! is_string($fallback) || trim($fallback) === '') {
-                throw new InvalidArgumentException("Font family '{$name}' has an empty fallback entry.");
+            if (! is_string($fallback) || ! self::isSafeFamilyName($fallback)) {
+                throw new InvalidArgumentException("Font family '{$name}' has an invalid fallback entry.");
             }
         }
         if ($weights === []) {
@@ -116,11 +116,34 @@ final readonly class FontFamily implements JsonSerializable
         return $this->file(FontFormat::TrueType);
     }
 
-    /** Every digest this family depends on, in declaration order. */
+    /**
+     * A typeface name that is safe to write into CSS and markup.
+     *
+     * Family names reach a rendered artifact's `<style>` block, so a name carrying a quote, an angle
+     * bracket, a brace or a semicolon could close the rule or the element and inject markup into a
+     * document a viewer opens. Real typeface names need none of those characters.
+     */
+    public static function isSafeFamilyName(string $name): bool
+    {
+        return trim($name) === $name
+            && $name !== ''
+            // A leading hyphen is legitimate: `-apple-system` is a real fallback entry.
+            && preg_match('/^-?[\p{L}\p{N}][\p{L}\p{N} ._+-]*$/u', $name) === 1;
+    }
+
+    /** Every digest this family depends on — font files and the licences that must ship with them. */
     /** @return list<ContentDigest> */
     public function assets(): array
     {
-        return array_map(static fn (FontFile $file): ContentDigest => $file->digest, $this->files);
+        $digests = [];
+        foreach ($this->files as $file) {
+            $digests[] = $file->digest;
+            if ($file->licence !== null) {
+                $digests[] = $file->licence;
+            }
+        }
+
+        return $digests;
     }
 
     public function supportsWeight(int $weight): bool

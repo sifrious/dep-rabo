@@ -35,6 +35,8 @@ final class ValidationCoverageTest extends TestCase
         'motion-cue-past-end' => IssueCode::MotionDurationInvalid,
         'motion-cue-overlap' => IssueCode::MotionCueOverlapUnresolved,
         'motion-essential-dismissed' => IssueCode::MotionInformationOnlyTransient,
+        'missing-font-asset' => IssueCode::FontAssetMissing,
+        'unreadable-font-asset' => IssueCode::FontAssetUnreadable,
     ];
 
     public function test_each_failing_bundle_reports_its_own_code_and_nothing_else(): void

@@ -17,6 +17,7 @@ enum IssueCode: string
     case FontAssetMissing = 'RABO_FONT_ASSET_MISSING';
     case FontNotEmbeddable = 'RABO_FONT_NOT_EMBEDDABLE';
     case FontGlyphUnavailable = 'RABO_FONT_GLYPH_UNAVAILABLE';
+    case FontAssetUnreadable = 'RABO_FONT_ASSET_UNREADABLE';
     case BrandDrift = 'RABO_BRAND_DRIFT';
     case ContrastInsufficient = 'RABO_CONTRAST_INSUFFICIENT';
     case AssetMissing = 'RABO_ASSET_MISSING';
@@ -55,6 +56,7 @@ enum IssueCode: string
             self::FontAssetMissing => 'Add the font bytes to the store, or drop the file declaration from the family.',
             self::FontNotEmbeddable => 'Ship a WOFF2 for this family, or accept that viewers without it see a fallback.',
             self::FontGlyphUnavailable => 'Use a font subset that covers the character, or rewrite the text to avoid it.',
+            self::FontAssetUnreadable => 'Replace the font file; its character map could not be read, so nothing can be checked against it.',
             self::BrandDrift => 'Re-point the composition at a current Brand Library version.',
             self::ContrastInsufficient => 'Choose an ink role with more contrast against its fill, or change the fill.',
             self::AssetMissing => 'Add the asset bytes to the store, or reference an asset that exists.',

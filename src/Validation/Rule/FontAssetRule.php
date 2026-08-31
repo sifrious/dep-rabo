@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sifrious\Rabo\Validation\Rule;
 
+use Sifrious\Rabo\Asset\CorruptAsset;
+use Sifrious\Rabo\Asset\MissingAsset;
 use Sifrious\Rabo\Brand\FontCoverage;
 use Sifrious\Rabo\Brand\FontFamily;
 use Sifrious\Rabo\Composition\Node\TextNode;
@@ -37,6 +39,55 @@ final readonly class FontAssetRule implements Rule
         $store = $context->assets;
         $issues = [];
 
+        // Embedding was asked for and there is nothing to embed from. Without this the renderer
+        // quietly produces an artifact with no font faces at all, which is exactly the
+        // non-portable output the embedding exists to prevent.
+        if ($context->target?->embedFonts === true && $store === null) {
+            $issues[] = new ValidationIssue(
+                IssueCode::FontAssetMissing,
+                'brand.typography',
+                'This render embeds fonts but was given no asset store, so no typeface can travel with the artifact.',
+            );
+        }
+
+        // File presence and integrity are checked for every family the brand declares, not only the
+        // ones this scene sets. A brand that lies about its own contents is wrong whichever scene
+        // happens to be rendering.
+        foreach ($context->brand->typography->families as $family) {
+            foreach ($family->files as $file) {
+                if ($store === null) {
+                    continue;
+                }
+                if (! $store->has($file->digest)) {
+                    $issues[] = new ValidationIssue(
+                        IssueCode::FontAssetMissing,
+                        'brand.typography.'.$family->name,
+                        sprintf(
+                            "Font family '%s' declares a %s file at %s, which the store does not hold.",
+                            $family->name, $file->format->value, $file->digest,
+                        ),
+                    );
+
+                    continue;
+                }
+                try {
+                    $store->bytes($file->digest);
+                } catch (CorruptAsset) {
+                    $issues[] = new ValidationIssue(
+                        IssueCode::AssetDigestMismatch,
+                        'brand.typography.'.$family->name,
+                        sprintf("The bytes stored for font family '%s' no longer hash to %s.", $family->name, $file->digest),
+                    );
+                } catch (MissingAsset) {
+                    $issues[] = new ValidationIssue(
+                        IssueCode::FontAssetMissing,
+                        'brand.typography.'.$family->name,
+                        sprintf("Font family '%s' declares %s, which could not be read.", $family->name, $file->digest),
+                    );
+                }
+            }
+        }
+
         $roles = [];
         foreach ($context->scene->nodes() as $node) {
             $role = $node->style()->typeRole;
@@ -47,17 +98,17 @@ final readonly class FontAssetRule implements Rule
         ksort($roles);
 
         foreach ($context->brand->typography->familiesForRoles(array_values($roles)) as $family) {
-            foreach ($family->files as $file) {
-                if ($store !== null && ! $store->has($file->digest)) {
-                    $issues[] = new ValidationIssue(
-                        IssueCode::FontAssetMissing,
-                        'brand.typography.'.$family->name,
-                        sprintf(
-                            "Font family '%s' declares a %s file at %s, which the store does not hold.",
-                            $family->name, $file->format->value, $file->digest,
-                        ),
-                    );
-                }
+            $raster = $family->rasterFile();
+            if ($store !== null && $raster !== null && $store->has($raster->digest)
+                && ! FontCoverage::ofTrueType($store->bytes($raster->digest))->readable) {
+                $issues[] = new ValidationIssue(
+                    IssueCode::FontAssetUnreadable,
+                    'brand.typography.'.$family->name,
+                    sprintf(
+                        "Font family '%s' ships a file whose character map could not be read, so nothing was checked against it.",
+                        $family->name,
+                    ),
+                );
             }
 
             foreach ($this->uncoveredCharacters($context, $family) as $character => $where) {
@@ -100,7 +151,9 @@ final readonly class FontAssetRule implements Rule
         }
 
         $coverage = FontCoverage::ofTrueType($store->bytes($file->digest));
-        if ($coverage->count() === 0) {
+        if (! $coverage->readable) {
+            // Reported separately as RABO_FONT_ASSET_UNREADABLE. Claiming every character is
+            // missing here would bury that one fact under a hundred derived ones.
             return [];
         }
 

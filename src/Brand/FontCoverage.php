@@ -13,32 +13,37 @@ namespace Sifrious\Rabo\Brand;
  * is "Agent completion ≠ verified completion" therefore gets that character from a system font on
  * every machine that happens to have one, and from nothing at all on a machine that does not.
  *
- * Only formats 4 and 12 are read. Those cover every modern font; a subtable this cannot parse is
- * reported as covering nothing rather than as covering everything, so the failure direction is a
- * false warning rather than a false pass.
+ * Only formats 4 and 12 are read. Those cover every modern font.
+ *
+ * `readable` is separate from `count()` on purpose. A font that could not be parsed and a font that
+ * genuinely covers nothing both have zero codepoints, and treating them the same let an unreadable
+ * file report no glyph problems at all — a silent pass on the exact question this class exists to
+ * answer. Callers must ask whether the coverage is readable before trusting that it is empty.
  */
 final readonly class FontCoverage
 {
     /** @param array<int,true> $codepoints */
-    private function __construct(private array $codepoints) {}
+    private function __construct(private array $codepoints, public bool $readable) {}
 
     public static function ofTrueType(string $bytes): self
     {
         $offset = self::tableOffset($bytes, 'cmap');
         if ($offset === null) {
-            return new self([]);
+            return new self([], false);
         }
 
         $subtable = self::bestSubtable($bytes, $offset);
         if ($subtable === null) {
-            return new self([]);
+            return new self([], false);
         }
 
-        return new self(match (self::uint16($bytes, $subtable)) {
-            4 => self::readFormat4($bytes, $subtable),
-            12 => self::readFormat12($bytes, $subtable),
-            default => [],
-        });
+        $format = self::uint16($bytes, $subtable);
+
+        return match ($format) {
+            4 => new self(self::readFormat4($bytes, $subtable), true),
+            12 => new self(self::readFormat12($bytes, $subtable), true),
+            default => new self([], false),
+        };
     }
 
     public function covers(int $codepoint): bool
@@ -104,13 +109,24 @@ final readonly class FontCoverage
         return $best;
     }
 
-    /** @return array<int,true> */
+    /**
+     * Format 4, resolving each code point to a glyph id.
+     *
+     * A segment's range says which code points it *describes*, not which it can draw: `idDelta`,
+     * `idRangeOffset` and `glyphIdArray` can still resolve a code point inside the range to glyph 0,
+     * which means no glyph. Treating the range as coverage marked characters as available that the
+     * font cannot draw, which is the false pass this whole class is meant to prevent.
+     *
+     * @return array<int,true>
+     */
     private static function readFormat4(string $bytes, int $subtable): array
     {
         $segmentBytes = self::uint16($bytes, $subtable + 6);
         $segments = intdiv($segmentBytes, 2);
         $endBase = $subtable + 14;
         $startBase = $endBase + $segmentBytes + 2;
+        $deltaBase = $startBase + $segmentBytes;
+        $rangeBase = $deltaBase + $segmentBytes;
 
         $codepoints = [];
         for ($i = 0; $i < $segments; $i++) {
@@ -119,8 +135,26 @@ final readonly class FontCoverage
             if ($end === 0xFFFF || $start > $end) {
                 continue;
             }
+            $delta = self::uint16($bytes, $deltaBase + $i * 2);
+            $rangeOffset = self::uint16($bytes, $rangeBase + $i * 2);
+
             for ($code = $start; $code <= $end; $code++) {
-                $codepoints[$code] = true;
+                if ($rangeOffset === 0) {
+                    $glyph = ($code + $delta) & 0xFFFF;
+                } else {
+                    // The offset is measured in bytes from the idRangeOffset entry itself.
+                    $at = $rangeBase + $i * 2 + $rangeOffset + ($code - $start) * 2;
+                    if ($at + 2 > strlen($bytes)) {
+                        continue;
+                    }
+                    $glyph = self::uint16($bytes, $at);
+                    if ($glyph !== 0) {
+                        $glyph = ($glyph + $delta) & 0xFFFF;
+                    }
+                }
+                if ($glyph !== 0) {
+                    $codepoints[$code] = true;
+                }
             }
         }
 

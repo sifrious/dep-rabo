@@ -114,6 +114,22 @@ final readonly class FfmpegMotionRenderer implements Renderer
             // files are written to disk and handed to it by path. Without this the video renders
             // in a system fallback while the SVG renders in the brand — the same composition
             // saying two different things.
+            $unrasterizable = $this->familiesWithoutRasterFile($request->brand, $scene);
+            if ($unrasterizable !== []) {
+                // Skipping them silently is what produced a video in a system fallback while the
+                // SVG rendered in the brand. This renderer cannot honour the composition, so it
+                // says so rather than shipping something that looks nearly right.
+                return RenderOutcome::refused(new ValidationReport([new ValidationIssue(
+                    IssueCode::RendererCapabilityUnsupported,
+                    'brand.typography',
+                    sprintf(
+                        "Renderer '%s' rasterizes text from TrueType files, and this scene sets type in %s, which ships none.",
+                        self::IDENTITY,
+                        implode(', ', $unrasterizable),
+                    ),
+                )]));
+            }
+
             $fontArguments = $this->writeFontFiles($request->brand, $scene, $directory);
 
             $frames = new SvgFrameRenderer($request->brand, $this->assets);
@@ -192,6 +208,32 @@ final readonly class FfmpegMotionRenderer implements Renderer
      *
      * @return list<string>
      */
+    /**
+     * Families this scene sets that ship no file a rasterizer can load.
+     *
+     * A WOFF2-only family passes validation — it is embeddable, so the SVG is fine — but resvg
+     * rejects WOFF2, so the video would quietly fall back to whatever the machine has installed.
+     *
+     * @return list<string>
+     */
+    private function familiesWithoutRasterFile(BrandLibrary $brand, Scene $scene): array
+    {
+        if ($this->assets === null) {
+            return [];
+        }
+
+        $missing = [];
+        foreach ((new ScenePainter($brand, $this->assets))->familiesUsedBy($scene) as $family) {
+            $file = $family->rasterFile();
+            if ($file === null || ! $this->assets->has($file->digest)) {
+                $missing[] = $family->name;
+            }
+        }
+
+        return $missing;
+    }
+
+    /** @return list<string> */
     private function writeFontFiles(BrandLibrary $brand, Scene $scene, string $directory): array
     {
         if ($this->assets === null) {
