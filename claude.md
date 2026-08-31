@@ -9,7 +9,7 @@ whether it may be published, or where it goes.
 **No framework, no ORM, no HTTP client, no provider SDK.** The only dependencies are `php` and
 `sifrious/reference-contract`. If a class here needs Laravel or a network, the design is wrong.
 
-**No Burdgeon tokens.** Burdgeon owns two token systems Rabo must never absorb: the semantic
+**No Burdgen tokens.** Burdgen owns two token systems Rabo must never absorb: the semantic
 interface palette (`--color-surface-*`, `--tone-*`) and the product identity palette
 (`--product-*`, where `rabo` is itself a colour). A Brand Library is customer-facing brand
 vocabulary. Reusing those names would collapse a boundary that ADR-002 exists to hold.

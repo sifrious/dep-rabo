@@ -5,7 +5,7 @@ Validated for MME-1864 on 2026-08-29.
 | Criterion | Package evidence | Result |
 | --- | --- | --- |
 | Rabo depends on no framework, ORM, HTTP client, or provider SDK | `composer.json` requires `php ^8.3` and `sifrious/reference-contract` only. `grep -ril "illuminate\|laravel\|guzzle\|symfony" src/` returns nothing. | Passed |
-| Burdgeon product-interface design tokens are not absorbed | No `--color-surface-*`, `--tone-*`, or `--product-*` name appears in `src/` or in any fixture. The fixture brand is `burg` from `sifrious/official-burd-design`, a customer-facing identity, not Burdgeon's theme model. | Passed |
+| Burdgen product-interface design tokens are not absorbed | No `--color-surface-*`, `--tone-*`, or `--product-*` name appears in `src/` or in any fixture. The fixture brand is `burg` from `sifrious/official-burd-design`, a customer-facing identity, not Burdgen's theme model. | Passed |
 | Cross-package references use the shared contract | `Reference\CompositionReferences` holds `Sifrious\ReferenceContract\CrossPackageReference` values and serializes them unchanged; asserted in `tests/Reference/CrossPackageReferenceTest.php`. | Passed |
 | Rabo does not own upstream or downstream state | `ReferenceRole` records an owning package per role and rejects a reference owned by anything else, including Rabo itself. No resolution, caching, or copying of referenced objects exists anywhere in `src/`. | Passed |
 | Renderer implementations stay behind the boundary | `Render\Renderer` names no format or tool. `Brand`, `Composition`, and `Motion` contain no reference to SVG, `resvg`, or `ffmpeg`; those appear only under `src/Renderer/`. | Passed |

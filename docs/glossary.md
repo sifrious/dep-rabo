@@ -2,7 +2,7 @@
 
 These terms are the vault's normative Rabo vocabulary
 (`vault/thoughts/Projects/Rabo/Glossary/Glossary.md`), with the class that implements each.
-Rabo owns these terms for customer-facing production. Burdgeon owns the separate
+Rabo owns these terms for customer-facing production. Burdgen owns the separate
 product-interface design-system vocabulary, and none of it appears here.
 
 - **Brand Library** — the portable source of truth for a visual identity, its assets, templates,

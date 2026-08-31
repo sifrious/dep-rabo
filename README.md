@@ -15,7 +15,7 @@ back. Rendered artifacts are outputs. The composition stays canonical and editab
 Rabo does not own what claim should be made or to whom (Pulp), where the underlying material
 came from (Digory, Funes, Aleph), whether the work is editorially acceptable (Orual), where it
 is published (Trout), or the application chrome and product-interface design system that
-Burdgeon owns. It holds opaque references to those things and resolves none of them.
+Burdgen owns. It holds opaque references to those things and resolves none of them.
 
 ## Verification
 

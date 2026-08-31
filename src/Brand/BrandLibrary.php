@@ -18,7 +18,7 @@ use Sifrious\ReferenceContract\CrossPackageReference;
  *
  * It references assets by content digest and never by path, and it declares which renderers
  * it is known to work with rather than naming one. Product-interface design systems are a
- * different thing owned elsewhere; nothing here is Burdgeon's theme model.
+ * different thing owned elsewhere; nothing here is Burdgen's theme model.
  */
 final readonly class BrandLibrary implements JsonSerializable
 {
