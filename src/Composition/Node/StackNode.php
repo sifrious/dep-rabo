@@ -6,6 +6,7 @@ namespace Sifrious\Rabo\Composition\Node;
 
 use InvalidArgumentException;
 use Sifrious\Rabo\Composition\Alignment;
+use Sifrious\Rabo\Composition\CrossSizing;
 use Sifrious\Rabo\Composition\NodeId;
 use Sifrious\Rabo\Composition\NodeStyle;
 use Sifrious\Rabo\Composition\Size;
@@ -36,6 +37,7 @@ final readonly class StackNode implements ContainerNode
         private NodeStyle $style = new NodeStyle(),
         public Alignment $align = Alignment::Center,
         public Alignment $distribute = Alignment::Start,
+        public CrossSizing $crossSizing = CrossSizing::Hug,
     ) {
         if (preg_match('/^[a-z0-9][a-z0-9-]*$/', $gap) !== 1) {
             throw new InvalidArgumentException("Stack '{$id}' must reference a brand spacing step for its gap.");
@@ -87,19 +89,19 @@ final readonly class StackNode implements ContainerNode
     /** A copy of this stack running along the other axis, keeping every identifier. */
     public function withDirection(StackDirection $direction): self
     {
-        return new self($this->id, $direction, $this->gap, $this->children, $this->style, $this->align, $this->distribute);
+        return new self($this->id, $direction, $this->gap, $this->children, $this->style, $this->align, $this->distribute, $this->crossSizing);
     }
 
     /** A copy aligned differently across its axis, keeping every identifier. */
     public function withAlign(Alignment $align): self
     {
-        return new self($this->id, $this->direction, $this->gap, $this->children, $this->style, $align, $this->distribute);
+        return new self($this->id, $this->direction, $this->gap, $this->children, $this->style, $align, $this->distribute, $this->crossSizing);
     }
 
     /** @param list<Node> $children */
     public function withChildren(array $children): self
     {
-        return new self($this->id, $this->direction, $this->gap, $children, $this->style, $this->align, $this->distribute);
+        return new self($this->id, $this->direction, $this->gap, $children, $this->style, $this->align, $this->distribute, $this->crossSizing);
     }
 
     /** @return array<string,mixed> */
@@ -112,6 +114,7 @@ final readonly class StackNode implements ContainerNode
             'gap' => $this->gap,
             'align' => $this->align->value,
             'distribute' => $this->distribute->value,
+            ...($this->crossSizing === CrossSizing::Hug ? [] : ['cross_sizing' => $this->crossSizing->value]),
             'style' => $this->style->toArray(),
             'children' => array_map(static fn (Node $n): array => $n->toArray(), $this->children),
         ];
@@ -125,9 +128,10 @@ final readonly class StackNode implements ContainerNode
         $gap = $serialized['gap'] ?? null;
         $align = $serialized['align'] ?? Alignment::Center->value;
         $distribute = $serialized['distribute'] ?? Alignment::Start->value;
+        $crossSizing = $serialized['cross_sizing'] ?? CrossSizing::Hug->value;
         $style = $serialized['style'] ?? [];
         $children = $serialized['children'] ?? [];
-        if (! is_string($id) || ! is_string($direction) || ! is_string($gap) || ! is_string($align) || ! is_string($distribute) || ! is_array($style) || ! is_array($children)) {
+        if (! is_string($id) || ! is_string($direction) || ! is_string($gap) || ! is_string($align) || ! is_string($distribute) || ! is_string($crossSizing) || ! is_array($style) || ! is_array($children)) {
             throw new InvalidArgumentException('Serialized stacks require id, direction, gap, align, distribute, style, and children.');
         }
 
@@ -139,6 +143,7 @@ final readonly class StackNode implements ContainerNode
             NodeStyle::fromArray($style),
             Alignment::tryFrom($align) ?? throw new InvalidArgumentException("Stack '{$id}' declares an unsupported alignment."),
             Alignment::tryFrom($distribute) ?? throw new InvalidArgumentException("Stack '{$id}' declares an unsupported distribution."),
+            CrossSizing::tryFrom($crossSizing) ?? throw new InvalidArgumentException("Stack '{$id}' declares an unsupported cross sizing."),
         );
     }
 

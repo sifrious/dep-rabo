@@ -22,7 +22,7 @@
     </g>
     <g id="columns">
       <g id="col-reported">
-        <rect x="40" y="513" width="560" height="194" rx="12" fill="#fbfaf6" stroke="#d8d2c2" stroke-width="1"/>
+        <rect x="40" y="513" width="1000" height="194" rx="12" fill="#fbfaf6" stroke="#d8d2c2" stroke-width="1"/>
         <g id="col-reported-title">
           <text x="64" y="556.97" fill="#2a1700" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="20" font-weight="600" text-anchor="start" xml:space="preserve">What the check reported</text>
         </g>
@@ -52,7 +52,7 @@
         </g>
       </g>
       <g id="col-actual">
-        <rect x="40" y="739" width="560" height="194" rx="12" fill="#faeeda" stroke="#d8d2c2" stroke-width="1"/>
+        <rect x="40" y="739" width="1000" height="194" rx="12" fill="#faeeda" stroke="#d8d2c2" stroke-width="1"/>
         <g id="col-actual-title">
           <text x="64" y="782.97" fill="#2a1700" font-family="&apos;Hanken Grotesk&apos;, system-ui, -apple-system, &apos;Segoe UI&apos;, sans-serif" font-size="20" font-weight="600" text-anchor="start" xml:space="preserve">What was true</text>
         </g>

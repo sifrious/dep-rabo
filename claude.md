@@ -37,6 +37,20 @@ word silently dropped.
 readable and avoid the `[]` versus `{}` ambiguity. That makes `toArray() === toArray()` always
 false for equal documents. Use `canonical()` and `equals()`.
 
+**The second composition warns, and that is correct.** `RABO_MARK_INK_NOT_INHERITED` fires on its
+mono mark: the mark is authored `fill="currentColor"`, and through an `ImageNode` it becomes its own
+document in a data URI where that resolves to black rather than the brand ink around it. Warning,
+not error — the artifact renders, and the real fix is Q-009.
+
+**A stack's `cross_sizing` is usually absent from `composition.json`.** `hug` is the default and is
+not serialized, because emitting it would change `Composition::key()` for every composition that
+never asked for the field — see D-017. Only `fill` appears.
+
+**`fill` means "equal widths" or "equal heights" depending on the stack.** The cross axis is the one
+the stack does not run along, so the same flag on a horizontal stack equalises heights and on a
+vertical one equalises widths. That is deliberate: `columns` in the second composition wants both,
+and gets them from one declaration because the variant flips its direction.
+
 **`maxLines` is an allowance, not a requirement.** Text that fits on one line inside a two-line box
 is correct. Height is measured against lines actually needed.
 
@@ -82,12 +96,18 @@ Consumers match on codes. Never make prose the only contract.
 ## Tests
 
 `composer test`. Fixtures are the same files a reviewer reads: `tests/` loads
-`fixtures/agent-completion-verified-completion` and `fixtures/failing/*` directly, and
-`tests/Cli/CommandTest.php` runs every command `docs/human-verification.md` documents, so the
-docs cannot drift from the package.
+`fixtures/agent-completion-verified-completion` and `fixtures/failing/*` directly.
+
+`tests/Docs/HumanVerificationTest.php` extracts the commands from `docs/human-verification.md`
+itself and runs them, asserting the exit code each fenced block is annotated with, and failing if a
+`php bin/rabo` line is documented without an annotation. That sentence used to name
+`tests/Cli/CommandTest.php` and was simply untrue — no test opened any file under `docs/`, and the
+gap hid `--no-embed-fonts`, documented in three places and read by nothing. When editing that page,
+annotate new blocks (`expect-exit=N`, `no-errexit`, `requires=`, `requires-missing=`, `not-run=`).
 
 Adding a validation code means adding a small bundle under `fixtures/failing/` that breaks that
-rule and nothing else. `ValidationCoverageTest` asserts each bundle isolates exactly one code.
+rule and nothing else. `ValidationCoverageTest` asserts each bundle isolates exactly one code, and
+scans the directory in both directions so neither the map nor the fixtures can fall behind.
 
 Changing a renderer changes the committed artifacts under `expected/`. Regenerate them with
 `bin/rabo render` and read the diff before committing it — that diff is the review.

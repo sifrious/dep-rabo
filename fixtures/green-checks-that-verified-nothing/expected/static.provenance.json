@@ -4,7 +4,7 @@
     "composition": {
         "id": "green-checks-that-verified-nothing",
         "version": 1,
-        "key": "aaf7e1e57e2af57975c5d5c71aedbebe518477e59038bebf10e3498ce74bee28",
+        "key": "3e9847b2e29494750fd4f6d6835d60d3b71974407ea4290e069d4dbca6c80fcd",
         "scene": "source"
     },
     "brand": {
@@ -31,7 +31,7 @@
         "deterministic": true,
         "tool_versions": {}
     },
-    "request_digest": "34523f8616ab44aadcb157d7c9a78f7a9b40bd53d9e1e36f820e62be4718494b",
+    "request_digest": "dcf1f457eb4fde1346ac4137c1d8139121877ac0d39158345db4707c338e787e",
     "output_digest": "sha256:5a2a866364589186a9f4ae40b9e304a29a795f6c5878600f2f79601bebd5c863",
     "references": {
         "contract": "sifrious.rabo.composition-references",

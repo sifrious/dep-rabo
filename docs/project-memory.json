@@ -1,7 +1,7 @@
 {
     "schema_version": 1,
     "project": "Rabo",
-    "updated_at": "2026-08-30T03:30:00Z",
+    "updated_at": "2026-09-01T00:00:00Z",
     "facts": [
         {
             "id": "F-001",
@@ -33,7 +33,7 @@
         },
         {
             "id": "F-008",
-            "statement": "Twelve failing fixtures under fixtures/failing each isolate exactly one validation code."
+            "statement": "Each fixture under fixtures/failing isolates exactly one validation code, and ValidationCoverageTest scans the directory in both directions so neither the map nor the fixtures can fall behind."
         },
         {
             "id": "F-009",
@@ -45,7 +45,7 @@
         },
         {
             "id": "F-011",
-            "statement": "The brand's three faces are latin subsets with no U+2260, so the canonical headline's \u2260 comes from a system font; validation warns rather than hiding it."
+            "statement": "The brand's three faces are latin subsets with no U+2260, so the canonical headline's ≠ comes from a system font; validation warns rather than hiding it."
         },
         {
             "id": "F-012",
@@ -72,6 +72,22 @@
         {
             "id": "A-004",
             "statement": "Animated SVG with CSS keyframes plays as authored in current browsers; no cross-browser check runs in this repository."
+        },
+        {
+            "id": "A-005",
+            "statement": "The fixture brand is real, licensed material: the burg identity from sifrious/official-burd-design, with the three typefaces under the SIL Open Font License."
+        },
+        {
+            "id": "A-006",
+            "statement": "The evidence the canonical composition cites is real and checkable at time of writing; Rabo holds the references and verifies none of them."
+        },
+        {
+            "id": "A-007",
+            "statement": "The rasterizer keeps system fonts available as a fallback: --use-font-file is passed for each brand face, --skip-system-fonts deliberately is not, so the headline's U+2260 still draws."
+        },
+        {
+            "id": "A-008",
+            "statement": "Font embedding was verified in Chrome and resvg by comparing rendered pixels, not across a browser matrix; Firefox and WebKit are expected to behave as Chrome does and were not tested."
         }
     ],
     "decisions": [
@@ -101,14 +117,34 @@
             "rationale": "Separate implementations let a caption pass validation and then render with its last word dropped."
         },
         {
+            "id": "D-006",
+            "decision": "Font families declare average advance-width ratios per weight. Overflow is estimated from those, and `docs/assumptions.md` records that this is an estimate.",
+            "rationale": "A real shaping engine means a font-file dependency, per-platform variation, and a much larger package, in exchange for precision that a validation gate does not need. A declared, brand-owned estimate is deterministic and inspectable."
+        },
+        {
             "id": "D-007",
             "decision": "Render outcomes are four states, not a nullable artifact.",
             "rationale": "A caller must distinguish a permanent refusal from a retryable failure from an ambiguous acknowledgement."
         },
         {
+            "id": "D-008",
+            "decision": "`RABO_BRAND_DRIFT` defaults to a warning, and `BrandCompatibilityRule` raises it at error severity when the pinned brand cannot be satisfied.",
+            "rationale": "`RenderRequest` already refuses to construct against an unsatisfiable pin. Reporting the same condition as a non-blocking warning would have validation disagree with rendering."
+        },
+        {
             "id": "D-009",
             "decision": "MP4 non-determinism is declared rather than hidden, and no MP4 is committed as a golden artifact.",
             "rationale": "Claiming unverifiable reproducibility would undermine the guarantee the package exists to demonstrate."
+        },
+        {
+            "id": "D-010",
+            "decision": "`BinaryProbe` is an interface. When `resvg` or `ffmpeg` is absent the adapter declares no capability and returns `RABO_RENDERER_CAPABILITY_UNSUPPORTED`.",
+            "rationale": "The request is well-formed; this renderer simply cannot serve it, and the caller should ask a different one. Making it an interface also lets all four outcome states be tested without installing or removing anything."
+        },
+        {
+            "id": "D-011",
+            "decision": "`VariantSpec` carries a canvas, per-stack direction overrides, per-stack alignment overrides, and an optional padding step. It cannot change text, styles, or sizes.",
+            "rationale": "A variant that could change copy would be a second composition wearing the first one's name. Restricting it to layout is what guarantees the square and landscape outputs say the same thing — which is asserted directly in `CompositionContractTest`."
         },
         {
             "id": "D-012",
@@ -134,6 +170,11 @@
             "id": "D-016",
             "decision": "A font whose character map cannot be read is reported as RABO_FONT_ASSET_UNREADABLE rather than as covering nothing.",
             "rationale": "An unparseable file and a file that genuinely covers nothing both have zero codepoints; treating them alike let an unreadable font report no glyph problems at all."
+        },
+        {
+            "id": "D-017",
+            "decision": "CrossSizing::Fill on a StackNode gives each container child the stack's whole inner cross extent; a child that declares its own size is never filled, and Layout::measure() is unchanged so a filled child cannot grow its parent.",
+            "rationale": "A variant could re-orient a stack but nothing widened, leaving the portrait columns at their landscape measure. Filling only container children is what keeps TextOverflowRule and ScenePainter measuring the same box, so no text can rewrap. It lives on StackNode beside direction, gap, align and distribute, so D-011 stands unamended. cross_sizing is serialized only when it is not the default, so a composition that does not use it keeps the content key it has always had."
         }
     ],
     "constraints": [
@@ -144,6 +185,12 @@
         "Rendered artifacts never replace editable compositions."
     ],
     "open_questions": [
+        {
+            "id": "Q-001",
+            "question": "Where does a brand's font file live?",
+            "answered": true,
+            "answer": "Answered by MME-2194: in the content-addressed asset store, like any other asset."
+        },
         {
             "id": "Q-002",
             "question": "Should departing from a template be a warning, an error, or silent?"
@@ -162,15 +209,19 @@
         },
         {
             "id": "Q-006",
-            "question": "How does anything but one laptop install this package, given composer.json uses a local-only SSH alias for a private dependency?"
+            "question": "How does anything but one laptop install this package?",
+            "answered": true,
+            "answer": "`composer.json` reached `sifrious/reference-contract` at `git@github.com-sifrious:…`, an SSH alias in one developer's `~/.ssh/config` that resolved on that machine and nowhere else. CI failed on both legs at its first run, at DNS rather than at authentication, with an error pointing at the wrong thing."
         },
         {
             "id": "Q-007",
-            "question": "Should the brand ship a wider font subset that covers its own headline's \u2260, or accept a system fallback for that character?"
+            "question": "Should the brand ship a wider font subset that covers its own headline's ≠, or accept a system fallback for that character?"
         },
         {
             "id": "Q-008",
-            "question": "Should a stack be able to stretch its children across its cross axis, given fixed node sizes stop a variant reflowing to a new measure?"
+            "question": "Should a stack be able to stretch its children across its cross axis, given fixed node sizes stop a variant reflowing to a new measure?",
+            "answered": true,
+            "answer": "Answered by D-017. CrossSizing::Fill gives container children the whole cross track; root and columns opt in, so the portrait cards span their root. The D-005 hazard it named was closed first and separately, by moving TextOverflowRule onto the resolved layout box and asserting the rule and the painter agree."
         },
         {
             "id": "Q-009",
@@ -179,6 +230,10 @@
         {
             "id": "Q-010",
             "question": "How should several compositions share one brand without either duplicating its assets or giving up self-contained bundles?"
+        },
+        {
+            "id": "Q-011",
+            "question": "Two edges of cross-axis fill that were deliberately left alone: a leaf that fills, which would reopen D-005, and a scene root that fills its canvas, which is the one change that could stop fixtures/failing/text-overflow overflowing."
         }
     ],
     "glossary": [

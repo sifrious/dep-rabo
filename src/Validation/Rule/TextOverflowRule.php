@@ -24,6 +24,12 @@ use Sifrious\Rabo\Validation\ValidationIssue;
  *
  * The wrapping is the renderer's own, via TextFlow, so a caption cannot pass here and then
  * lose its last word when drawn.
+ *
+ * The box is the one layout resolved, which is the same box `ScenePainter` wraps against. D-005
+ * unified the wrapping algorithm; this unifies the measure it is given. Reading `declaredSize()`
+ * here happened to agree only because layout could not yet produce a size a node had not declared,
+ * and `tests/Validation/TextMeasureAgreementTest.php` now asserts the agreement rather than
+ * leaving it to coincidence.
  */
 final readonly class TextOverflowRule implements Rule
 {
@@ -48,7 +54,7 @@ final readonly class TextOverflowRule implements Rule
                 continue; // BrandTokenRule owns unresolvable roles.
             }
 
-            $box = $node->declaredSize();
+            $box = $context->layout()->box($node->id());
             $linesNeeded = $flow->linesNeeded($role, $node->content, $box->width);
 
             if ($linesNeeded > $node->maxLines) {
@@ -69,7 +75,7 @@ final readonly class TextOverflowRule implements Rule
                     IssueCode::TextOverflow,
                     (string) $node->id(),
                     sprintf(
-                        "Text '%s' occupies %d line(s) needing about %.0fpx of height but declares only %.0fpx.",
+                        "Text '%s' occupies %d line(s) needing about %.0fpx of height but is given only %.0fpx.",
                         $node->id(), min($linesNeeded, $node->maxLines), $heightNeeded, $box->height,
                     ),
                 );

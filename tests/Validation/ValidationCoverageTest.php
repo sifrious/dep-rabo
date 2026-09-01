@@ -53,6 +53,27 @@ final class ValidationCoverageTest extends TestCase
         }
     }
 
+    /**
+     * The other direction, which is the one that went wrong.
+     *
+     * The constant was checked against the filesystem but never the filesystem against the
+     * constant, so `unreadable-font-asset` sat there covered by nothing, and three documents
+     * disagreed about how many bundles existed — "thirteen", "twelve" and "twelve", against
+     * fourteen on disk.
+     */
+    public function test_no_failing_fixture_sits_outside_the_map(): void
+    {
+        $directories = glob(dirname(__DIR__, 2).'/fixtures/failing/*', GLOB_ONLYDIR) ?: [];
+        self::assertNotEmpty($directories);
+
+        $unmapped = array_values(array_diff(
+            array_map(basename(...), $directories),
+            array_keys(self::FAILING_BUNDLES),
+        ));
+
+        self::assertSame([], $unmapped, 'These bundles exist but no test asserts what they isolate: '.implode(', ', $unmapped));
+    }
+
     public function test_a_fixture_exists_for_every_dimension_the_slice_depends_on(): void
     {
         foreach (array_keys(self::FAILING_BUNDLES) as $directory) {

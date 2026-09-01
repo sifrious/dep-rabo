@@ -30,6 +30,7 @@ enum IssueCode: string
     case ReadingOrderIncomplete = 'RABO_READING_ORDER_INCOMPLETE';
     case ColorOnlyEncoding = 'RABO_COLOR_ONLY_ENCODING';
     case LogoClearspaceViolated = 'RABO_LOGO_CLEARSPACE_VIOLATED';
+    case MarkInkNotInherited = 'RABO_MARK_INK_NOT_INHERITED';
     case MotionReducedVariantRequired = 'RABO_MOTION_REDUCED_VARIANT_REQUIRED';
     case MotionDurationInvalid = 'RABO_MOTION_DURATION_INVALID';
     case MotionCueOverlapUnresolved = 'RABO_MOTION_CUE_OVERLAP_UNRESOLVED';
@@ -42,7 +43,8 @@ enum IssueCode: string
         return match ($this) {
             // A brand may legitimately rely on a system stack; the artifact still renders,
             // just not necessarily as the brand.
-            self::BrandDrift, self::FontNotEmbeddable, self::FontGlyphUnavailable => Severity::Warning,
+            self::BrandDrift, self::FontNotEmbeddable, self::FontGlyphUnavailable,
+            self::MarkInkNotInherited => Severity::Warning,
             default => Severity::Error,
         };
     }
@@ -57,6 +59,7 @@ enum IssueCode: string
             self::FontNotEmbeddable => 'Ship a WOFF2 for this family, or accept that viewers without it see a fallback.',
             self::FontGlyphUnavailable => 'Use a font subset that covers the character, or rewrite the text to avoid it.',
             self::FontAssetUnreadable => 'Replace the font file; its character map could not be read, so nothing can be checked against it.',
+            self::MarkInkNotInherited => 'Use a mark variant with its colours declared, or accept that this one draws in its own default rather than the brand ink.',
             self::BrandDrift => 'Re-point the composition at a current Brand Library version.',
             self::ContrastInsufficient => 'Choose an ink role with more contrast against its fill, or change the fill.',
             self::AssetMissing => 'Add the asset bytes to the store, or reference an asset that exists.',

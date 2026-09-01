@@ -13,7 +13,7 @@ use Sifrious\Rabo\Validation\ValidationContext;
 use Sifrious\Rabo\Validation\ValidationIssue;
 
 /**
- * A mark must be given its declared minimum size and clearspace.
+ * A mark must be given its declared minimum size and clearspace, and must draw in brand ink.
  *
  * Clearspace is measured against the laid-out geometry rather than the author's intent, so
  * a variant that packs the header tighter is caught the same as a hand-placed logo would be.
@@ -43,6 +43,10 @@ final readonly class MarkTreatmentRule implements Rule
                 continue;
             }
 
+            foreach ($this->inkIssues($context, $node, $mark->id) as $issue) {
+                $issues[] = $issue;
+            }
+
             $box = $layout->box($node->id());
             if ($box->width + 0.5 < $mark->minWidthPx) {
                 $issues[] = new ValidationIssue(
@@ -55,6 +59,9 @@ final readonly class MarkTreatmentRule implements Rule
             $required = $box->height * $mark->clearspaceRatio;
             foreach ($layout->placed as $placed) {
                 $other = $placed->node;
+                // Containers are skipped because their extent is their children's, not their own —
+                // and since D-017 a filled stack's box can span a whole track, which would other-
+                // wise crowd every mark on the canvas with geometry nobody drew.
                 if ($other->id()->equals($node->id()) || $other->declaredSize() === null) {
                     continue;
                 }
@@ -71,6 +78,43 @@ final readonly class MarkTreatmentRule implements Rule
         }
 
         return $issues;
+    }
+
+    /**
+     * A mark drawn through an image cannot inherit the ink around it.
+     *
+     * The mono mark is authored `fill="currentColor"` so it takes the colour of whatever it sits
+     * in. Placed as an `ImageNode` it becomes a separate document inside a data URI, where
+     * `currentColor` resolves to that document's own default — black — rather than the brand's
+     * `text-strong`, a warm near-black. So the mark renders subtly off-brand, everywhere, and
+     * nothing said so.
+     *
+     * Inlining foreign SVG into the host document would fix it properly and is not obviously worth
+     * the cost yet — Q-009. Until then the report says it rather than leaving it to be found in a
+     * rendered artifact, which is this package's position on every other known-wrong output.
+     *
+     * @return list<ValidationIssue>
+     */
+    private function inkIssues(ValidationContext $context, ImageNode $node, string $markId): array
+    {
+        $store = $context->assets;
+        if ($store === null || ! $store->has($node->asset)) {
+            return []; // AssetRule owns a missing file.
+        }
+
+        $bytes = $store->bytes($node->asset);
+        if (! str_contains($bytes, '<svg') || ! str_contains($bytes, 'currentColor')) {
+            return [];
+        }
+
+        return [new ValidationIssue(
+            IssueCode::MarkInkNotInherited,
+            (string) $node->id(),
+            sprintf(
+                "Mark '%s' is drawn with currentColor inside its own document, so it takes that document's default ink rather than the brand colour around it.",
+                $markId,
+            ),
+        )];
     }
 
     /** Edge-to-edge distance, or null when the boxes do not share a band. */
