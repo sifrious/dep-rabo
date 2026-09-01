@@ -37,6 +37,11 @@ word silently dropped.
 readable and avoid the `[]` versus `{}` ambiguity. That makes `toArray() === toArray()` always
 false for equal documents. Use `canonical()` and `equals()`.
 
+**The second composition warns, and that is correct.** `RABO_MARK_INK_NOT_INHERITED` fires on its
+mono mark: the mark is authored `fill="currentColor"`, and through an `ImageNode` it becomes its own
+document in a data URI where that resolves to black rather than the brand ink around it. Warning,
+not error — the artifact renders, and the real fix is Q-009.
+
 **A stack's `cross_sizing` is usually absent from `composition.json`.** `hug` is the default and is
 not serialized, because emitting it would change `Composition::key()` for every composition that
 never asked for the field — see D-017. Only `fill` appears.

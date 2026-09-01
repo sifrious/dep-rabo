@@ -18,6 +18,8 @@ use Sifrious\Rabo\Render\RenderRequest;
 use Sifrious\Rabo\Render\RenderTarget;
 use Sifrious\Rabo\Renderer\Svg\SvgStaticRenderer;
 use Sifrious\Rabo\Validation\CompositionValidator;
+use Sifrious\Rabo\Validation\IssueCode;
+use Sifrious\Rabo\Validation\Severity;
 
 /**
  * A second composition on the same brand.
@@ -39,8 +41,49 @@ final class SecondCompositionTest extends TestCase
         );
 
         self::assertTrue($report->passed(), 'Issues: '.implode(', ', $report->codes()));
-        self::assertSame([], $report->issues, 'This composition avoids the glyph the brand cannot draw, so it warns about nothing.');
+        self::assertNotContains(
+            IssueCode::FontGlyphUnavailable->value,
+            $report->codes(),
+            'This composition avoids the glyph the brand cannot draw.',
+        );
         self::assertSame('burg', $bundle->composition->brandId);
+    }
+
+    /**
+     * Q-009, said rather than left to be found in a rendered artifact.
+     *
+     * This composition places the mark's mono variant, which is authored `fill="currentColor"`.
+     * Through an `ImageNode` that becomes its own document in a data URI, so the mark draws in that
+     * document's default black rather than the brand's warm near-black. It is a warning because the
+     * artifact does render and the fix — inlining foreign SVG — is not obviously worth its cost
+     * yet. The point is that the report says so.
+     */
+    public function test_the_mono_mark_is_reported_as_not_taking_brand_ink(): void
+    {
+        $bundle = $this->bundle();
+        $report = (new CompositionValidator())->validate(
+            $bundle->composition, $bundle->brand, $bundle->assets, null, null, $bundle->assetRecords,
+        );
+
+        $issues = $report->withCode(IssueCode::MarkInkNotInherited);
+        self::assertNotSame([], $issues, 'The mono mark draws in its own ink and nothing said so.');
+        self::assertSame('mark', $issues[0]->path);
+        self::assertSame(Severity::Warning, $issues[0]->severity());
+        self::assertTrue($report->passed(), 'It is a warning: the artifact still renders.');
+    }
+
+    public function test_a_full_colour_mark_is_not_reported(): void
+    {
+        $bundle = CompositionBundle::load(dirname(__DIR__, 2).'/fixtures/agent-completion-verified-completion');
+        $report = (new CompositionValidator())->validate(
+            $bundle->composition, $bundle->brand, $bundle->assets, null, null, $bundle->assetRecords,
+        );
+
+        self::assertNotContains(
+            IssueCode::MarkInkNotInherited->value,
+            $report->codes(),
+            'The first composition places the full-colour mark, whose colours are its own.',
+        );
     }
 
     public function test_a_bundle_without_motion_is_a_complete_bundle(): void

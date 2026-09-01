@@ -101,10 +101,15 @@ in. Placed through an `ImageNode`, it becomes a separate document in a data URI 
 resolves to that document's own default — black — rather than the brand's `text-strong`, which is a
 warm near-black.
 
-So a mono mark is always pure black, subtly off-brand, and no validation notices. Inlining the
-mark's markup into the host document rather than referencing it as an image would fix it and would
-let brand colour reach the mark, at the cost of the renderer having to parse and namespace foreign
-SVG. Not obviously worth it yet; recorded so the next person does not rediscover it.
+So a mono mark is always pure black, subtly off-brand. **It is now reported** —
+`RABO_MARK_INK_NOT_INHERITED`, at warning severity, raised by `MarkTreatmentRule` when a mark's
+bytes are an SVG using `currentColor`. The artifact still renders, so it warns rather than refuses;
+the point is that the report says it instead of leaving it to be found in a rendered artifact.
+
+The question itself stays open, because reporting is not fixing. Inlining the mark's markup into the
+host document rather than referencing it as an image would let brand colour reach the mark, at the
+cost of the renderer having to parse and namespace foreign SVG. Still not obviously worth it — but
+no longer silent while it is not.
 
 ## Q-010 — Two compositions on one brand duplicate the brand
 
