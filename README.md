@@ -52,6 +52,19 @@ Open `build/motion.svg` in a browser for the fifteen seconds; `build/reduced-mot
 the same piece with the motion removed. `diff -r build fixtures/agent-completion-verified-completion/expected`
 reports nothing: the committed artifacts are exactly what these commands regenerate.
 
+## A second composition
+
+`fixtures/green-checks-that-verified-nothing` is a different piece of work on the same brand,
+existing mainly to find out whether the model generalises or was shaped around the first fixture. It
+nests stacks four deep, draws ellipses, uses no connectors, places the mark's mono variant, derives a
+4:5 portrait rather than a square, and carries no motion.
+
+It found three real limits, recorded in [docs/open-questions.md](docs/open-questions.md): fixed node
+sizes stop a variant reflowing to a new measure (Q-008), `currentColor` cannot cross into an embedded
+image so a mono mark is always pure black (Q-009), and self-contained bundles duplicate the brand
+they share (Q-010). None of them blocks the work; all of them would have been discovered later and
+more expensively.
+
 ## How it fits together
 
 ```mermaid

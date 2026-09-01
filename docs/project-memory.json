@@ -48,6 +48,10 @@
             "statement": "The brand's three faces are latin subsets with no U+2260, so the canonical headline's \u2260 comes from a system font; validation warns rather than hiding it."
         },
         {
+            "id": "F-012",
+            "statement": "A second composition on the same brand validates and renders, exercising nested stacks four deep, ellipses, no connectors, the mono mark variant, a 4:5 portrait derivation, and no motion."
+        },
+        {
             "id": "F-013",
             "statement": "Font files and their OFL licence texts are linked from the brand's FontFile entries, so referencedAssets() and render provenance list all eleven assets an artifact depends on."
         }
@@ -163,6 +167,18 @@
         {
             "id": "Q-007",
             "question": "Should the brand ship a wider font subset that covers its own headline's \u2260, or accept a system fallback for that character?"
+        },
+        {
+            "id": "Q-008",
+            "question": "Should a stack be able to stretch its children across its cross axis, given fixed node sizes stop a variant reflowing to a new measure?"
+        },
+        {
+            "id": "Q-009",
+            "question": "Should marks be inlined rather than referenced as images, so currentColor can reach them?"
+        },
+        {
+            "id": "Q-010",
+            "question": "How should several compositions share one brand without either duplicating its assets or giving up self-contained bundles?"
         }
     ],
     "glossary": [
@@ -310,6 +326,16 @@
             "project_context": "Rabo D-005, found by looking at a rendered PNG",
             "audience": "intermediate application developers",
             "hook": "Two implementations of the same rule are two answers."
+        },
+        {
+            "id": "C-004",
+            "format": "diagram",
+            "user_problem": "A green check is treated as evidence that the thing it checked is correct.",
+            "concept": "Three checks reported success while something was wrong; each was caught by looking at output, by an independent reviewer, or by CI.",
+            "technology": "PHP, deterministic SVG rendering",
+            "project_context": "Rabo MME-2195, drawn from defects found in its own delivery",
+            "audience": "engineers who rely on automated checks",
+            "hook": "Green checks that verified nothing."
         }
     ]
 }
