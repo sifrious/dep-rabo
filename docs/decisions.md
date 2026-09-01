@@ -222,5 +222,8 @@ box everywhere else — the same shape of failure as D-005, where validation and
 A warning rather than an error because the artifact does still render, and because a brand may
 knowingly rely on a system stack. The point is that the report says so.
 
-An unparseable font is reported as covering nothing, so an unreadable file produces a false warning
-rather than a false pass.
+An unparseable font is not reported as covering nothing. Zero coverage and unreadable bytes are
+different facts, so `FontCoverage` carries a `readable` flag and `FontAssetRule` reports
+`RABO_FONT_ASSET_UNREADABLE` at error severity rather than a glyph warning per character. A broken
+file is one fact, and burying it under a hundred derived ones would make the report harder to act on
+than the failure it describes.
