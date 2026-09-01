@@ -11,7 +11,7 @@ use Sifrious\Rabo\Render\FrozenClock;
 use Sifrious\Rabo\Render\RenderFormat;
 use Sifrious\Rabo\Render\RenderRequest;
 use Sifrious\Rabo\Render\RenderTarget;
-use Sifrious\Rabo\Renderer\Ffmpeg\BinaryProbe;
+use Sifrious\Rabo\Renderer\BinaryProbe;
 use Sifrious\Rabo\Renderer\Ffmpeg\FfmpegMotionRenderer;
 use Sifrious\Rabo\Renderer\Svg\SvgStaticRenderer;
 use Sifrious\Rabo\Render\RenderStatus;

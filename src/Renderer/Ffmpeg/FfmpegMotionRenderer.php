@@ -18,7 +18,9 @@ use Sifrious\Rabo\Render\RenderOutcome;
 use Sifrious\Rabo\Render\RenderProvenance;
 use Sifrious\Rabo\Render\RenderRequest;
 use Sifrious\Rabo\Render\SystemClock;
-use Sifrious\Rabo\Renderer\Svg\ScenePainter;
+use Sifrious\Rabo\Renderer\BinaryProbe;
+use Sifrious\Rabo\Renderer\Resvg\Rasterizer;
+use Sifrious\Rabo\Renderer\SystemBinaryProbe;
 use Sifrious\Rabo\Renderer\Svg\SvgFrameRenderer;
 use Sifrious\Rabo\Validation\CompositionValidator;
 use Sifrious\Rabo\Validation\IssueCode;
@@ -45,7 +47,7 @@ final readonly class FfmpegMotionRenderer implements Renderer
 
     public const VERSION = '1.0.0';
 
-    public const RASTERIZER = 'resvg';
+    public const RASTERIZER = Rasterizer::BINARY;
 
     public const ENCODER = 'ffmpeg';
 
@@ -114,7 +116,8 @@ final readonly class FfmpegMotionRenderer implements Renderer
             // files are written to disk and handed to it by path. Without this the video renders
             // in a system fallback while the SVG renders in the brand — the same composition
             // saying two different things.
-            $unrasterizable = $this->familiesWithoutRasterFile($request->brand, $scene);
+            $rasterizer = new Rasterizer($this->assets, $this->probe);
+            $unrasterizable = $rasterizer->familiesWithoutRasterFile($request->brand, $scene);
             if ($unrasterizable !== []) {
                 // Skipping them silently is what produced a video in a system fallback while the
                 // SVG rendered in the brand. This renderer cannot honour the composition, so it
@@ -130,20 +133,17 @@ final readonly class FfmpegMotionRenderer implements Renderer
                 )]));
             }
 
-            $fontArguments = $this->writeFontFiles($request->brand, $scene, $directory);
+            $fontArguments = $rasterizer->fontArguments($request->brand, $scene, $directory);
 
             $frames = new SvgFrameRenderer($request->brand, $this->assets);
             $times = SvgFrameRenderer::frameTimes($timeline, $fps);
             foreach ($times as $index => $at) {
                 $name = sprintf('%s/frame-%05d', $directory, $index);
                 file_put_contents($name.'.svg', $frames->frame($scene, $timeline, $at));
-                $rasterised = $this->run([
-                    (string) $this->probe->path(self::RASTERIZER),
-                    '--width', (string) $scene->canvas->width,
-                    '--height', (string) $scene->canvas->height,
-                    ...$fontArguments,
+                $rasterised = $rasterizer->rasterize(
                     $name.'.svg', $name.'.png',
-                ]);
+                    $scene->canvas->width, $scene->canvas->height, $fontArguments,
+                );
                 if ($rasterised['status'] !== 0) {
                     return RenderOutcome::failedTransiently('rasterizer_failed', "resvg failed on frame {$index}: ".$rasterised['output']);
                 }
@@ -208,53 +208,7 @@ final readonly class FfmpegMotionRenderer implements Renderer
      *
      * @return list<string>
      */
-    /**
-     * Families this scene sets that ship no file a rasterizer can load.
-     *
-     * A WOFF2-only family passes validation — it is embeddable, so the SVG is fine — but resvg
-     * rejects WOFF2, so the video would quietly fall back to whatever the machine has installed.
-     *
-     * @return list<string>
-     */
-    private function familiesWithoutRasterFile(BrandLibrary $brand, Scene $scene): array
-    {
-        if ($this->assets === null) {
-            return [];
-        }
 
-        $missing = [];
-        foreach ((new ScenePainter($brand, $this->assets))->familiesUsedBy($scene) as $family) {
-            $file = $family->rasterFile();
-            if ($file === null || ! $this->assets->has($file->digest)) {
-                $missing[] = $family->name;
-            }
-        }
-
-        return $missing;
-    }
-
-    /** @return list<string> */
-    private function writeFontFiles(BrandLibrary $brand, Scene $scene, string $directory): array
-    {
-        if ($this->assets === null) {
-            return [];
-        }
-
-        $arguments = [];
-        $painter = new ScenePainter($brand, $this->assets);
-        foreach ($painter->familiesUsedBy($scene) as $family) {
-            $file = $family->rasterFile();
-            if ($file === null || ! $this->assets->has($file->digest)) {
-                continue;
-            }
-            $path = $directory.'/font-'.substr($file->digest->hex, 0, 16).'.ttf';
-            file_put_contents($path, $this->assets->bytes($file->digest));
-            $arguments[] = '--use-font-file';
-            $arguments[] = $path;
-        }
-
-        return $arguments;
-    }
 
     /** @return list<string> */
     private function missingBinaries(): array

@@ -175,6 +175,11 @@
             "id": "D-017",
             "decision": "CrossSizing::Fill on a StackNode gives each container child the stack's whole inner cross extent; a child that declares its own size is never filled, and Layout::measure() is unchanged so a filled child cannot grow its parent.",
             "rationale": "A variant could re-orient a stack but nothing widened, leaving the portrait columns at their landscape measure. Filling only container children is what keeps TextOverflowRule and ScenePainter measuring the same box, so no text can rewrap. It lives on StackNode beside direction, gap, align and distribute, so D-011 stands unamended. cross_sizing is serialized only when it is not the default, so a composition that does not use it keeps the content key it has always had."
+        },
+        {
+            "id": "D-018",
+            "decision": "ResvgStillRenderer implements RenderFormat::Png by rasterizing SvgStaticRenderer's artifact with resvg; it paints nothing itself, and Renderer\\Resvg\\Rasterizer is shared with the MP4 adapter.",
+            "rationale": "Png was in the published contract and the CLI answered it with a throw. Rasterizing the SVG keeps validation, refusals, accessibility text and font embedding in one place, so a PNG cannot disagree with the SVG of the same scene. deterministic is false because raster bytes vary across resvg builds, so PNGs are not committed artifacts; the provenance records the digest of the reproducible SVG they came from."
         }
     ],
     "constraints": [
@@ -312,6 +317,12 @@
         {
             "id": "MME-1867",
             "name": "First portable static-and-motion composition",
+            "stage": "MVP",
+            "status": "implemented"
+        },
+        {
+            "id": "D-018",
+            "name": "Raster still rendering",
             "stage": "MVP",
             "status": "implemented"
         }

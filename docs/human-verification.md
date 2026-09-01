@@ -196,6 +196,29 @@ directory at all** — the refusal happens before anything is written, which
 `tests/Cli/CommandTest.php` asserts directly. The refusal is deterministic: the same request will
 never succeed until the composition changes.
 
+## 8b. Optional — a raster still
+
+```sh expect-exit=1 requires-missing=resvg
+php bin/rabo render fixtures/agent-completion-verified-completion --format=png
+```
+
+**Expect:** without `resvg` on `PATH`, exit `1` and `RABO_RENDERER_CAPABILITY_UNSUPPORTED`. The
+request is fine; this renderer cannot serve it.
+
+```sh expect-exit=0 requires=resvg
+php bin/rabo render fixtures/agent-completion-verified-completion --format=png
+php bin/rabo render fixtures/green-checks-that-verified-nothing --format=png --scene=portrait --out=build/png
+```
+
+**Expect:** exit `0`, `build/static.png` at 1200×630 and `build/png/static-portrait.png` at
+1080×1350. Open them: the type is the brand's own, because the TrueType files are written from the
+store and handed to the rasterizer exactly as the MP4 path does — both go through the same
+`Renderer\Resvg\Rasterizer`.
+
+PNGs are **not** committed artifacts and their provenance records `deterministic: false`, for the
+same reason the MP4's does: raster bytes vary across `resvg` builds. The SVG each one rasterizes is
+reproducible, is recorded in the provenance as `source_svg_digest`, and is what the tests assert on.
+
 ## 9. Optional — the MP4 adapter
 
 Without `resvg` and `ffmpeg` on `PATH`:

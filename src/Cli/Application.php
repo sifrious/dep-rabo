@@ -17,6 +17,7 @@ use Sifrious\Rabo\Render\RenderRequest;
 use Sifrious\Rabo\Render\RenderStatus;
 use Sifrious\Rabo\Render\RenderTarget;
 use Sifrious\Rabo\Renderer\Ffmpeg\FfmpegMotionRenderer;
+use Sifrious\Rabo\Renderer\Resvg\ResvgStillRenderer;
 use Sifrious\Rabo\Renderer\Svg\SvgMotionRenderer;
 use Sifrious\Rabo\Renderer\Svg\SvgStaticRenderer;
 use Sifrious\Rabo\Validation\CompositionValidator;
@@ -103,7 +104,7 @@ final readonly class Application
         $bundle = CompositionBundle::load($options->positional(0, 'a composition bundle directory'));
 
         $format = RenderFormat::tryFrom($options->value('format', RenderFormat::Svg->value))
-            ?? throw new InvalidArgumentException('Unknown --format. Try: svg, svg-animated, mp4.');
+            ?? throw new InvalidArgumentException('Unknown --format. Try: svg, svg-animated, png, mp4.');
         $sceneName = $options->value('scene', 'source');
         $reduced = $options->flag('reduced-motion');
         $embedFonts = ! $options->flag('no-embed-fonts');
@@ -117,7 +118,7 @@ final readonly class Application
             RenderFormat::Svg => new SvgStaticRenderer($bundle->assets, $this->clock, $this->validator),
             RenderFormat::SvgAnimated => new SvgMotionRenderer($bundle->motionOrFail(), $bundle->assets, $this->clock, $this->validator),
             RenderFormat::Mp4 => new FfmpegMotionRenderer($bundle->motionOrFail(), $bundle->assets, $this->clock, $this->validator),
-            RenderFormat::Png => throw new InvalidArgumentException('No bundled renderer produces PNG; rasterize the SVG instead.'),
+            RenderFormat::Png => new ResvgStillRenderer($bundle->assets, $this->clock, $this->validator),
         };
 
         $outcome = $renderer->render(new RenderRequest(
@@ -214,7 +215,9 @@ final readonly class Application
 
     private function defaultName(string $scene, RenderFormat $format, bool $reduced): string
     {
-        if ($format === RenderFormat::Svg) {
+        // Stills are named for their scene, moving pictures for their motion. The test is whether
+        // the format is temporal, not whether it is SVG: a PNG still is a still.
+        if (! $format->isTemporal()) {
             return $scene === 'source' ? 'static' : 'static-'.$scene;
         }
 
@@ -235,7 +238,7 @@ final readonly class Application
           rabo validate <bundle>
               Validate a composition bundle. Prints a JSON report; exits 1 on any blocking issue.
 
-          rabo render <bundle> [--format=svg|svg-animated|mp4] [--scene=source|<variant>]
+          rabo render <bundle> [--format=svg|svg-animated|png|mp4] [--scene=source|<variant>]
                                [--reduced-motion] [--no-embed-fonts] [--fps=24]
                                [--out=build] [--name=<basename>]
               Render one scene. Writes the artifact and its provenance beside it.

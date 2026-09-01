@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sifrious\Rabo\Renderer\Ffmpeg;
+namespace Sifrious\Rabo\Renderer;
 
 final class SystemBinaryProbe implements BinaryProbe
 {

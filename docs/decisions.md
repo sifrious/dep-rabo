@@ -292,3 +292,33 @@ that disabled them.
 Also rejected: a size mode on `Node`. It would put a placement decision on objects that place
 nothing, and give a leaf both a declared size and a flag saying whether to honour it — two sources
 for one fact.
+
+## D-018 — PNG is a rasterization of the SVG, not a second painter
+
+**Decision.** `ResvgStillRenderer` implements `RenderFormat::Png` by asking `SvgStaticRenderer` for
+the artifact and handing it to `resvg`. It paints nothing itself. The `resvg` invocation, the
+TrueType files written for it, and the check for families it cannot rasterize all live in
+`Renderer\Resvg\Rasterizer`, shared with the MP4 adapter. Provenance reports
+`deterministic: false` and records the digest of the SVG it rasterized.
+
+**Rationale.** `RenderFormat::Png` was in the published contract from the day the renderer boundary
+was defined, and the CLI answered it with a throw — a capability advertised and not implemented. A
+caller that needs pixels rather than a document has no other option: a social platform will not take
+an SVG.
+
+Rasterizing the SVG rather than writing a second painter is the whole point. Validation, refusals,
+the accessibility description, font embedding and every layout decision come from one place, so a
+PNG cannot disagree with the SVG of the same scene about anything. D-005 is the same argument one
+level down.
+
+Sharing the rasterizer with the MP4 adapter is the same argument again. That adapter grew its font
+handling because a video was silently rendering in a system fallback while the SVG rendered in the
+brand; a second copy of that logic is a second chance to make the same mistake, so there is one.
+
+`deterministic: false` because raster bytes vary across `resvg` builds, exactly as MP4 bytes vary
+across encoder builds. So PNGs are not committed artifacts either, and `source_svg_digest` in the
+provenance names the reproducible thing they came from.
+
+**Rejected.** Removing the `Png` case to stop advertising what did not exist. It is a published
+enum, and the honest fix for an unimplemented capability is to implement it, not to narrow the
+contract until the gap disappears.

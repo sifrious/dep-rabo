@@ -54,6 +54,12 @@ and gets them from one declaration because the variant flips its direction.
 **`maxLines` is an allowance, not a requirement.** Text that fits on one line inside a two-line box
 is correct. Height is measured against lines actually needed.
 
+**PNG has no golden fixture either, for the same reason as the MP4.** Raster bytes vary across
+`resvg` builds. `ResvgStillRenderer` paints nothing of its own — it hands `SvgStaticRenderer`'s
+artifact to `resvg` — so the thing to assert on is the SVG, and the provenance records its digest as
+`source_svg_digest`. Both raster paths go through `Renderer\Resvg\Rasterizer`; do not give either
+one its own copy of the font handling, which is where the MP4's silent system-fallback bug came from.
+
 **The MP4 has no golden fixture and reports `deterministic: false`.** MP4 bytes vary across encoder
 builds. The frame SVGs feeding it are reproducible and are what the tests assert on.
 
