@@ -82,12 +82,18 @@ Consumers match on codes. Never make prose the only contract.
 ## Tests
 
 `composer test`. Fixtures are the same files a reviewer reads: `tests/` loads
-`fixtures/agent-completion-verified-completion` and `fixtures/failing/*` directly, and
-`tests/Cli/CommandTest.php` runs every command `docs/human-verification.md` documents, so the
-docs cannot drift from the package.
+`fixtures/agent-completion-verified-completion` and `fixtures/failing/*` directly.
+
+`tests/Docs/HumanVerificationTest.php` extracts the commands from `docs/human-verification.md`
+itself and runs them, asserting the exit code each fenced block is annotated with, and failing if a
+`php bin/rabo` line is documented without an annotation. That sentence used to name
+`tests/Cli/CommandTest.php` and was simply untrue — no test opened any file under `docs/`, and the
+gap hid `--no-embed-fonts`, documented in three places and read by nothing. When editing that page,
+annotate new blocks (`expect-exit=N`, `no-errexit`, `requires=`, `requires-missing=`, `not-run=`).
 
 Adding a validation code means adding a small bundle under `fixtures/failing/` that breaks that
-rule and nothing else. `ValidationCoverageTest` asserts each bundle isolates exactly one code.
+rule and nothing else. `ValidationCoverageTest` asserts each bundle isolates exactly one code, and
+scans the directory in both directions so neither the map nor the fixtures can fall behind.
 
 Changing a renderer changes the committed artifacts under `expected/`. Regenerate them with
 `bin/rabo render` and read the diff before committing it — that diff is the review.

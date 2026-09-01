@@ -1,19 +1,28 @@
 # Human verification
 
-Every command below is also run by the test suite (`tests/Cli/CommandTest.php`), so this page
-and the package cannot drift apart. Run them from the repository root after `composer install`.
+Every command below is extracted from this file and run by `tests/Docs/HumanVerificationTest.php`,
+which asserts the exit code each block is annotated with. A command documented here that stops
+working fails the suite, and a `php bin/rabo` line added here without an annotation fails it too —
+so this page cannot quietly drift away from the package. Run them from the repository root after
+`composer install`.
+
+The annotations (`expect-exit=0`, `requires=…`, `not-run=…`) sit in the code-fence info string and
+do not render. Exit codes are what this page binds; what the output *means* is asserted by the
+dedicated tests each section names.
 
 ## 1. The suite
 
-```sh
+```sh not-run=recursive
 composer test
 ```
 
-**Expect:** exit `0`, `OK (97 tests, 413 assertions)`.
+**Expect:** exit `0`, and `OK` with no failures. The exact test count is deliberately not quoted
+here — it changes with every slice, and a number in prose that nothing checks is exactly the kind
+of claim this page exists to stop making.
 
 ## 2. The canonical bundle validates
 
-```sh
+```sh expect-exit=0
 php bin/rabo validate fixtures/agent-completion-verified-completion
 ```
 
@@ -23,7 +32,7 @@ php bin/rabo validate fixtures/agent-completion-verified-completion
 
 ## 3. Rendering produces four artifacts and their provenance
 
-```sh
+```sh expect-exit=0
 php bin/rabo render fixtures/agent-completion-verified-completion --format=svg
 php bin/rabo render fixtures/agent-completion-verified-completion --format=svg --scene=square
 php bin/rabo render fixtures/agent-completion-verified-completion --format=svg-animated
@@ -47,7 +56,7 @@ content, fully assembled, no animation.
 
 ## 4. The committed artifacts are exactly what those commands produce
 
-```sh
+```sh expect-exit=0
 diff -r build fixtures/agent-completion-verified-completion/expected
 ```
 
@@ -56,7 +65,7 @@ identical every time, because the renderers take an injected clock and write no 
 
 ## 5. Provenance traces an artifact back to its sources
 
-```sh
+```sh expect-exit=0
 php bin/rabo inspect build/static.svg
 ```
 
@@ -67,17 +76,17 @@ Digory and Funes references the composition rests on.
 
 Now tamper with it:
 
-```sh
+```sh expect-exit=1
 echo '<!-- edited -->' >> build/static.svg
 php bin/rabo inspect build/static.svg
 ```
 
 **Expect:** exit `1` and `FAIL ... the bytes on disk do not match the digest its provenance
-records.` Re-render to restore.
+records.` Step 6 re-renders it, which restores it.
 
 ## 6. The artifact displays in the brand's own typefaces
 
-```sh
+```sh expect-exit=0
 php bin/rabo render fixtures/agent-completion-verified-completion --format=svg
 grep -c '@font-face' build/static.svg          # 3
 ```
@@ -87,11 +96,14 @@ headline is Space Grotesk, the body Hanken Grotesk, `"Done"` JetBrains Mono. **N
 faces needs to be installed** — that is the point. Before this existed, every artifact rendered in a
 serif fallback on a machine with none of them, and nothing said so.
 
-```sh
+```sh expect-exit=0
 php bin/rabo render fixtures/agent-completion-verified-completion --format=svg --no-embed-fonts --out=build/bare
 ```
 
-**Expect:** exit `0`, no `@font-face`, under 20 KB — for anyone who controls the display environment.
+**Expect:** exit `0`, no `@font-face`, around 9 KB — for anyone who controls the display
+environment. `tests/Cli/CommandTest.php` asserts both the face count and the size, because this
+flag was once documented in three places and read by nothing: it silently embedded the fonts
+anyway, and this page promised a small file that the package never produced.
 
 The validation report carries one honest warning:
 
@@ -105,7 +117,7 @@ report says so rather than letting it be discovered at publication.
 
 ## 6b. A second composition on the same brand
 
-```sh
+```sh expect-exit=0
 php bin/rabo validate fixtures/green-checks-that-verified-nothing
 php bin/rabo render  fixtures/green-checks-that-verified-nothing --format=svg --out=build/second
 php bin/rabo render  fixtures/green-checks-that-verified-nothing --format=svg --scene=portrait --out=build/second
@@ -121,13 +133,13 @@ the mark's mono variant, a 4:5 portrait derivation, and **no motion** — a bund
 
 It also carries only two typefaces rather than three, because it sets nothing in mono:
 
-```sh
+```sh expect-exit=0
 grep -c '@font-face' build/second/static.svg     # 2
 ```
 
 ## 7. Every validation dimension fails the way it should
 
-```sh
+```sh expect-exit=0 no-errexit
 for d in fixtures/failing/*/; do
   php bin/rabo validate "$d" >/dev/null 2>&1
   exit_code=$?
@@ -139,7 +151,7 @@ Capture `$?` into a variable before the `echo`. Writing `echo "$(basename "$d") 
 the exit code of `basename`, which is always `0`, and the loop then cheerfully claims every fixture
 passed. Avoid the name `status`, which is read-only in zsh.
 
-**Expect:** exit `1` for all thirteen. Each bundle isolates exactly one code:
+**Expect:** `exit=1` for every bundle. Each isolates exactly one code:
 
 | Bundle | Code |
 | --- | --- |
@@ -156,10 +168,15 @@ passed. Avoid the name `status`, which is read-only in zsh.
 | `motion-cue-overlap` | `RABO_MOTION_CUE_OVERLAP_UNRESOLVED` |
 | `motion-essential-dismissed` | `RABO_MOTION_INFORMATION_ONLY_TRANSIENT` |
 | `missing-font-asset` | `RABO_FONT_ASSET_MISSING` |
+| `unreadable-font-asset` | `RABO_FONT_ASSET_UNREADABLE` |
+
+`HumanVerificationTest` reads this table and fails if it does not name every directory under
+`fixtures/failing/`, so the list cannot fall behind the fixtures again — it said "thirteen" while
+fourteen existed, and two other documents said "twelve".
 
 Check one in detail:
 
-```sh
+```sh expect-exit=1
 php bin/rabo validate fixtures/failing/unknown-brand-token
 ```
 
@@ -169,31 +186,35 @@ the exact node — with a remediation hint. Standard error repeats the code and 
 
 ## 8. A failed validation prevents an artifact
 
-```sh
-rm -rf /tmp/rabo-refused
-php bin/rabo render fixtures/failing/insufficient-contrast --format=svg --out=/tmp/rabo-refused
-ls /tmp/rabo-refused
+```sh expect-exit=1
+rm -rf build/refused
+php bin/rabo render fixtures/failing/insufficient-contrast --format=svg --out=build/refused
 ```
 
-**Expect:** exit `1`, `RABO_CONTRAST_INSUFFICIENT` on standard error, and **no file written**.
-The refusal is deterministic: the same request will never succeed until the composition changes.
+**Expect:** exit `1`, `RABO_CONTRAST_INSUFFICIENT` on standard error, and **no `build/refused`
+directory at all** — the refusal happens before anything is written, which
+`tests/Cli/CommandTest.php` asserts directly. The refusal is deterministic: the same request will
+never succeed until the composition changes.
 
 ## 9. Optional — the MP4 adapter
 
 Without `resvg` and `ffmpeg` on `PATH`:
 
-```sh
+```sh expect-exit=1 requires-missing=resvg,ffmpeg
 php bin/rabo render fixtures/agent-completion-verified-completion --format=mp4
 ```
 
 **Expect:** exit `1`, status `refused`, code `RABO_RENDERER_CAPABILITY_UNSUPPORTED`, naming which
 binary is missing. This is the correct answer, not a failure of the package: the request is fine,
-this renderer cannot serve it.
+this renderer cannot serve it. CI runs on a machine with neither tool for exactly this reason.
 
 With them installed:
 
-```sh
+```sh not-run=environment
 brew install ffmpeg resvg
+```
+
+```sh expect-exit=0 requires=resvg,ffmpeg
 php bin/rabo render fixtures/agent-completion-verified-completion --format=mp4
 ffprobe -v error -show_entries format=duration:stream=width,height,r_frame_rate \
   -of default=noprint_wrappers=1 build/motion.mp4

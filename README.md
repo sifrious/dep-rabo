@@ -24,7 +24,7 @@ composer install
 composer test
 ```
 
-That runs 87 fixtures covering brand round-tripping, content-addressed asset identity,
+That runs the suite: brand round-tripping, content-addressed asset identity,
 composition and variant derivation, deterministic rendering, every validation code, timeline
 ordering and reduced-motion derivation, provenance, and the CLI. See
 [docs/human-verification.md](docs/human-verification.md) for the commands to run by hand and

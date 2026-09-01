@@ -33,7 +33,7 @@
         },
         {
             "id": "F-008",
-            "statement": "Twelve failing fixtures under fixtures/failing each isolate exactly one validation code."
+            "statement": "Each fixture under fixtures/failing isolates exactly one validation code, and ValidationCoverageTest scans the directory in both directions so neither the map nor the fixtures can fall behind."
         },
         {
             "id": "F-009",
