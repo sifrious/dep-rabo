@@ -12,6 +12,9 @@ use Sifrious\Rabo\Brand\BrandLibrary;
 /**
  * The resolved geometry of one scene against one brand.
  *
+ * A stack's own measure is bottom-up and unaffected by `CrossSizing::Fill`: filling consumes space
+ * already allocated, and never asks for more. That is what keeps the change local to placement.
+ *
  * Layout is a pure function of scene plus brand. Running it twice produces identical boxes,
  * which is what lets a rendered artifact be compared byte for byte.
  */
@@ -144,17 +147,29 @@ final readonly class Layout
             $contentMain += ($horizontal ? $sizes[$index]->width : $sizes[$index]->height) + ($index > 0 ? $gap : 0.0);
         }
 
+        $fills = $node->crossSizing === CrossSizing::Fill;
+
         $cursor = $pad + $node->distribute->offsetWithin($innerMain, $contentMain);
         foreach ($node->children() as $index => $child) {
             $size = $sizes[$index];
             $childMain = $horizontal ? $size->width : $size->height;
             $childCross = $horizontal ? $size->height : $size->width;
+
+            // Only a child that declares no size, whose extent was always this stack's to compute.
+            // An authored size is never overridden, so no text box moves and the measure the
+            // overflow rule reads stays the measure the painter draws into.
+            if ($fills && $child->declaredSize() === null) {
+                $childCross = max($childCross, $innerCross);
+            }
+
             $crossOffset = $pad + $node->align->offsetWithin($innerCross, $childCross);
 
             $childBox = $horizontal
-                ? new Box($box->x + $cursor, $box->y + $crossOffset, $size->width, $size->height)
-                : new Box($box->x + $crossOffset, $box->y + $cursor, $size->width, $size->height);
+                ? new Box($box->x + $cursor, $box->y + $crossOffset, $childMain, $childCross)
+                : new Box($box->x + $crossOffset, $box->y + $cursor, $childCross, $childMain);
 
+            // The enlarged track reaches grandchildren through this box: place() reads its own
+            // inner cross extent back out of the box it is handed, so nesting needs nothing extra.
             self::place($child, $childBox, $brand, $placed);
             $cursor += $childMain + $gap;
         }
