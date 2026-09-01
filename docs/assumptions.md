@@ -7,7 +7,9 @@ character count. It does not do kerning, ligatures, bidi, or script shaping, and
 a font file.
 
 The estimate is used identically by validation and by the SVG renderer, so the two always agree
-with each other. They may both be wrong about a real browser, in one of two directions: a string
+with each other — asserted by `tests/Validation/TextMeasureAgreementTest.php`, which compares the
+width the rule measures against the lines the painter actually drew. D-005 unified the wrapping
+algorithm; that test unifies the measure, which had been agreeing only by coincidence. They may both be wrong about a real browser, in one of two directions: a string
 of narrow characters may be reported as overflowing when it would have fitted, and a string of
 wide ones may pass and then overflow slightly. Ratios in the fixture brand are set conservatively
 for that reason.
