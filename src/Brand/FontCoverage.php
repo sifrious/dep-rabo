@@ -39,11 +39,15 @@ final readonly class FontCoverage
 
         $format = self::uint16($bytes, $subtable);
 
-        return match ($format) {
-            4 => new self(self::readFormat4($bytes, $subtable), true),
-            12 => new self(self::readFormat12($bytes, $subtable), true),
-            default => new self([], false),
+        $codepoints = match ($format) {
+            4 => self::readFormat4($bytes, $subtable),
+            12 => self::readFormat12($bytes, $subtable),
+            default => null,
         };
+
+        // A subtable that violates its own declared bounds is unreadable, not empty. Reading past
+        // it would take bytes from an unrelated table and call them glyph ids.
+        return $codepoints === null ? new self([], false) : new self($codepoints, true);
     }
 
     public function covers(int $codepoint): bool
@@ -117,16 +121,25 @@ final readonly class FontCoverage
      * which means no glyph. Treating the range as coverage marked characters as available that the
      * font cannot draw, which is the false pass this whole class is meant to prevent.
      *
-     * @return array<int,true>
+     * @return array<int,true>|null null when the subtable exceeds its own declared length
      */
-    private static function readFormat4(string $bytes, int $subtable): array
+    private static function readFormat4(string $bytes, int $subtable): ?array
     {
+        // Every read is bounded by the subtable's own length field, not merely by the end of the
+        // font. An idRangeOffset pointing into a later table would otherwise yield a nonzero glyph
+        // id from unrelated bytes, and the character would be reported as covered.
+        $limit = min($subtable + self::uint16($bytes, $subtable + 2), strlen($bytes));
+
         $segmentBytes = self::uint16($bytes, $subtable + 6);
         $segments = intdiv($segmentBytes, 2);
         $endBase = $subtable + 14;
         $startBase = $endBase + $segmentBytes + 2;
         $deltaBase = $startBase + $segmentBytes;
         $rangeBase = $deltaBase + $segmentBytes;
+
+        if ($segments === 0 || $rangeBase + $segmentBytes > $limit) {
+            return null;
+        }
 
         $codepoints = [];
         for ($i = 0; $i < $segments; $i++) {
@@ -144,8 +157,8 @@ final readonly class FontCoverage
                 } else {
                     // The offset is measured in bytes from the idRangeOffset entry itself.
                     $at = $rangeBase + $i * 2 + $rangeOffset + ($code - $start) * 2;
-                    if ($at + 2 > strlen($bytes)) {
-                        continue;
+                    if ($at + 2 > $limit) {
+                        return null;
                     }
                     $glyph = self::uint16($bytes, $at);
                     if ($glyph !== 0) {
