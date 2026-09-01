@@ -222,8 +222,24 @@ box everywhere else — the same shape of failure as D-005, where validation and
 A warning rather than an error because the artifact does still render, and because a brand may
 knowingly rely on a system stack. The point is that the report says so.
 
-An unparseable font is not reported as covering nothing. Zero coverage and unreadable bytes are
-different facts, so `FontCoverage` carries a `readable` flag and `FontAssetRule` reports
-`RABO_FONT_ASSET_UNREADABLE` at error severity rather than a glyph warning per character. A broken
-file is one fact, and burying it under a hundred derived ones would make the report harder to act on
-than the failure it describes.
+See D-016 for what happens when the `cmap` cannot be read at all.
+
+## D-016 — An unreadable character map is its own error, not a hundred derived warnings
+
+**Decision.** `FontCoverage` carries a `readable` flag separate from its codepoint count, and
+`FontAssetRule` reports `RABO_FONT_ASSET_UNREADABLE` at error severity for a font whose `cmap`
+could not be parsed. It does not report a `RABO_FONT_GLYPH_UNAVAILABLE` warning for every character
+in the scene.
+
+**Rationale.** "Parsed, and covers nothing" and "could not be parsed" are different facts that both
+produce zero codepoints. Collapsing them let an unreadable file answer a coverage question it had
+never actually read, which is a false pass of exactly the kind D-015 exists to prevent.
+
+Error rather than warning because, unlike a genuine glyph gap, nothing about the outcome is
+knowingly accepted: the check did not run. Reporting it once rather than per character is the
+difference between a report that names a broken file and a report that buries it under a hundred
+consequences of that file.
+
+**Rejected.** Treating an unparseable font as covering nothing, which was the original behaviour and
+which D-015's own text still described for some time after it had been replaced — long enough for an
+automated reviewer to read the stale paragraph and file a defect against correct code.
