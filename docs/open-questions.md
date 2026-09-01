@@ -70,7 +70,7 @@ text is fixed by the brief, so the options are to ship a wider subset for the di
 accept a system fallback for one character. Widening the subset means re-vendoring from Fontsource
 and re-deriving the TrueType, which is a small but real decision about what the brand carries.
 
-## Q-008 — Node sizes are fixed, so a variant cannot reflow to a new measure
+## Q-008 — Node sizes are fixed, so a variant cannot reflow to a new measure *(answered)*
 
 Found by building a second composition. A `VariantSpec` can flip a stack's axis, but every node
 carries a fixed `Size`, so nothing widens when the axis changes.
@@ -80,11 +80,19 @@ the second, two 560-wide columns that sit edge to edge in landscape become a sin
 in a 1000-wide portrait, leaving 440 pixels of dead space beside it. The content is correct and the
 layout is legal; it simply does not use the space it was given.
 
-The obvious answer is a stretch mode on a stack's cross axis, which is what flexbox does. It is not
-a small change: `TextOverflowRule` measures against `declaredSize()` while `ScenePainter` wraps
-against the resolved layout box, so a size the layout computes rather than the node declares would
-put those two back into disagreement — the exact failure D-005 exists to prevent. Any stretch
-implementation has to give the overflow rule the resolved box too.
+**Answered by D-017.** `CrossSizing::Fill` on a stack gives each of its container children the whole
+inner cross extent. `root` and `columns` opt in, so the portrait cards now span their root: the two
+changed lines in `expected/static-portrait.svg` are `width="560"` becoming `width="1000"`.
+
+The hazard this entry named was real and was closed first, in its own commit, before the feature
+existed. `TextOverflowRule` now measures the box layout resolved rather than the one the node
+declares — a no-op at the time, since the two could not yet differ — and
+`tests/Validation/TextMeasureAgreementTest.php` asserts the rule's width against the lines the
+painter actually drew, so the two can no longer drift apart unnoticed.
+
+`Fill` then avoids the question entirely for text: it applies only to children that declare no size,
+which is every container and no leaf. No text box changes width, so nothing can rewrap. The
+remaining edges are Q-011.
 
 ## Q-009 — `currentColor` cannot cross an embedded image boundary
 
@@ -108,3 +116,18 @@ Self-contained and non-duplicating pull in opposite directions. Two compositions
 6 MB of identical font bytes. Some indirection will be needed — a bundle naming a brand directory,
 or a store that several bundles share — and it should be chosen deliberately rather than when the
 repository gets uncomfortable.
+
+## Q-011 — Two edges of cross-axis fill that were deliberately left alone
+
+Recorded by D-017 so neither is rediscovered as a surprise.
+
+**A leaf that fills.** `Fill` skips any node with a declared size, which is what keeps validation and
+drawing measuring the same box. Letting a leaf fill would reopen D-005 directly, and
+`test_a_declared_size_is_the_box_the_layout_resolves` currently forbids it — deliberately, so that
+anyone who wants it has to answer the question rather than discover it in a rendered artifact.
+
+**A scene root that fills its canvas.** `Layout::of()` sizes the root from `measure()`, never from
+the available space, so a stack-level flag can never make the root wider than its content. That is
+also what keeps `fixtures/failing/text-overflow` failing: its root measures 200, so there is no
+track to fill. A root that filled its canvas would give that fixture 552px and is the one change
+that could weaken it. If it is ever wanted, that fixture needs checking first.

@@ -170,6 +170,11 @@
             "id": "D-016",
             "decision": "A font whose character map cannot be read is reported as RABO_FONT_ASSET_UNREADABLE rather than as covering nothing.",
             "rationale": "An unparseable file and a file that genuinely covers nothing both have zero codepoints; treating them alike let an unreadable font report no glyph problems at all."
+        },
+        {
+            "id": "D-017",
+            "decision": "CrossSizing::Fill on a StackNode gives each container child the stack's whole inner cross extent; a child that declares its own size is never filled, and Layout::measure() is unchanged so a filled child cannot grow its parent.",
+            "rationale": "A variant could re-orient a stack but nothing widened, leaving the portrait columns at their landscape measure. Filling only container children is what keeps TextOverflowRule and ScenePainter measuring the same box, so no text can rewrap. It lives on StackNode beside direction, gap, align and distribute, so D-011 stands unamended. cross_sizing is serialized only when it is not the default, so a composition that does not use it keeps the content key it has always had."
         }
     ],
     "constraints": [
@@ -214,7 +219,9 @@
         },
         {
             "id": "Q-008",
-            "question": "Should a stack be able to stretch its children across its cross axis, given fixed node sizes stop a variant reflowing to a new measure?"
+            "question": "Should a stack be able to stretch its children across its cross axis, given fixed node sizes stop a variant reflowing to a new measure?",
+            "answered": true,
+            "answer": "Answered by D-017. CrossSizing::Fill gives container children the whole cross track; root and columns opt in, so the portrait cards span their root. The D-005 hazard it named was closed first and separately, by moving TextOverflowRule onto the resolved layout box and asserting the rule and the painter agree."
         },
         {
             "id": "Q-009",
@@ -223,6 +230,10 @@
         {
             "id": "Q-010",
             "question": "How should several compositions share one brand without either duplicating its assets or giving up self-contained bundles?"
+        },
+        {
+            "id": "Q-011",
+            "question": "Two edges of cross-axis fill that were deliberately left alone: a leaf that fills, which would reopen D-005, and a scene root that fills its canvas, which is the one change that could stop fixtures/failing/text-overflow overflowing."
         }
     ],
     "glossary": [

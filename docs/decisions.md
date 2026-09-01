@@ -243,3 +243,52 @@ consequences of that file.
 **Rejected.** Treating an unparseable font as covering nothing, which was the original behaviour and
 which D-015's own text still described for some time after it had been replaced — long enough for an
 automated reviewer to read the stale paragraph and file a defect against correct code.
+
+## D-017 — A stack may fill its cross axis, and it lives on the stack
+
+**Decision.** `CrossSizing` is a two-case enum — `Hug`, the default and the original behaviour, and
+`Fill` — carried by `StackNode` alongside `direction`, `gap`, `align` and `distribute`. Under `Fill`,
+`Layout::place()` gives each child the stack's whole inner cross extent, but only a child that
+returns null from `declaredSize()`. `Layout::measure()` is unchanged.
+
+**Rationale.** A variant could re-orient a stack but nothing widened, so the green-checks portrait
+put two 560-wide columns in a 1000-wide root and left 440px beside content that was correct, legal,
+and simply did not use the room it had — Q-008.
+
+Only container children fill because their extent was always the stack's to compute:
+`Node::declaredSize()` returns null "when its container computes it". An authored size is never
+overridden. That is not a nicety — it is what keeps `TextOverflowRule` and `ScenePainter` measuring
+the same box, which is D-005, and it means no text can rewrap as a result of this feature.
+
+`measure()` stays bottom-up so a filled child never grows its parent. Filling consumes space already
+allocated; it never asks for more, so the change cannot cascade upward and the scene root is still
+sized by what it contains rather than by its canvas.
+
+On `StackNode` rather than `VariantSpec` because a composition should be able to say "this card
+fills its row" in its own right, not only through a derivation. **D-011 therefore stands unamended:**
+the variant surface gains nothing, and per-stack overrides can be added on top of this primitive
+later if a real composition needs them.
+
+**Serialization.** `cross_sizing` is emitted only when it is not `Hug`. This departs from every other
+`toArray()` here, which emit total key sets — and the general rule it establishes is that *a field
+added after a contract version is frozen is emitted only when it departs from what the contract
+meant before it existed*. `Composition::key()` is a content identity: always emitting would mint a
+new key for every existing composition while the rendered bytes stayed identical, so provenance
+would report a change that had not happened. The reader side already defaults every missing key, so
+nothing had to change to accept it.
+
+**Consequences worth knowing.** `Fill` supersedes `align` for the children it fills — a node
+occupying the whole track has no alignment left to have — while leaving `align` in force for any
+sibling that declares a size. And the cross axis follows `direction`: on a horizontal stack `Fill`
+equalises heights, on a vertical one it equalises widths. The same flag on `columns` therefore means
+"equal-height cards" in landscape and "equal-width cards" in portrait, which is what was wanted in
+both.
+
+**Rejected.** A fourth `Alignment` case. `Alignment` is used for both `align` and `distribute`, and
+stretching is meaningless on the main axis, so it would have needed a runtime rejection; and a
+filled child has no alignment, so the case would not have been a peer of the other three but a value
+that disabled them.
+
+Also rejected: a size mode on `Node`. It would put a placement decision on objects that place
+nothing, and give a leaf both a declared size and a flag saying whether to honour it — two sources
+for one fact.

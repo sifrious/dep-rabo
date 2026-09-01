@@ -37,6 +37,15 @@ word silently dropped.
 readable and avoid the `[]` versus `{}` ambiguity. That makes `toArray() === toArray()` always
 false for equal documents. Use `canonical()` and `equals()`.
 
+**A stack's `cross_sizing` is usually absent from `composition.json`.** `hug` is the default and is
+not serialized, because emitting it would change `Composition::key()` for every composition that
+never asked for the field — see D-017. Only `fill` appears.
+
+**`fill` means "equal widths" or "equal heights" depending on the stack.** The cross axis is the one
+the stack does not run along, so the same flag on a horizontal stack equalises heights and on a
+vertical one equalises widths. That is deliberate: `columns` in the second composition wants both,
+and gets them from one declaration because the variant flips its direction.
+
 **`maxLines` is an allowance, not a requirement.** Text that fits on one line inside a two-line box
 is correct. Height is measured against lines actually needed.
 
