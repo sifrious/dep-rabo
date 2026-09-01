@@ -1,15 +1,18 @@
 # Open questions
 
-## Q-001 — Where does a brand's font file live?
+## Q-001 — Where does a brand's font file live? *(answered)*
 
-The Brand Library names families and declares metrics for them, but references no font binaries.
-A rendered SVG relies on the viewer having the family installed or falling back down the declared
-stack. For a published artifact that is a real gap: a social card rendered on a machine without
-Space Grotesk will not look like the brand.
+Answered by MME-2194: in the content-addressed asset store, like any other asset.
 
-Options are embedding subsetted WOFF2 as content-addressed assets and inlining them, or leaving
-font delivery to whichever consumer publishes. Not answered here because the first proof is
-inspected locally.
+A family declares its files. The WOFF2 is inlined into rendered SVG as an `@font-face` data URI,
+which browsers honour. The TrueType — stored as an `AssetDerivation` of the WOFF2, transform
+`woff2-decompress` — is written to disk and handed to the rasterizer by path, because resvg ignores
+`@font-face` entirely and rejects WOFF2 as malformed. One artifact serves both, because the font
+stack names the family the TrueType file declares for itself directly after the family's own name.
+
+Licences travel as assets too: each OFL text is stored under its own digest and named from the
+font's `AssetRights.terms`, so the licence cannot drift from the bytes it covers.
+
 
 ## Q-002 — Should a template constrain a composition, or only suggest one?
 
@@ -36,17 +39,33 @@ Cue captions currently produce a text equivalent for the whole piece. Timed capt
 motion — start, end, speaker — would need a caption track rather than a per-cue string. Deferred
 until a composition actually carries speech.
 
-## Q-006 — How does anything but one laptop install this package?
+## Q-006 — How does anything but one laptop install this package? — answered
 
-`composer.json` reaches `sifrious/reference-contract` at `git@github.com-sifrious:…`, which is an
-SSH alias in one developer's `~/.ssh/config` and resolves nowhere else. Both repositories are
-private, so substituting an `https://` URL does not help either — it moves the failure from DNS to
-authentication.
+`composer.json` reached `sifrious/reference-contract` at `git@github.com-sifrious:…`, an SSH alias
+in one developer's `~/.ssh/config` that resolved on that machine and nowhere else. CI failed on both
+legs at its first run, at DNS rather than at authentication, with an error pointing at the wrong
+thing.
 
-CI works around it with a `url.…insteadOf` rewrite gated on a `SIFRIOUS_PACKAGES_TOKEN` secret, and
-fails with an explicit message until that secret exists. That unblocks this package; it does not
-answer the question for the six repositories with the same line.
+**Answered.** The repository is public, so the dependency is now reached at
+`https://github.com/sifrious/dep-reference-contract.git` and needs no credential at all. Verified in
+a sandbox matching a runner — no SSH, no credential helper, no prompts — and then by CI on PHP 8.3
+and 8.4.
 
-Tracked as MME-2193, with four options recorded there. Worth noting that this was invisible to
-local verification — a clean `git clone` into a scratch directory passed, because it ran on the one
-machine where the alias resolves.
+Two things worth keeping from it. Making the repository public was necessary but not sufficient: the
+alias had to be replaced too, because it fails at name resolution whether or not a credential is
+needed. And this was invisible to local verification — a clean `git clone` into a scratch directory
+passed, because it ran on the one machine where the alias resolves. The check that looked like proof
+of portability was measuring something else.
+
+Five other repositories still carry the same line. That is MME-2193, not Rabo's question.
+
+## Q-007 — Should the brand ship a font subset that covers its own headline?
+
+All three faces are latin subsets of about 230 glyphs, and none contains U+2260. The canonical
+composition's headline turns on exactly that character, so `≠` is drawn by whatever the viewer has
+installed, and by nothing at all on a machine with no such font.
+
+Validation reports this as `RABO_FONT_GLYPH_UNAVAILABLE` rather than hiding it, and the headline
+text is fixed by the brief, so the options are to ship a wider subset for the display face or to
+accept a system fallback for one character. Widening the subset means re-vendoring from Fontsource
+and re-deriving the TrueType, which is a small but real decision about what the brand carries.

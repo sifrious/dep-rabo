@@ -78,6 +78,9 @@ final readonly class SvgStaticRenderer implements Renderer
         ], 0);
         $svg->element('title', $request->composition->title ?? $request->composition->id, ['id' => 'rabo-title']);
         $svg->element('desc', $this->describe($request), ['id' => 'rabo-desc']);
+        if ($request->target->embedFonts) {
+            $painter->paintFontFaces($svg, $scene);
+        }
         $painter->paintArrowheadDefs($svg, $scene);
         $painter->paintBackground($svg, $scene);
         $painter->paintNodes($svg, $layout);

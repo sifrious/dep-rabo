@@ -18,7 +18,7 @@ use Sifrious\ReferenceContract\CrossPackageReference;
  *
  * It references assets by content digest and never by path, and it declares which renderers
  * it is known to work with rather than naming one. Product-interface design systems are a
- * different thing owned elsewhere; nothing here is Burdgeon's theme model.
+ * different thing owned elsewhere; nothing here is Burdgen's theme model.
  */
 final readonly class BrandLibrary implements JsonSerializable
 {
@@ -121,6 +121,11 @@ final readonly class BrandLibrary implements JsonSerializable
         $digests = [];
         foreach ($this->marks as $mark) {
             foreach ($mark->assets() as $digest) {
+                $digests[(string) $digest] = $digest;
+            }
+        }
+        foreach ($this->typography->families as $family) {
+            foreach ($family->assets() as $digest) {
                 $digests[(string) $digest] = $digest;
             }
         }

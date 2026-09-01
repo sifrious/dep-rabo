@@ -19,6 +19,10 @@ use Sifrious\Rabo\Motion\Timeline;
  * and gets a plain, deterministic still — which means the frames feeding a video are exactly
  * as reproducible as the still renderer, and can be compared byte for byte in a test even
  * when the resulting MP4 cannot be.
+ *
+ * Font embedding defaults to off here. A frame is consumed by a rasterizer, which reads fonts from
+ * files rather than from `@font-face`, so inlining ~130KB into each of several hundred frames would
+ * cost a great deal and buy nothing.
  */
 final readonly class SvgFrameRenderer
 {
@@ -27,7 +31,7 @@ final readonly class SvgFrameRenderer
         private ?AssetStore $assets = null,
     ) {}
 
-    public function frame(Scene $scene, Timeline $timeline, Duration $at, ?string $title = null, ?string $description = null): string
+    public function frame(Scene $scene, Timeline $timeline, Duration $at, ?string $title = null, ?string $description = null, bool $embedFonts = false): string
     {
         $sampler = new CueSampler($this->brand);
         $painter = new ScenePainter($this->brand, $this->assets);
@@ -48,6 +52,9 @@ final readonly class SvgFrameRenderer
         }
         if ($description !== null) {
             $svg->element('desc', $description);
+        }
+        if ($embedFonts) {
+            $painter->paintFontFaces($svg, $scene);
         }
         $painter->paintArrowheadDefs($svg, $scene);
         $painter->paintBackground($svg, $scene);

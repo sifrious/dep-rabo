@@ -9,7 +9,7 @@ whether it may be published, or where it goes.
 **No framework, no ORM, no HTTP client, no provider SDK.** The only dependencies are `php` and
 `sifrious/reference-contract`. If a class here needs Laravel or a network, the design is wrong.
 
-**No Burdgeon tokens.** Burdgeon owns two token systems Rabo must never absorb: the semantic
+**No Burdgen tokens.** Burdgen owns two token systems Rabo must never absorb: the semantic
 interface palette (`--color-surface-*`, `--tone-*`) and the product identity palette
 (`--product-*`, where `rabo` is itself a colour). A Brand Library is customer-facing brand
 vocabulary. Reusing those names would collapse a boundary that ADR-002 exists to hold.
@@ -42,6 +42,20 @@ is correct. Height is measured against lines actually needed.
 
 **The MP4 has no golden fixture and reports `deterministic: false`.** MP4 bytes vary across encoder
 builds. The frame SVGs feeding it are reproducible and are what the tests assert on.
+
+**Artifacts are ~140KB, not ~9KB.** They carry the brand's typefaces inlined as `@font-face` data
+URIs. Without that they render in whatever the viewer has, which on a machine with none of the three
+faces is a serif fallback — the state every artifact was in before MME-2194. `--no-embed-fonts`
+gives the small file when you control the display environment.
+
+**The font stack lists a family twice, sort of.** `'Space Grotesk', 'Space Grotesk Light', …` is not
+a mistake. Browsers match the first against the inlined face; resvg cannot read `@font-face` at all
+and matches the second against the TrueType file it was handed, which declares itself by that name
+after its default axis instance.
+
+**`≠` comes from a system font.** All three brand faces are latin subsets without U+2260. Validation
+warns (`RABO_FONT_GLYPH_UNAVAILABLE`); the renderer deliberately does not pass `--skip-system-fonts`
+so the character still draws. On a machine with no font covering it, the MP4 shows a box.
 
 **`FrozenClock` is the default in the CLI.** Artifacts contain no timestamps, so renders are
 byte-identical across runs. A timestamp anywhere in an artifact would destroy that.

@@ -1,0 +1,40 @@
+{
+    "contract": "sifrious.rabo.asset-set",
+    "contract_version": 1,
+    "assets": [
+        {
+            "contract": "sifrious.rabo.asset",
+            "contract_version": 1,
+            "digest": "sha256:c07d8fe9d94dc122389d53c3c2bfed548ec3fc11623b78d0ad612f88c2db236c",
+            "media_type": "font/woff2",
+            "byte_length": 72,
+            "rights": {
+                "holder": "sifrious",
+                "license": "OFL-1.1",
+                "attribution_required": false,
+                "terms": null
+            },
+            "dimensions": null,
+            "derivation": null,
+            "provenance": null,
+            "label": "An embeddable file that is not a web font"
+        },
+        {
+            "contract": "sifrious.rabo.asset",
+            "contract_version": 1,
+            "digest": "sha256:a5d6606e0ce658b162a7c281426319252b635d4b43614ffc0091513e42f173da",
+            "media_type": "font/ttf",
+            "byte_length": 91,
+            "rights": {
+                "holder": "sifrious",
+                "license": "OFL-1.1",
+                "attribution_required": false,
+                "terms": null
+            },
+            "dimensions": null,
+            "derivation": null,
+            "provenance": null,
+            "label": "A font file with no readable character map"
+        }
+    ]
+}

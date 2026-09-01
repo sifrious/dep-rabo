@@ -70,6 +70,30 @@ final readonly class TypographySystem implements JsonSerializable
         return $this->families[$name] ?? throw new UnknownBrandToken("The brand declares no font family '{$name}'.");
     }
 
+    /**
+     * The families behind a set of type roles, in a stable order.
+     *
+     * A renderer inlines only the faces a document actually uses, so a composition that never sets
+     * anything in monospace does not carry a monospace font it will not draw.
+     *
+     * @param  list<string>  $roleNames
+     * @return list<FontFamily>
+     */
+    public function familiesForRoles(array $roleNames): array
+    {
+        $families = [];
+        foreach ($roleNames as $roleName) {
+            if (! $this->hasRole($roleName)) {
+                continue;
+            }
+            $family = $this->family($this->role($roleName)->family);
+            $families[$family->name] = $family;
+        }
+        ksort($families);
+
+        return array_values($families);
+    }
+
     /** Estimated rendered width, using the brand's declared advance ratio. */
     public function estimateWidthPx(string $roleName, string $text): float
     {

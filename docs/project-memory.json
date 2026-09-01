@@ -1,7 +1,7 @@
 {
     "schema_version": 1,
     "project": "Rabo",
-    "updated_at": "2026-08-29T22:30:00Z",
+    "updated_at": "2026-08-30T03:30:00Z",
     "facts": [
         {
             "id": "F-001",
@@ -38,6 +38,18 @@
         {
             "id": "F-009",
             "statement": "CI runs composer install/test/audit on PHP 8.3 and 8.4 with neither resvg nor ffmpeg present, which also exercises the MP4 adapter's deterministic refusal."
+        },
+        {
+            "id": "F-010",
+            "statement": "Typefaces ship as content-addressed assets in two formats: WOFF2 inlined into SVG as @font-face, and TrueType handed to the rasterizer by path because resvg ignores @font-face and rejects WOFF2."
+        },
+        {
+            "id": "F-011",
+            "statement": "The brand's three faces are latin subsets with no U+2260, so the canonical headline's \u2260 comes from a system font; validation warns rather than hiding it."
+        },
+        {
+            "id": "F-013",
+            "statement": "Font files and their OFL licence texts are linked from the brand's FontFile entries, so referencedAssets() and render provenance list all eleven assets an artifact depends on."
         }
     ],
     "assumptions": [
@@ -103,20 +115,31 @@
             "id": "D-013",
             "decision": "This package ships CI although no neutral sibling does.",
             "rationale": "It commits golden artifacts the tests compare byte for byte; a renderer change could otherwise invalidate them silently."
+        },
+        {
+            "id": "D-014",
+            "decision": "Typefaces are content-addressed assets in two formats, with the TrueType derived from the WOFF2.",
+            "rationale": "No single format satisfies both browsers and the rasterizer, and before this every artifact rendered in a fallback on a machine with none of the faces installed."
+        },
+        {
+            "id": "D-015",
+            "decision": "Glyph coverage is parsed from the font cmap and a gap is a warning.",
+            "rationale": "The headline turns on a character none of the brand faces contains; without the check it renders as a tofu box wherever no system font covers it."
+        },
+        {
+            "id": "D-016",
+            "decision": "A font whose character map cannot be read is reported as RABO_FONT_ASSET_UNREADABLE rather than as covering nothing.",
+            "rationale": "An unparseable file and a file that genuinely covers nothing both have zero codepoints; treating them alike let an unreadable font report no glyph problems at all."
         }
     ],
     "constraints": [
         "Rabo does not depend on Laravel, Eloquent, HTTP, a queue, a browser, or a provider SDK.",
-        "Rabo does not own Pulp intent, Digory or Funes evidence, Orual approval, Trout delivery, or Burdgeon product-interface design.",
+        "Rabo does not own Pulp intent, Digory or Funes evidence, Orual approval, Trout delivery, or Burdgen product-interface design.",
         "Rabo holds cross-package references and resolves none of them.",
         "Validation is deterministic: no model, no network, no clock.",
         "Rendered artifacts never replace editable compositions."
     ],
     "open_questions": [
-        {
-            "id": "Q-001",
-            "question": "Where do a brand's font files live, given a rendered SVG relies on the viewer having the family?"
-        },
         {
             "id": "Q-002",
             "question": "Should departing from a template be a warning, an error, or silent?"
@@ -132,6 +155,14 @@
         {
             "id": "Q-005",
             "question": "Do timed captions need a first-class caption track rather than a per-cue string?"
+        },
+        {
+            "id": "Q-006",
+            "question": "How does anything but one laptop install this package, given composer.json uses a local-only SSH alias for a private dependency?"
+        },
+        {
+            "id": "Q-007",
+            "question": "Should the brand ship a wider font subset that covers its own headline's \u2260, or accept a system fallback for that character?"
         }
     ],
     "glossary": [

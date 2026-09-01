@@ -35,6 +35,8 @@ final class ValidationCoverageTest extends TestCase
         'motion-cue-past-end' => IssueCode::MotionDurationInvalid,
         'motion-cue-overlap' => IssueCode::MotionCueOverlapUnresolved,
         'motion-essential-dismissed' => IssueCode::MotionInformationOnlyTransient,
+        'missing-font-asset' => IssueCode::FontAssetMissing,
+        'unreadable-font-asset' => IssueCode::FontAssetUnreadable,
     ];
 
     public function test_each_failing_bundle_reports_its_own_code_and_nothing_else(): void
@@ -43,7 +45,9 @@ final class ValidationCoverageTest extends TestCase
             $report = $this->validate($directory);
 
             self::assertFalse($report->passed(), "Bundle '{$directory}' was expected to fail validation.");
-            self::assertSame([$expected->value], $report->codes(), "Bundle '{$directory}' should isolate one dimension.");
+            // Blocking codes only. These minimal brands ship no font files, which warns; that is
+            // correct behaviour and not a second dimension under test.
+            self::assertSame([$expected->value], $report->errorCodes(), "Bundle '{$directory}' should isolate one blocking dimension.");
             self::assertNotSame('', $report->withCode($expected)[0]->path, "Bundle '{$directory}' must name the thing at fault.");
             self::assertNotSame('', $report->withCode($expected)[0]->remediation());
         }
@@ -60,8 +64,30 @@ final class ValidationCoverageTest extends TestCase
     {
         $report = $this->validate('../'.Fixture::SLICE);
 
-        self::assertTrue($report->passed(), 'Canonical fixture issues: '.implode(', ', $report->codes()));
-        self::assertSame([], $report->issues);
+        self::assertTrue($report->passed(), 'Canonical fixture errors: '.implode(', ', $report->errorCodes()));
+        self::assertSame([], $report->errors());
+    }
+
+    /**
+     * The canonical composition has one honest defect, and validation says so rather than hiding it.
+     *
+     * Its headline turns on "≠", and every one of the brand's three faces is a latin subset that
+     * has no glyph for U+2260. That character therefore comes from whatever the viewer happens to
+     * have installed, and from nothing at all on a machine with no such font. The headline text is
+     * fixed by the brief, so the honest end state is a warning that names the character rather than
+     * a quiet substitution.
+     */
+    public function test_the_canonical_bundle_warns_that_its_headline_glyph_is_not_in_the_brand(): void
+    {
+        $report = $this->validate('../'.Fixture::SLICE);
+
+        self::assertSame([IssueCode::FontGlyphUnavailable->value], $report->codes());
+        self::assertTrue($report->passed(), 'A missing glyph is worth reading, not worth blocking on.');
+
+        $issue = $report->withCode(IssueCode::FontGlyphUnavailable)[0];
+        self::assertStringContainsString('≠', $issue->message);
+        self::assertSame('headline', $issue->path);
+        self::assertSame(Severity::Warning, $issue->severity());
     }
 
     public function test_an_unsatisfiable_brand_pin_blocks_rather_than_warns(): void

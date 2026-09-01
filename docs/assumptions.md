@@ -56,3 +56,19 @@ requiring per-criterion results and commit SHAs, and at six `[RABO-00x]` tickets
 "In Review" with no attachments and no implementation. That second reference is a claim about
 state that will change as those tickets are reconciled; it is a reference to an observation, not
 an assertion that the observation is still current.
+
+## A-007 — The rasterizer keeps system fonts available as a fallback
+
+Confirmed by construction. `FfmpegMotionRenderer` passes `--use-font-file` for each brand face but
+does **not** pass `--skip-system-fonts`. That is deliberate: the brand's subsets have no `≠`, and
+without a system fallback the canonical composition's headline rasterizes as a tofu box.
+
+The consequence is that MP4 output on a machine with no font covering U+2260 will show that box. The
+validator warns about exactly this (`RABO_FONT_GLYPH_UNAVAILABLE`); it is not silently assumed away.
+
+## A-008 — Font embedding was verified in one browser, not a matrix
+
+Chrome honours the inlined `@font-face` and renders the brand faces; resvg skips the block and
+matches the font stack's declared-family entry against files passed on the command line. Both were
+checked by rendering and comparing pixels. Firefox and WebKit are expected to behave as Chrome does,
+and were not tested here.

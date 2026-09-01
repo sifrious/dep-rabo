@@ -16,6 +16,7 @@ use Sifrious\Rabo\Validation\Rule\AssetRule;
 use Sifrious\Rabo\Validation\Rule\BrandCompatibilityRule;
 use Sifrious\Rabo\Validation\Rule\BrandTokenRule;
 use Sifrious\Rabo\Validation\Rule\ContrastRule;
+use Sifrious\Rabo\Validation\Rule\FontAssetRule;
 use Sifrious\Rabo\Validation\Rule\DimensionsRule;
 use Sifrious\Rabo\Validation\Rule\MarkTreatmentRule;
 use Sifrious\Rabo\Validation\Rule\ReferenceRule;
@@ -47,6 +48,7 @@ final readonly class CompositionValidator
             new BrandTokenRule(),
             new ContrastRule(),
             new TextOverflowRule(),
+            new FontAssetRule(),
             new DimensionsRule(),
             new AccessibilityRule(),
             new MarkTreatmentRule(),
