@@ -4,7 +4,7 @@
     "composition": {
         "id": "green-checks-that-verified-nothing",
         "version": 1,
-        "key": "aaf7e1e57e2af57975c5d5c71aedbebe518477e59038bebf10e3498ce74bee28",
+        "key": "3e9847b2e29494750fd4f6d6835d60d3b71974407ea4290e069d4dbca6c80fcd",
         "scene": "portrait"
     },
     "brand": {
@@ -31,8 +31,8 @@
         "deterministic": true,
         "tool_versions": {}
     },
-    "request_digest": "6c6af0334608e41417e01f9417daf6d43c05e61aeff1081f07eed8c7167a3feb",
-    "output_digest": "sha256:edf0ec4bef2a6b1d20d2edf54e84730e571687edaaa8780a9e10e4c22e193d2e",
+    "request_digest": "567c3cca6c9d8d424589cc27fcfd02038db0badffdd4b2aaddcf3f18d8331f60",
+    "output_digest": "sha256:74ae84e8eda94b78a11f8470994134bbe9952966ad7c3d59f90b799a32411b42",
     "references": {
         "contract": "sifrious.rabo.composition-references",
         "contract_version": 1,

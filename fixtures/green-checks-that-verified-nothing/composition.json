@@ -26,6 +26,7 @@
             "gap": "xl",
             "align": "start",
             "distribute": "start",
+            "cross_sizing": "fill",
             "style": {
                 "fill": null,
                 "text": null,
@@ -136,6 +137,7 @@
                     "gap": "xl",
                     "align": "start",
                     "distribute": "start",
+                    "cross_sizing": "fill",
                     "style": {
                         "fill": null,
                         "text": null,

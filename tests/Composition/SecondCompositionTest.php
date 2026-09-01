@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sifrious\Rabo\Tests\Composition;
 
 use PHPUnit\Framework\TestCase;
+use Sifrious\Rabo\Composition\CrossSizing;
 use Sifrious\Rabo\Composition\Node\ShapeKind;
 use Sifrious\Rabo\Composition\Node\ShapeNode;
 use Sifrious\Rabo\Composition\NodeId;
@@ -95,6 +96,47 @@ final class SecondCompositionTest extends TestCase
         self::assertSame(1080, $composition->variant('portrait')->canvas->width);
         self::assertSame(1350, $composition->variant('portrait')->canvas->height);
         self::assertSame('4:5', $composition->variant('portrait')->canvas->aspectRatio());
+    }
+
+    /**
+     * Q-008, in the artifact that found it.
+     *
+     * Flipping the columns to a vertical stack in a 1000-wide root used to leave them at their
+     * landscape measure of 560, with 440px of dead space beside content that was correct and legal
+     * and simply did not use the room it was given.
+     *
+     * The title's box is asserted too: filling a container must not reflow the text inside it, or
+     * the fill has quietly re-opened the question D-005 exists to keep closed.
+     */
+    public function test_the_portrait_variant_fills_the_width_it_is_given(): void
+    {
+        $composition = $this->bundle()->composition;
+        $brand = $this->bundle()->brand;
+
+        $source = $composition->scene->layout($brand);
+        $portrait = $composition->variantScene('portrait')->layout($brand);
+
+        foreach (['col-reported', 'col-actual'] as $card) {
+            self::assertSame(560.0, $source->box(new NodeId($card))->width, "{$card} keeps its measure side by side.");
+            self::assertSame(
+                $portrait->box(new NodeId('root'))->width,
+                $portrait->box(new NodeId($card))->width,
+                "{$card} should span the root once the columns stack vertically.",
+            );
+        }
+
+        self::assertSame(512.0, $portrait->box(new NodeId('col-reported-title'))->width, 'A declared text size is never filled.');
+    }
+
+    public function test_the_variant_derivation_keeps_the_fill_it_was_given(): void
+    {
+        $composition = $this->bundle()->composition;
+
+        // applyOverrides() rebuilds this stack through withDirection(), which reconstructs
+        // positionally. Dropping crossSizing there would compile, reset it, and leave the portrait
+        // looking exactly as it did before the feature existed.
+        self::assertSame(CrossSizing::Fill, $composition->scene->findNode(new NodeId('columns'))->crossSizing);
+        self::assertSame(CrossSizing::Fill, $composition->variantScene('portrait')->findNode(new NodeId('columns'))->crossSizing);
     }
 
     public function test_it_embeds_only_the_typefaces_it_sets(): void
