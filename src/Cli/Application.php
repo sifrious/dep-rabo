@@ -63,7 +63,7 @@ final readonly class Application
     /** @param list<string> $arguments */
     private function validate(array $arguments, mixed $out, mixed $err): int
     {
-        $options = Options::parse($arguments);
+        $options = Options::parse($arguments, [], []);
         $bundle = CompositionBundle::load($options->positional(0, 'a composition bundle directory'));
 
         $report = $this->validator->validate(
@@ -95,13 +95,18 @@ final readonly class Application
     /** @param list<string> $arguments */
     private function render(array $arguments, mixed $out, mixed $err): int
     {
-        $options = Options::parse($arguments);
+        $options = Options::parse(
+            $arguments,
+            ['format', 'scene', 'out', 'fps', 'name'],
+            ['reduced-motion', 'no-embed-fonts'],
+        );
         $bundle = CompositionBundle::load($options->positional(0, 'a composition bundle directory'));
 
         $format = RenderFormat::tryFrom($options->value('format', RenderFormat::Svg->value))
             ?? throw new InvalidArgumentException('Unknown --format. Try: svg, svg-animated, mp4.');
         $sceneName = $options->value('scene', 'source');
         $reduced = $options->flag('reduced-motion');
+        $embedFonts = ! $options->flag('no-embed-fonts');
         $directory = rtrim($options->value('out', 'build'), '/');
         $fps = $format->isTemporal() ? (int) $options->value('fps', '24') : null;
 
@@ -119,7 +124,7 @@ final readonly class Application
             $bundle->composition,
             $bundle->brand,
             $sceneName,
-            new RenderTarget($format, new Dimensions($scene->canvas->width, $scene->canvas->height), $fps, $reduced),
+            new RenderTarget($format, new Dimensions($scene->canvas->width, $scene->canvas->height), $fps, $reduced, $embedFonts),
         ));
 
         return $this->writeOutcome($outcome, $directory, $options->value('name', $this->defaultName($sceneName, $format, $reduced)), $out, $err);
@@ -128,7 +133,7 @@ final readonly class Application
     /** @param list<string> $arguments */
     private function inspect(array $arguments, mixed $out, mixed $err): int
     {
-        $options = Options::parse($arguments);
+        $options = Options::parse($arguments, [], []);
         $artifact = $options->positional(0, 'a rendered artifact');
         $provenanceFile = preg_replace('/\.[a-z0-9]+$/i', '', $artifact).'.provenance.json';
 
@@ -231,8 +236,11 @@ final readonly class Application
               Validate a composition bundle. Prints a JSON report; exits 1 on any blocking issue.
 
           rabo render <bundle> [--format=svg|svg-animated|mp4] [--scene=source|<variant>]
-                               [--reduced-motion] [--fps=24] [--out=build] [--name=<basename>]
+                               [--reduced-motion] [--no-embed-fonts] [--fps=24]
+                               [--out=build] [--name=<basename>]
               Render one scene. Writes the artifact and its provenance beside it.
+              --no-embed-fonts leaves the brand's typefaces out. Smaller, and correct
+              only where you control what is installed on the display machine.
 
           rabo inspect <artifact>
               Re-hash a rendered artifact and check it against the provenance written with it.

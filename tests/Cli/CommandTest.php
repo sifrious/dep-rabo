@@ -9,10 +9,11 @@ use Sifrious\Rabo\Cli\Application;
 use Sifrious\Rabo\Tests\Fixture;
 
 /**
- * The documented human-verification path, run as a test.
+ * The CLI's own behaviour, exercised in process.
  *
- * Every command a reviewer is told to type is exercised here with its expected exit code, so
- * the README cannot drift away from what the package actually does.
+ * The commands `docs/human-verification.md` tells a reviewer to type are run separately, from that
+ * document, by `tests/Docs/HumanVerificationTest.php`. This file covers what the CLI does with
+ * arguments — including the ones a reviewer should never need to type.
  */
 final class CommandTest extends TestCase
 {
@@ -111,6 +112,44 @@ final class CommandTest extends TestCase
                 "{$file} differs from the committed artifact.",
             );
         }
+    }
+
+    public function test_no_embed_fonts_leaves_the_typefaces_out(): void
+    {
+        $directory = $this->workspace();
+
+        self::assertSame(0, $this->rabo(['rabo', 'render', Fixture::path(), '--format=svg', '--out='.$directory]));
+        $embedded = (string) file_get_contents($directory.'/static.svg');
+
+        self::assertSame(0, $this->rabo(['rabo', 'render', Fixture::path(), '--format=svg', '--no-embed-fonts', '--out='.$directory, '--name=bare']));
+        $bare = (string) file_get_contents($directory.'/bare.svg');
+
+        self::assertSame(3, substr_count($embedded, '@font-face'));
+        self::assertSame(0, substr_count($bare, '@font-face'), 'This flag was documented in three places and read by nothing.');
+        self::assertLessThan(20_000, strlen($bare), 'docs/human-verification.md promises under 20 KB.');
+        self::assertGreaterThan(100_000, strlen($embedded));
+    }
+
+    public function test_an_option_the_command_does_not_accept_is_refused(): void
+    {
+        self::assertSame(2, $this->rabo(['rabo', 'render', Fixture::path(), '--no-embed-font']));
+        self::assertStringContainsString("Unknown option '--no-embed-font'", $this->err);
+        self::assertStringContainsString('--no-embed-fonts', $this->err, 'The refusal lists what is accepted.');
+    }
+
+    public function test_a_flag_given_a_value_and_a_key_given_none_are_both_refused(): void
+    {
+        self::assertSame(2, $this->rabo(['rabo', 'render', Fixture::path(), '--reduced-motion=yes']));
+        self::assertStringContainsString('is a flag and takes no value', $this->err);
+
+        self::assertSame(2, $this->rabo(['rabo', 'render', Fixture::path(), '--format']));
+        self::assertStringContainsString('needs a value', $this->err);
+    }
+
+    public function test_a_command_that_accepts_no_options_says_so(): void
+    {
+        self::assertSame(2, $this->rabo(['rabo', 'validate', Fixture::path(), '--format=svg']));
+        self::assertStringContainsString('accepts no options', $this->err);
     }
 
     public function test_an_unknown_command_exits_two(): void
