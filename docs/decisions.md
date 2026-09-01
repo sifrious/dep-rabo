@@ -147,3 +147,34 @@ house `toArray() === toArray()` idiom silently reports inequality.
 
 **Rejected.** Emitting maps as sorted key/value pair lists, which would restore `===` at the cost
 of a manifest no one wants to read or hand-edit.
+
+## D-013 — This package has CI, unlike its neutral siblings
+
+**Decision.** `.github/workflows/ci.yml` runs `composer install`, `composer test`, and
+`composer audit` on PHP 8.3 and 8.4 for every push to `main` and every pull request.
+
+**Rationale.** No framework-neutral package in this organisation has CI — `dep-reference-contract`,
+`dep-titan`, `dep-elwin` and `dep-logres` all ship none, and every `dep-*` repo that does have CI
+pulls Laravel. This package is a deliberate exception for one specific reason: it commits golden
+artifacts that the tests regenerate and compare byte for byte. A renderer change can silently
+invalidate them for anyone who does not run the suite locally, and an artifact that no longer
+matches its own recorded provenance is exactly the failure this package exists to argue against.
+
+The workflow installs from the committed lock rather than updating, because reproducibility is the
+property under test. It runs 8.3 because `composer.json` declares `^8.3`, and a declared floor that
+is never exercised is a claim rather than a fact.
+
+`resvg` and `ffmpeg` are deliberately absent from the runner. The suite covers that case with a
+stubbed `BinaryProbe`, so CI also proves the MP4 adapter refuses deterministically rather than
+crashing when its tools are missing.
+
+**Rejected.** Matching the neutral-package convention and shipping no CI. Defensible for a package
+of pure value objects; not for one whose correctness claim is "these committed bytes regenerate
+exactly".
+
+**What it caught immediately.** The first run failed on both legs, and not on anything the tests
+cover: `composer.json` addresses its one dependency through an SSH alias that exists only in one
+developer's `~/.ssh/config`. Local verification had passed, including a clean `git clone` into a
+scratch directory — because that clone happened on the machine where the alias resolves. The check
+that looked like proof of portability was measuring something else. See `docs/open-questions.md`
+Q-006 and MME-2193.

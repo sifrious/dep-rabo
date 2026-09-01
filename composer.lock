@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff2e072d9aee15bde2d74f24601a4b54",
+    "content-hash": "800655e185060cb999567c01a97c69c7",
     "packages": [
         {
             "name": "sifrious/reference-contract",
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "git@github.com-sifrious:sifrious/dep-reference-contract.git",
-                "reference": "13d9d69427032cbf09c769bbb3b68744c380824f"
+                "url": "https://github.com/sifrious/dep-reference-contract.git",
+                "reference": "13075ffaec9e263392083d4b7e84f7cde8f38622"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sifrious/dep-reference-contract/zipball/13075ffaec9e263392083d4b7e84f7cde8f38622",
+                "reference": "13075ffaec9e263392083d4b7e84f7cde8f38622",
+                "shasum": ""
             },
             "require": {
                 "php": "^8.3"
@@ -30,10 +36,14 @@
                 ]
             },
             "license": [
-                "MIT"
+                "proprietary"
             ],
             "description": "Framework-neutral cross-package reference values and resolution contracts.",
-            "time": "2026-08-29T18:53:46+00:00"
+            "support": {
+                "source": "https://github.com/sifrious/dep-reference-contract/tree/main",
+                "issues": "https://github.com/sifrious/dep-reference-contract/issues"
+            },
+            "time": "2026-08-30T02:13:10+00:00"
         }
     ],
     "packages-dev": [
