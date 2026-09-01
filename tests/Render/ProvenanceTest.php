@@ -72,6 +72,61 @@ final class ProvenanceTest extends TestCase
         }
     }
 
+    /**
+     * The committed provenance must still name the composition sitting beside it.
+     *
+     * Every other assertion here renders live and compares the result to a live computation, so
+     * both sides move together and the check can never fail. Nothing looked at whether the
+     * `composition.key` recorded in a committed file still matches the bundle it claims to
+     * describe — which is the same shape of gap as D-005: two recorded facts that are supposed to
+     * agree, and nothing asking whether they do.
+     *
+     * It matters most exactly when a serialized field is added. The bytes do not move, so the
+     * artifact diff looks clean, while every recorded key silently goes stale.
+     */
+    public function test_the_committed_provenance_still_names_the_composition_beside_it(): void
+    {
+        $checked = 0;
+
+        foreach (self::committedProvenance() as $file) {
+            $bundle = CompositionBundle::load(dirname($file, 2));
+            $recorded = json_decode((string) file_get_contents($file), true, flags: JSON_THROW_ON_ERROR);
+            $label = basename(dirname($file, 2)).'/'.basename($file);
+
+            self::assertSame($bundle->composition->id, $recorded['composition']['id'], $label);
+            self::assertSame($bundle->composition->key(), $recorded['composition']['key'], "{$label} records a composition key the bundle no longer produces.");
+            self::assertSame($bundle->brand->key(), $recorded['brand']['key'], "{$label} records a brand key the bundle no longer produces.");
+            $checked++;
+        }
+
+        self::assertSame(6, $checked, 'Every committed provenance file must be covered, not just the canonical four.');
+    }
+
+    /** Every committed artifact matches the digest recorded beside it, in both bundles. */
+    public function test_every_committed_artifact_matches_its_recorded_digest(): void
+    {
+        foreach (self::committedProvenance() as $file) {
+            $artifact = preg_replace('/\.provenance\.json$/', '.svg', $file);
+            $recorded = json_decode((string) file_get_contents($file), true, flags: JSON_THROW_ON_ERROR);
+
+            self::assertFileExists((string) $artifact);
+            self::assertSame(
+                (string) ContentDigest::ofBytes((string) file_get_contents((string) $artifact)),
+                $recorded['output_digest'],
+                basename((string) $artifact).' does not match the digest its provenance records.',
+            );
+        }
+    }
+
+    /** @return list<string> */
+    private static function committedProvenance(): array
+    {
+        $files = glob(dirname(__DIR__, 2).'/fixtures/*/expected/*.provenance.json') ?: [];
+        sort($files);
+
+        return $files;
+    }
+
     public function test_provenance_carries_the_upstream_references_forward(): void
     {
         $references = $this->render(CompositionBundle::load(Fixture::path()))->provenance?->references;
